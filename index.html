@@ -1538,6 +1538,24 @@ async function createVideoTask(imageDataUri, prompt, durationFrames) {
     return videoId;
 }
 async function pollVideo(videoId, onProgress) {
+    // ─── CORRECTION : Décoder l'ID composite base64 ───
+    let realVideoId = videoId;
+    if (typeof videoId === 'string' && videoId.startsWith('video_')) {
+        try {
+            const base64Part = videoId.replace('video_', '');
+            if (base64Part.length > 60) {
+                const decoded = atob(base64Part);
+                const match = decoded.match(/video_id:(.+)$/);
+                if (match && match[1]) {
+                    realVideoId = match[1];
+                    log('ID décodé : ' + realVideoId);
+                }
+            }
+        } catch (e) {
+            log('Pas un ID composite, utilisation directe');
+        }
+    }
+
     const estimatedMs = estimateGenerationTime(state.durationFrames);
     const estimatedSec = estimatedMs / 1000;
     let remaining = Math.max(20, Math.floor(estimatedSec * 0.8));
@@ -1558,25 +1576,25 @@ async function pollVideo(videoId, onProgress) {
                 r--;
             }
         }
-        const url = POLL_BASE + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
+        const url = POLL_BASE + '?video_id=' + encodeURIComponent(realVideoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
         const res = await apiFetch(url, {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + getApiKey() }
         });
         const d = await res.json();
-        const status = d.status || 'unknown';
-        const progress = d.progress || 0;
+        const status = d.status || d.internal_status || 'unknown';
+        const progress = d.progress || d.internal_progress || 0;
         onProgress('Rendu… ' + progress + '%');
         if (status === 'completed' || status === 'succeeded' || status === 'done') {
-            const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-            if (!videoUrl) throw new Error('Pas d\'URL');
+            const videoUrl = d.url || (d.metadata && d.metadata.url) || (d.output && d.output.url);
+            if (!videoUrl) throw new Error('Terminé mais pas d\'URL');
             return videoUrl;
         }
         if (status === 'failed' || status === 'error' || status === 'cancelled') {
             throw new Error('Échec (' + status + ')');
         }
     }
-    throw new Error('Délai dépassé');
+    throw new Error('Délai maximal dépassé');
 }
 
 // ══════════════════════════════════════════════════════════════════
