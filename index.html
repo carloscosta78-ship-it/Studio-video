@@ -407,4 +407,614 @@ const state = {
     media: [], isRunning: false, stopRequested: false,
     queue: [], completed: 0, failed: 0,
     selectedObjective: 'premium', currentStoryboard: null,
-    main
+    mainPrompt: '', durationFrames: 153, intensity: 'moderate',
+    isLoading: false, generatedVideos: []
+};
+
+// ============ UTILS ============
+function $(id) { return document.getElementById(id); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function log(msg) { console.log('[MCP]', msg); }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function pick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+function pickFiltered(arr, ids) { const f = arr.filter(e => ids.includes(e.id)); return f.length ? pick(f) : pick(arr); }
+function fmtEta(s) { if(s<60) return Math.round(s)+'s'; const m=Math.floor(s/60), r=Math.round(s%60); return m+'m'+(r>0?' '+r+'s':''); }
+
+// ============ TOAST ============
+let toastTO = null;
+function toast(msg, type='success', dur=2500) {
+    const t = $('toast'), icon = $('toast-icon'), txt = $('toast-text');
+    if (!t || !icon || !txt) return;
+    t.classList.remove('visible','success','error','warn'); void t.offsetWidth;
+    icon.textContent = { success:'✓', error:'✕', warn:'⚠' }[type] || '✓';
+    txt.textContent = msg;
+    t.classList.add(type);
+    requestAnimationFrame(() => t.classList.add('visible'));
+    if (toastTO) clearTimeout(toastTO);
+    toastTO = setTimeout(() => t.classList.remove('visible'), dur);
+}
+
+// ============ STATUS ============
+function setStatus(text) {
+    const bar = $('status-bar'), txt = $('status-text');
+    if (!bar || !txt) return;
+    if (text) { bar.classList.add('visible'); txt.textContent = text; }
+    else bar.classList.remove('visible');
+}
+
+// ============ API KEY ============
+function getKey() {
+    try { return (localStorage.getItem(KEY_STORAGE) || '').trim(); }
+    catch (e) { return ''; }
+}
+function saveKey() {
+    const input = $('api-key-input');
+    if (!input) return;
+    const key = input.value.trim();
+    if (!key) {
+        try { localStorage.removeItem(KEY_STORAGE); } catch(e){}
+        refreshApiPanel();
+        toast('Clé supprimée', 'warn');
+        return;
+    }
+    try {
+        localStorage.setItem(KEY_STORAGE, key);
+        refreshApiPanel();
+        toast('Clé API enregistrée ✓', 'success');
+    } catch(e) {
+        toast('Erreur de sauvegarde', 'error');
+    }
+}
+function refreshApiPanel() {
+    const panel = $('api-panel'), input = $('api-key-input'),
+          status = $('api-status'), text = $('api-status-text');
+    if (!panel || !input || !status || !text) return;
+    const key = getKey();
+    if (key) {
+        panel.classList.add('ok');
+        status.classList.add('ok');
+        text.textContent = 'Clé active · ' + key.slice(0,8) + '…' + key.slice(-4);
+        input.value = key;
+        input.placeholder = '';
+    } else {
+        panel.classList.remove('ok');
+        status.classList.remove('ok');
+        text.textContent = 'Aucune clé API enregistrée';
+        input.value = '';
+        input.placeholder = 'Collez votre clé API Agnes (sk-...)';
+    }
+    refreshGenBtn();
+}
+
+// ============ BOUTON GÉNÉRER ============
+function refreshGenBtn() {
+    const btn = $('generate-btn');
+    if (!btn) return;
+    const hasMedia = state.media.length > 0;
+    const hasKey = !!getKey();
+    const hasStoryboard = !!state.currentStoryboard;
+    btn.disabled = !hasMedia || !hasKey || state.isRunning || state.isLoading || !hasStoryboard;
+    if (state.isLoading) btn.textContent = 'Chargement…';
+    else if (state.isRunning) { const d = state.completed + state.failed; btn.textContent = 'Génération… (' + d + '/' + state.queue.length + ')'; }
+    else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
+    else if (!hasMedia) btn.textContent = 'Ajoutez vos photos';
+    else if (!hasStoryboard) btn.textContent = '🔍 Analysez d\'abord vos photos';
+    else btn.textContent = '🎬 Créer ' + state.currentStoryboard.plans.length + ' clips — ' + state.currentStoryboard.duration + 's';
+}
+
+// ============ ÉTAPES ============
+function setStep(n) {
+    document.querySelectorAll('.step').forEach(el => {
+        const i = parseInt(el.dataset.step, 10);
+        el.classList.remove('active','done');
+        if (i < n) el.classList.add('done');
+        else if (i === n) el.classList.add('active');
+    });
+}
+
+// ============ ANTI-VEILLE ============
+let wakeLock = null, wakeEnabled = false, canvasStream = null, canvasInterval = null;
+
+async function activateWake() {
+    if ('wakeLock' in navigator) {
+        try { wakeLock = await navigator.wakeLock.request('screen'); return true; } catch(e){}
+    }
+    try {
+        const c = $('noSleepCanvas'), v = $('noSleepVideo');
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#000'; ctx.fillRect(0,0,2,2);
+        canvasStream = c.captureStream(1);
+        let t = false;
+        canvasInterval = setInterval(() => { t = !t; ctx.fillStyle = t ? '#000' : '#010101'; ctx.fillRect(0,0,2,2); }, 1000);
+        v.srcObject = canvasStream; v.muted = true; v.playsInline = true;
+        const p = v.play(); if (p && p.catch) p.catch(()=>{});
+        return true;
+    } catch(e) { return false; }
+}
+async function deactivateWake() {
+    if (wakeLock) { try { await wakeLock.release(); } catch(e){} wakeLock = null; }
+    if (canvasInterval) clearInterval(canvasInterval);
+    if (canvasStream) { canvasStream.getTracks().forEach(t => t.stop()); canvasStream = null; }
+    const v = $('noSleepVideo'); if (v) { try { v.pause(); v.srcObject = null; } catch(e){} }
+}
+function refreshWakeStatus() {
+    const el = $('wake-status'), txt = $('wake-text'), btn = $('wake-btn');
+    if (!el || !txt || !btn) return;
+    el.classList.remove('active');
+    const active = wakeLock !== null || canvasStream !== null;
+    if (wakeEnabled && active) { el.classList.add('active'); txt.textContent = '✅ Écran allumé'; btn.textContent = 'Désactiver'; }
+    else if (wakeEnabled) { txt.textContent = '⏳ En attente'; btn.textContent = 'Désactiver'; }
+    else { txt.textContent = '💤 Veille automatique'; btn.textContent = 'Garder l\'écran allumé'; }
+}
+async function toggleWake() {
+    if (wakeEnabled) {
+        wakeEnabled = false; await deactivateWake();
+        try { localStorage.setItem(WAKE_STORAGE, '0'); } catch(e){}
+        toast('Veille automatique', 'warn');
+    } else {
+        wakeEnabled = true;
+        const ok = await activateWake();
+        try { localStorage.setItem(WAKE_STORAGE, '1'); } catch(e){}
+        toast(ok ? 'Écran maintenu allumé' : 'Activez manuellement', ok ? 'success' : 'warn');
+    }
+    refreshWakeStatus();
+}
+
+// ============ MÉDIAS ============
+function readFile(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.onerror = () => rej(new Error('read'));
+        r.readAsDataURL(file);
+    });
+}
+function makeThumb(dataUri) {
+    return new Promise(res => {
+        const img = new Image();
+        img.onload = () => {
+            try {
+                const c = document.createElement('canvas');
+                c.width = THUMB_W; c.height = Math.round(THUMB_W * img.height / img.width);
+                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                res(c.toDataURL('image/jpeg', 0.7));
+            } catch(e) { res(dataUri); }
+        };
+        img.onerror = () => res(dataUri);
+        img.src = dataUri;
+    });
+}
+async function processFile(file) {
+    if (!file.type.startsWith('image/')) return null;
+    if (file.size > MAX_IMG_SIZE) return null;
+    try {
+        const dataUri = await readFile(file);
+        const thumb = await makeThumb(dataUri);
+        return { file, dataUri, thumb, id: Date.now() + Math.random() };
+    } catch(e) { return null; }
+}
+async function handleFiles(files) {
+    const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (!imgs.length) return;
+    state.isLoading = true; refreshGenBtn();
+    setStatus('Chargement de ' + imgs.length + ' photo(s)…');
+    const zone = $('upload-zone'); zone.classList.add('loading');
+    let n = 0;
+    for (const f of imgs) {
+        const r = await processFile(f);
+        if (r) { state.media.push(r); n++; }
+        renderMedia();
+        setStatus('Chargement… ' + n + '/' + imgs.length);
+    }
+    state.isLoading = false;
+    zone.classList.remove('loading');
+    setStatus(null);
+    state.currentStoryboard = null;
+    refreshGenBtn();
+}
+function removeMedia(id) {
+    state.media = state.media.filter(m => m.id !== id);
+    renderMedia();
+    state.currentStoryboard = null;
+    refreshGenBtn();
+}
+function renderMedia() {
+    const grid = $('media-grid');
+    if (!grid) return;
+    grid.innerHTML = state.media.map((m, i) => {
+        const role = i === 0 ? 'Référence' : (i === 1 ? 'Complément' : (i === 2 ? 'Détail' : 'Angle ' + (i+1)));
+        return '<div class="media-card">' +
+            '<img src="' + (m.thumb || m.dataUri) + '" alt="">' +
+            '<span class="role">' + role + '</span>' +
+            '<button class="rm" data-rm="' + m.id + '">✕</button>' +
+        '</div>';
+    }).join('');
+    grid.querySelectorAll('[data-rm]').forEach(b => {
+        b.addEventListener('click', e => { e.stopPropagation(); removeMedia(parseFloat(b.dataset.rm)); });
+    });
+}
+
+// ============ OBJECTIFS ============
+function renderObjectives() {
+    const grid = $('objective-grid');
+    if (!grid) return;
+    grid.innerHTML = Object.entries(OBJECTIVES).map(([id, o]) =>
+        '<div class="obj-card ' + (state.selectedObjective===id?'selected':'') + '" data-obj="' + id + '">' +
+            '<span class="emoji">' + o.emoji + '</span>' +
+            '<div class="name">' + esc(o.name) + '</div>' +
+            '<div class="desc">' + esc(o.desc) + '</div>' +
+        '</div>'
+    ).join('');
+    grid.querySelectorAll('[data-obj]').forEach(el => {
+        el.addEventListener('click', () => {
+            state.selectedObjective = el.dataset.obj;
+            try { localStorage.setItem(OBJ_STORAGE, state.selectedObjective); } catch(e){}
+            renderObjectives();
+            state.currentStoryboard = null;
+            refreshGenBtn();
+        });
+    });
+}
+
+// ============ STORYBOARD ============
+function generateStoryboard(media, objKey) {
+    const obj = OBJECTIVES[objKey] || OBJECTIVES.premium;
+    const numPlans = obj.structure.length;
+    const plans = [];
+    for (let i = 0; i < numPlans; i++) {
+        const mediaIdx = media.length >= numPlans ? Math.floor((i/numPlans)*media.length) : i % media.length;
+        plans.push({
+            index: i,
+            role: obj.structure[i],
+            media: media[mediaIdx],
+            duration: Math.max(5, Math.min(10, Math.floor(obj.duration / numPlans))),
+            effects: selectEffectsForRole(obj.structure[i])
+        });
+    }
+    return { objective: objKey, duration: obj.duration, plans, hook: pick(HOOKS[objKey] || HOOKS.premium) };
+}
+function selectEffectsForRole(role) {
+    const e = [];
+    switch (role) {
+        case 'hook': e.push(pickFiltered(EFFECTS.camera,['travelling_av','macro'])); e.push(pickFiltered(EFFECTS.ambiance,['cinema','showroom'])); break;
+        case 'transformation': e.push(pick(EFFECTS.transformation)); e.push(pickFiltered(EFFECTS.ambiance,['golden','archi'])); break;
+        case 'before': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','golden'])); break;
+        case 'construction': e.push(pickFiltered(EFFECTS.transformation,['sol','plafond','assemblage'])); e.push(pickFiltered(EFFECTS.ambiance,['archi','showroom'])); break;
+        case 'reveal': e.push(pickFiltered(EFFECTS.camera,['orbit','travelling_ar','rotation180'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','cinema'])); break;
+        case 'ambiance': e.push(pickFiltered(EFFECTS.camera,['travelling_av','ras_sol','plongee'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','soir'])); break;
+        case 'macro': case 'detail': e.push(EFFECTS.camera.find(c=>c.id==='macro')); e.push(pick(EFFECTS.materiaux)); break;
+        case 'orbit': case 'island': e.push(pickFiltered(EFFECTS.camera,['orbit','rotation180'])); e.push(pickFiltered(EFFECTS.ambiance,['showroom','cinema'])); break;
+        case 'hero': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','cinema'])); break;
+        case 'wide': case 'entrance': e.push(pickFiltered(EFFECTS.camera,['travelling_av','plongee'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','archi'])); break;
+        case 'plan2d': e.push(EFFECTS.transformation.find(t=>t.id==='plan2d3d')); e.push(pickFiltered(EFFECTS.ambiance,['archi'])); break;
+        case 'problem': case 'solution': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','golden'])); break;
+        case 'cta': e.push(pickFiltered(EFFECTS.camera,['travelling_av'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','showroom'])); break;
+        default: e.push(pick(EFFECTS.camera)); e.push(pick(EFFECTS.ambiance));
+    }
+    return e.filter(Boolean);
+}
+
+// ============ PROMPT ============
+function buildPrompt(plan) {
+    const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
+    const brandName = ($('brand-name')?.value || '').trim() || 'Mon Cuisiniste Privé';
+    const brandTag = ($('brand-tagline')?.value || '').trim();
+    const userPrompt = (state.mainPrompt || '').trim();
+    const parts = [
+        SOURCE_LOCK,
+        REF_HIERARCHY,
+        obj.guidance,
+        'Shot role: ' + plan.role + '.',
+        plan.effects.map(e => e.prompt).join(' ')
+    ];
+    if (userPrompt) parts.push(userPrompt);
+    parts.push(state.intensity === 'subtle' ? 'subtle elegant motion' : state.intensity === 'strong' ? 'dynamic energetic motion' : 'moderate cinematic motion');
+    parts.push('Brand context: ' + brandName + (brandTag ? ' — ' + brandTag : '') + '.');
+    parts.push('Portrait 9:16 vertical, 24fps, photorealistic, luxury commercial quality, no text, no watermarks, no people.');
+    return parts.join(' ');
+}
+
+// ============ API ============
+async function apiFetch(url, opts, retries = 5) {
+    for (let i = 0; i < retries; i++) {
+        if (state.stopRequested) throw new Error('Arrêt demandé');
+        try {
+            const r = await fetch(url, opts);
+            if (r.status === 429 || r.status === 503) {
+                const w = [15,30,45,60,90][i] || 90;
+                setStatus('API en préparation… (' + w + 's)');
+                await sleep(w * 1000);
+                continue;
+            }
+            return r;
+        } catch(e) {
+            if (e.message === 'Arrêt demandé') throw e;
+            const w = [3,5,8,12,20][i] || 20;
+            setStatus('Connexion… (' + w + 's)');
+            await sleep(w * 1000);
+        }
+    }
+    return fetch(url, opts);
+}
+async function createTask(dataUri, prompt, frames) {
+    const r = await apiFetch(API_BASE + '/videos', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + getKey(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: MODEL, prompt, image: dataUri, num_frames: frames, frame_rate: FPS })
+    });
+    if (!r.ok) { const t = await r.text(); throw new Error('HTTP ' + r.status + ' — ' + t.slice(0,200)); }
+    const d = await r.json();
+    const id = d.video_id || d.task_id || d.id;
+    if (!id) throw new Error('Pas de video_id');
+    return { videoId: d.video_id || id, taskId: d.task_id || id };
+}
+async function pollTask(videoId, taskId, onProg) {
+    const start = Date.now();
+    while (Date.now() - start < 30000) {
+        if (state.stopRequested) throw new Error('Arrêt demandé');
+        onProg('Préparation… ' + Math.round((Date.now()-start)/1000) + 's');
+        await sleep(1000);
+    }
+    for (let i = 0; i < MAX_POLL; i++) {
+        if (state.stopRequested) throw new Error('Arrêt demandé');
+        if (i > 0) { for (let s = POLL_INTERVAL_S; s > 0; s--) { if (state.stopRequested) throw new Error('Arrêt demandé'); onProg('Rendu… ' + s + 's'); await sleep(1000); } }
+        // Essaie les deux paramètres : video_id et task_id
+        const urls = [
+            POLL_BASE + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + MODEL,
+            POLL_BASE + '?task_id=' + encodeURIComponent(taskId) + '&model_name=' + MODEL
+        ];
+        for (const url of urls) {
+            try {
+                const r = await apiFetch(url, { method:'GET', headers:{ 'Authorization':'Bearer ' + getKey() } });
+                const d = await r.json();
+                if (d && d.error && d.error.code === 404) continue;
+                const st = (d.status || '').toLowerCase();
+                onProg('Rendu… ' + (d.progress || 0) + '%');
+                if (['completed','succeeded','done','success'].includes(st)) {
+                    const u = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
+                    if (u) return u;
+                    throw new Error('Pas d\'URL');
+                }
+                if (['failed','error','cancelled'].includes(st)) throw new Error('Échec (' + st + ')');
+                break;
+            } catch(e) { if (e.message === 'Arrêt demandé') throw e; }
+        }
+    }
+    throw new Error('Délai dépassé');
+}
+
+// ============ FILE D'ATTENTE ============
+function renderQueue() {
+    const q = $('queue');
+    if (!q) return;
+    if (!state.queue.length) { q.innerHTML = ''; return; }
+    const total = state.queue.length;
+    const done = state.completed + state.failed;
+    q.innerHTML = '<div class="queue-summary"><span>Progression : ' + done + '/' + total + '</span><span>' + (done<total?'≈ '+fmtEta((total-done)*60)+' restant':'Terminé') + '</span></div>' +
+        state.queue.map(item => {
+            let icon = '○', st = 'En attente', cls = 'pending';
+            if (item.status==='creating') { icon='◐'; st='Préparation…'; cls='creating'; }
+            else if (item.status==='processing') { icon='◐'; st=item.progress||'En cours'; cls='processing'; }
+            else if (item.status==='done') { icon='●'; st='Terminé'; cls='done'; }
+            else if (item.status==='failed') { icon='✕'; st='Échec'; cls='failed'; }
+            return '<div class="queue-item ' + cls + '"><div class="q-icon">' + icon + '</div><div class="q-name">Plan ' + (item.planIndex+1) + ' — ' + esc(item.plan.role) + '</div><div class="q-status">' + esc(st) + '</div></div>';
+        }).join('');
+}
+
+// ============ GALERIE ============
+function addToGallery(url, label) {
+    const g = $('gallery'), grid = $('gallery-grid');
+    g.style.display = 'block';
+    const el = document.createElement('div');
+    el.className = 'gallery-item';
+    el.innerHTML = '<video controls preload="metadata" muted playsinline><source src="' + url + '" type="video/mp4"></video>' +
+        '<div class="caption">' + esc(label) + '</div>' +
+        '<div class="actions"><a href="' + url + '" download="mcp-' + Date.now() + '.mp4">⬇ Télécharger</a></div>';
+    grid.appendChild(el);
+}
+
+// ============ ANALYSE ============
+function analyzeAndPropose() {
+    if (!state.media.length) { toast('Ajoutez d\'abord des photos', 'error'); return; }
+    setStep(2);
+    setStatus('Analyse des médias…');
+    setTimeout(() => {
+        state.currentStoryboard = generateStoryboard(state.media, state.selectedObjective);
+        setStep(3);
+        renderConcepts();
+        setStatus(null);
+        refreshGenBtn();
+        toast('Concept proposé ✓', 'success');
+        $('sec-concepts').classList.add('open');
+        $('sec-concepts').scrollIntoView({ behavior:'smooth' });
+    }, 500);
+}
+function renderConcepts() {
+    const box = $('concept-list');
+    if (!box) return;
+    if (!state.currentStoryboard) {
+        box.innerHTML = '<div class="prompt-hint" style="text-align:center; padding:1rem;">Importez vos photos, choisissez un objectif, puis cliquez sur <strong>Analyser</strong>.</div>';
+        return;
+    }
+    const sb = state.currentStoryboard;
+    const obj = OBJECTIVES[sb.objective];
+    box.innerHTML = '<div class="concept-card">' +
+        '<div class="title">' + obj.emoji + ' ' + esc(obj.name) + '</div>' +
+        '<div class="meta">⏱ ' + sb.duration + 's · ' + sb.plans.length + ' plans</div>' +
+        '<div class="storyboard">' + sb.plans.map((p,i) => '• Plan ' + (i+1) + ' — ' + esc(p.role) + ' — ' + p.effects.map(e => e.emoji).join(' ') + ' — ' + p.duration + 's').join('<br>') + '</div>' +
+        '</div>' +
+        '<div class="hook-list"><div class="hook-item"><div class="label">Hook</div>' + esc(sb.hook) + '</div></div>';
+}
+
+// ============ GÉNÉRATION ============
+async function startGeneration() {
+    if (state.isRunning) return;
+    if (!getKey()) { toast('Ajoutez votre clé API', 'error'); $('api-key-input').focus(); return; }
+    if (!state.currentStoryboard) { toast('Analysez d\'abord vos photos', 'error'); return; }
+    state.mainPrompt = ($('main-prompt')?.value || '').trim();
+    state.isRunning = true;
+    state.stopRequested = false;
+    state.completed = 0;
+    state.failed = 0;
+    const sb = state.currentStoryboard;
+    state.queue = sb.plans.map((plan, i) => ({
+        planIndex: i, plan, status: 'pending', progress: null,
+        videoId: null, taskId: null, videoUrl: null, startTime: null
+    }));
+    $('gallery-grid').innerHTML = '';
+    $('gallery').style.display = 'none';
+    $('stop-btn').classList.add('visible');
+    $('generate-btn').disabled = true;
+    setStep(4);
+    if (wakeEnabled) await activateWake();
+    renderQueue();
+    refreshGenBtn();
+
+    const tasks = [];
+    try {
+        for (let i = 0; i < state.queue.length; i++) {
+            if (state.stopRequested) break;
+            const item = state.queue[i];
+            try {
+                item.status = 'creating'; item.progress = 'Préparation…'; renderQueue();
+                const prompt = buildPrompt(item.plan);
+                item.prompt = prompt;
+                const ids = await createTask(item.plan.media.dataUri, prompt, state.durationFrames);
+                item.videoId = ids.videoId;
+                item.taskId = ids.taskId;
+                item.startTime = Date.now();
+                item.status = 'processing'; item.progress = 'En cours…';
+                renderQueue();
+                tasks.push(processTask(item));
+            } catch(e) {
+                if (e.message === 'Arrêt demandé') break;
+                item.status = 'failed'; item.progress = 'Échec'; state.failed++;
+                renderQueue();
+            }
+            if (i < state.queue.length - 1 && !state.stopRequested) {
+                const sec = Math.ceil(CREATE_INTERVAL_MS / 1000);
+                for (let r = sec; r > 0; r--) {
+                    if (state.stopRequested) break;
+                    setStatus('Respiration… Plan ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
+                    await sleep(1000);
+                }
+            }
+        }
+        if (tasks.length) { setStatus('Attente des derniers rendus…'); await Promise.allSettled(tasks); }
+
+        const okClips = state.queue.filter(q => q.status === 'done' && q.videoUrl);
+        if (okClips.length >= 1) {
+            okClips.forEach((c, i) => addToGallery(c.videoUrl, 'Clip ' + (i+1) + ' — ' + c.plan.role));
+        }
+        setStep(5);
+        $('gallery').scrollIntoView({ behavior:'smooth' });
+    } catch(e) { log('Erreur: ' + e.message); }
+
+    setStatus(state.stopRequested ? 'Arrêté — ' + state.completed + ' clips' : '✦ ' + state.completed + '/' + state.queue.length + ' clips créés ✦');
+    await sleep(4000); setStatus(null);
+    state.isRunning = false;
+    state.stopRequested = false;
+    $('stop-btn').classList.remove('visible');
+    refreshGenBtn();
+    toast(state.completed + ' clip(s) créé(s)', 'success');
+}
+async function processTask(item) {
+    try {
+        const url = await pollTask(item.videoId, item.taskId, p => { item.progress = p; renderQueue(); });
+        item.status = 'done'; item.videoUrl = url; item.progress = 'Terminé';
+        state.completed++;
+        renderQueue(); refreshGenBtn();
+    } catch(e) {
+        if (e.message === 'Arrêt demandé') { item.status='failed'; item.progress='Arrêté'; }
+        else { item.status='failed'; item.progress='Échec'; state.failed++; }
+        renderQueue(); refreshGenBtn();
+    }
+}
+function stopGeneration() {
+    if (!state.isRunning) return;
+    state.stopRequested = true;
+    setStatus('Arrêt en cours…');
+}
+
+// ============ INIT ============
+function init() {
+    log('Initialisation…');
+
+    // Restaurer préférences
+    try {
+        const obj = localStorage.getItem(OBJ_STORAGE);
+        if (obj && OBJECTIVES[obj]) state.selectedObjective = obj;
+        wakeEnabled = localStorage.getItem(WAKE_STORAGE) === '1';
+        const brand = JSON.parse(localStorage.getItem(BRAND_STORAGE) || '{}');
+        if (brand.name) $('brand-name').value = brand.name;
+        if (brand.tagline) $('brand-tagline').value = brand.tagline;
+        if (brand.slogan) $('brand-slogan').value = brand.slogan;
+    } catch(e){}
+
+    // Bouton clé API
+    const saveBtn = $('api-save-btn');
+    if (saveBtn) saveBtn.addEventListener('click', saveKey);
+    const keyInput = $('api-key-input');
+    if (keyInput) keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveKey(); } });
+
+    // Anti-veille
+    const wakeBtn = $('wake-btn');
+    if (wakeBtn) wakeBtn.addEventListener('click', toggleWake);
+
+    // Sections
+    document.querySelectorAll('[data-toggle]').forEach(h => {
+        h.addEventListener('click', () => $(h.dataset.toggle)?.classList.toggle('open'));
+    });
+
+    // Upload
+    const zone = $('upload-zone'), fileInput = $('file-input');
+    if (zone && fileInput) {
+        zone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', e => { handleFiles(e.target.files); fileInput.value = ''; });
+    }
+
+    // Prompt
+    const mainPrompt = $('main-prompt');
+    if (mainPrompt) mainPrompt.addEventListener('input', e => { state.mainPrompt = e.target.value; });
+
+    // Sélecteurs
+    const dur = $('duration-select');
+    if (dur) dur.addEventListener('change', e => { state.durationFrames = parseInt(e.target.value, 10); });
+    const inten = $('intensity-select');
+    if (inten) inten.addEventListener('change', e => { state.intensity = e.target.value; });
+
+    // Boutons principaux
+    const genBtn = $('generate-btn');
+    if (genBtn) genBtn.addEventListener('click', startGeneration);
+    const stopBtn = $('stop-btn');
+    if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
+    const anaBtn = $('analyze-btn');
+    if (anaBtn) anaBtn.addEventListener('click', analyzeAndPropose);
+
+    // Brand inputs
+    ['brand-name','brand-tagline','brand-slogan'].forEach(id => {
+        const el = $(id);
+        if (el) el.addEventListener('input', () => {
+            const b = { name: $('brand-name').value, tagline: $('brand-tagline').value, slogan: $('brand-slogan').value };
+            try { localStorage.setItem(BRAND_STORAGE, JSON.stringify(b)); } catch(e){}
+            const sig = $('header-sig');
+            if (sig) sig.textContent = b.name + (b.tagline ? ' · ' + b.tagline : '');
+        });
+    });
+
+    // Rendu initial
+    renderObjectives();
+    renderMedia();
+    renderConcepts();
+    refreshApiPanel();
+    refreshWakeStatus();
+    setStep(1);
+    refreshGenBtn();
+    setStatus(null);
+
+    log('Prêt.');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
