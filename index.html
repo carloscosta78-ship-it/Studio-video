@@ -33,7 +33,7 @@
         border: 1px solid var(--border); border-radius: var(--radius);
         font-size: 0.68rem; gap: 0.2rem;
     }
-    .step { flex: 1; text-align: center; color: var(--ink-faint); position: relative; }
+    .step { flex: 1; text-align: center; color: var(--ink-faint); }
     .step.active { color: var(--mcp); font-weight: 700; }
     .step.done { color: var(--success); }
     .step .num {
@@ -70,35 +70,6 @@
         margin-bottom: 1rem; line-height: 1.45;
     }
     .info-banner strong { color: var(--ink); }
-
-    .section {
-        background: var(--panel); border: 1px solid var(--border);
-        border-radius: var(--radius); margin-bottom: 1rem;
-        overflow: hidden;
-    }
-    .section-header {
-        padding: 0.9rem 1.1rem; cursor: pointer; user-select: none;
-        display: flex; justify-content: space-between; align-items: center;
-    }
-    .section-header:active { background: var(--panel-2); }
-    .section-title {
-        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
-        color: var(--ink-dim); font-weight: 600;
-    }
-    .section-title .badge {
-        display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem;
-        background: var(--mcp); color: #fff; border-radius: 10px;
-        font-size: 0.65rem; letter-spacing: 0;
-    }
-    .section-title .badge.soft { background: var(--info); }
-    .section-title .badge.ok { background: var(--success); }
-    .section-header .chevron {
-        font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s;
-    }
-    .section.open .section-header .chevron { transform: rotate(180deg); }
-    .section-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-    .section.open .section-body { max-height: 8000px; }
-    .section-content { padding: 0 1.1rem 1.1rem; }
 
     .api-panel {
         background: var(--panel); border: 1px solid var(--border);
@@ -154,6 +125,34 @@
         font-size: 0.68rem; cursor: pointer; font-family: inherit;
     }
 
+    .section {
+        background: var(--panel); border: 1px solid var(--border);
+        border-radius: var(--radius); margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    .section-header {
+        padding: 0.9rem 1.1rem; cursor: pointer; user-select: none;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .section-header:active { background: var(--panel-2); }
+    .section-title {
+        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+        color: var(--ink-dim); font-weight: 600;
+    }
+    .section-title .badge {
+        display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem;
+        background: var(--mcp); color: #fff; border-radius: 10px;
+        font-size: 0.65rem; letter-spacing: 0;
+    }
+    .section-title .badge.soft { background: var(--info); }
+    .section-header .chevron {
+        font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s;
+    }
+    .section.open .section-header .chevron { transform: rotate(180deg); }
+    .section-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .section.open .section-body { max-height: 8000px; }
+    .section-content { padding: 0 1.1rem 1.1rem; }
+
     .upload-zone {
         border: 2px dashed var(--border); border-radius: var(--radius);
         padding: 2rem 1rem; text-align: center; cursor: pointer;
@@ -181,12 +180,6 @@
     .media-card.drag-over { border: 2px dashed var(--mcp); }
     .media-card img {
         width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    .media-card .media-badge {
-        position: absolute; bottom: 3px; left: 3px;
-        background: rgba(0,0,0,0.7); color: #fff;
-        padding: 1px 5px; border-radius: 5px;
-        font-size: 8px; font-weight: 700; letter-spacing: 0.05em;
     }
     .media-card .media-role {
         position: absolute; top: 3px; left: 3px;
@@ -236,52 +229,18 @@
     .concept-card {
         padding: 0.9rem 1rem; border-radius: 8px;
         border: 2px solid var(--border); background: var(--panel-2);
-        cursor: pointer; transition: all 0.15s;
     }
-    .concept-card:active { transform: scale(0.99); }
     .concept-card.selected {
         border-color: var(--mcp); background: var(--mcp-light);
     }
     .concept-card .concept-title {
         font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;
-        display: flex; align-items: center; gap: 0.4rem;
     }
     .concept-card .concept-meta {
         font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 0.4rem;
     }
     .concept-card .concept-storyboard {
         font-size: 0.68rem; line-height: 1.5; color: var(--ink-dim);
-    }
-
-    .styles-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 0.5rem;
-    }
-    .style-card {
-        padding: 0.75rem 0.85rem; border-radius: 8px;
-        border: 1px solid var(--border); background: var(--panel-2);
-        cursor: pointer; transition: all 0.15s;
-        display: flex; align-items: center; gap: 0.5rem;
-    }
-    .style-card:active { transform: scale(0.98); }
-    .style-card.selected { background: var(--mcp); color: #fff; border-color: var(--mcp); }
-    .style-card .style-emoji { font-size: 1.2rem; flex-shrink: 0; }
-    .style-card .style-name { font-size: 0.8rem; font-weight: 500; line-height: 1.2; }
-    .style-card .style-desc { font-size: 0.65rem; opacity: 0.7; margin-top: 0.1rem; line-height: 1.2; }
-
-    .style-category-header {
-        grid-column: 1 / -1;
-        font-size: 0.7rem; font-weight: 600;
-        color: var(--mcp); text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 0.6rem 0 0.3rem;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 0.3rem;
-    }
-    .style-category-desc {
-        grid-column: 1 / -1;
-        font-size: 0.68rem; color: var(--ink-dim);
-        font-style: italic; margin-bottom: 0.4rem; line-height: 1.35;
     }
 
     .control-row { margin-bottom: 0.9rem; }
@@ -312,7 +271,6 @@
         border: 1px solid var(--mcp); background: var(--panel);
         color: var(--mcp); font-size: 0.9rem; font-weight: 600;
         font-family: inherit; cursor: pointer; margin-bottom: 1rem;
-        transition: all 0.15s;
     }
     .btn-secondary:active { transform: scale(0.98); background: var(--mcp-light); }
 
@@ -339,8 +297,7 @@
         display: flex; align-items: center; gap: 0.8rem;
         padding: 0.7rem 0.8rem; border-radius: 8px;
         border: 1px solid var(--border); margin-bottom: 0.4rem;
-        background: var(--panel); transition: border-color 0.3s, opacity 0.3s;
-        font-size: 0.82rem;
+        background: var(--panel); font-size: 0.82rem;
     }
     .queue-item.pending { opacity: 0.5; }
     .queue-item.creating { border-color: var(--warn); }
@@ -359,7 +316,6 @@
     .gallery-item {
         border-radius: var(--radius); overflow: hidden;
         border: 1px solid var(--border); background: #000;
-        animation: fadeIn 0.4s ease;
     }
     .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
     .gallery-item .g-caption {
@@ -390,23 +346,18 @@
         animation: spin 0.8s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .hook-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
     .hook-item {
         padding: 0.6rem 0.8rem; border-radius: 8px;
         background: var(--panel-2); border: 1px solid var(--border);
-        font-size: 0.78rem; line-height: 1.4; cursor: pointer;
-        transition: all 0.15s;
+        font-size: 0.78rem; line-height: 1.4;
     }
-    .hook-item:hover { border-color: var(--mcp); }
     .hook-item .hook-label {
         font-weight: 700; color: var(--mcp); font-size: 0.68rem;
         text-transform: uppercase; letter-spacing: 0.05em;
         margin-bottom: 0.2rem;
     }
-
-    .hidden { display: none !important; }
 
     #noSleepCanvas { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
     #noSleepVideo { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
@@ -434,9 +385,25 @@
     des vidéos publicitaires de 15 à 45 secondes.
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ── CLÉ API ── -->
+<div class="api-panel" id="api-panel">
+    <input type="password" class="api-key-input" id="api-key-input"
+           placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off" spellcheck="false">
+    <button type="button" class="api-save-btn" id="api-save-btn">Enregistrer la clé</button>
+    <div class="api-status-line" id="api-status-line">
+        <span class="status-dot"></span>
+        <span id="api-status-text">Aucune clé API enregistrée</span>
+    </div>
+    <div class="api-hint">
+        Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank">platform.agnes-ai.com</a> → Settings → API Keys
+    </div>
+    <div class="wake-status" id="wake-status">
+        <span id="wake-status-text">💤 Veille automatique</span>
+        <button type="button" id="wake-toggle-btn">Garder l'écran allumé</button>
+    </div>
+</div>
+
 <!-- ÉTAPE 1 — IMPORTER -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section open" id="section-import">
     <div class="section-header" data-toggle="section-import">
         <span class="section-title">1️⃣ Importer vos médias <span class="badge">photos</span></span>
@@ -453,15 +420,13 @@
             <div class="media-grid" id="media-grid"></div>
             <div class="prompt-main-hint">
                 💡 <strong>La première photo sera la référence absolue</strong> du projet.
-                Glissez-déposez pour réorganiser. L'IA détectera automatiquement le rôle de chaque image.
+                Glissez-déposez pour réorganiser.
             </div>
         </div>
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
 <!-- ÉTAPE 2 — ANALYSER -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section" id="section-objective">
     <div class="section-header" data-toggle="section-objective">
         <span class="section-title">2️⃣ Objectif de la vidéo <span class="badge soft">storytelling</span></span>
@@ -478,9 +443,7 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
 <!-- ÉTAPE 3 — CRÉER -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section" id="section-concepts">
     <div class="section-header" data-toggle="section-concepts">
         <span class="section-title">3️⃣ Concepts vidéo proposés <span class="badge soft">IA</span></span>
@@ -501,9 +464,7 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
 <!-- IDENTITÉ MCP -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section" id="section-brand">
     <div class="section-header" data-toggle="section-brand">
         <span class="section-title">🏷️ Identité MCP <span class="badge">signature</span></span>
@@ -513,23 +474,21 @@
         <div class="section-content">
             <div class="control-row">
                 <label class="control-label">Nom de l'entreprise</label>
-                <input type="text" id="brand-name" value="Mon Cuisiniste Privé" placeholder="Votre marque">
+                <input type="text" id="brand-name" value="Mon Cuisiniste Privé">
             </div>
             <div class="control-row">
                 <label class="control-label">Signature / localisation</label>
-                <input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines" placeholder="Votre signature">
+                <input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines">
             </div>
             <div class="control-row">
-                <label class="control-label">Slogan (apparaît en fin de vidéo)</label>
-                <input type="text" id="brand-slogan" value="Votre cuisine sur mesure, pensée pour vous" placeholder="Slogan">
+                <label class="control-label">Slogan</label>
+                <input type="text" id="brand-slogan" value="Votre cuisine sur mesure, pensée pour vous">
             </div>
         </div>
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
 <!-- PROMPT PERSONNALISÉ -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section" id="section-prompt">
     <div class="section-header" data-toggle="section-prompt">
         <span class="section-title">✍️ Votre vision (optionnel) <span class="badge">+</span></span>
@@ -538,17 +497,15 @@
     <div class="section-body">
         <div class="section-content">
             <textarea class="prompt-main" id="main-prompt"
-                placeholder="Ajoutez une direction artistique particulière : « Cuisine haut de gamme, lumière naturelle du matin, ambiance chaleureuse et minimaliste. »"></textarea>
+                placeholder="Ajoutez une direction artistique : « Cuisine haut de gamme, lumière naturelle du matin. »"></textarea>
             <div class="prompt-main-hint">
-                💡 Ce prompt s'ajoute aux instructions automatiques de l'IA. Laissez vide pour une génération 100% automatique.
+                💡 Ce prompt s'ajoute aux instructions automatiques de l'IA.
             </div>
         </div>
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
 <!-- RÉGLAGES TECHNIQUES -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="section" id="section-tech">
     <div class="section-header" data-toggle="section-tech">
         <span class="section-title">📷 Réglages techniques</span>
@@ -557,7 +514,7 @@
     <div class="section-body">
         <div class="section-content">
             <div class="control-row">
-                <label class="control-label">Durée par clip (max 10s imposé par l'API)</label>
+                <label class="control-label">Durée par clip (max 10s)</label>
                 <select id="duration-select">
                     <option value="121">5 secondes</option>
                     <option value="153" selected>6,4 secondes (recommandé)</option>
@@ -586,9 +543,6 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PRODUCTION -->
-<!-- ═══════════════════════════════════════════════════ -->
 <button type="button" class="btn-primary" id="generate-btn" disabled>
     🎬 Créer la campagne vidéo
 </button>
@@ -599,9 +553,6 @@
 
 <div class="queue" id="queue" style="display:none;"></div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PUBLICATION -->
-<!-- ═══════════════════════════════════════════════════ -->
 <div class="gallery" id="gallery" style="display:none;">
     <div class="section-title" style="margin-bottom:0.8rem;">🎥 Vidéos générées — MCP Studio</div>
     <div class="gallery-grid" id="gallery-grid"></div>
@@ -619,7 +570,9 @@
 
 <canvas id="noSleepCanvas" width="2" height="2"></canvas>
 <video id="noSleepVideo" playsinline muted loop></video>
+
 <script>
+
 // ══════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ══════════════════════════════════════════════════════════════════
@@ -682,35 +635,35 @@ const OBJECTIVES = {
         duration: 35, category: 'lead',
         structure: ['hook', 'plan2d', 'wireframe', 'construction', 'reveal'],
         tone: 'Technique, précis, professionnel',
-        promptGuidance: 'Create a design process video. Start with the 2D plan, then show the 3D wireframe, then the construction, then the photorealistic result. The viewer should understand the design expertise.'
+        promptGuidance: 'Create a design process video. Start with the 2D plan, then show the 3D wireframe, then the construction, then the photorealistic result.'
     },
     premium: {
         emoji: '💰', name: 'Valoriser le haut de gamme', desc: 'Luxe, macro, élégance',
         duration: 40, category: 'desir',
         structure: ['hook', 'ambiance', 'macro', 'orbit', 'hero', 'cta'],
         tone: 'Luxueux, raffiné, prestigieux',
-        promptGuidance: 'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details on materials, slow elegant camera movements. The viewer should feel prestige and exclusivity.'
+        promptGuidance: 'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details on materials, slow elegant camera movements.'
     },
     devis: {
         emoji: '📩', name: 'Générer des demandes de devis', desc: 'Problème → solution → CTA',
         duration: 25, category: 'lead',
         structure: ['hook', 'problem', 'solution', 'reveal', 'cta'],
         tone: 'Direct, convaincant, orienté bénéfice',
-        promptGuidance: 'Create a lead-generation video. Start with a common kitchen problem, then show the solution, then the beautiful result, then a clear call-to-action. Convincing and benefit-oriented.'
+        promptGuidance: 'Create a lead-generation video. Start with a common kitchen problem, then show the solution, then the beautiful result, then a clear call-to-action.'
     },
     realisation: {
         emoji: '🏠', name: 'Présenter une réalisation', desc: 'Visite complète, walkthrough',
         duration: 45, category: 'desir',
         structure: ['hook', 'entrance', 'wide', 'island', 'detail', 'hero', 'cta'],
         tone: 'Immersion, découverte, storytelling',
-        promptGuidance: 'Create a complete project showcase video. The camera walks through the kitchen, revealing the space, the island, the details, and the atmosphere. The viewer should feel like they are visiting in person.'
+        promptGuidance: 'Create a complete project showcase video. The camera walks through the kitchen, revealing the space, the island, the details, and the atmosphere.'
     },
     detail: {
         emoji: '👀', name: 'Faire découvrir un détail', desc: 'Macro, zoom, révélation',
         duration: 15, category: 'desir',
         structure: ['hook', 'macro', 'reveal'],
         tone: 'Intime, sensoriel, précis',
-        promptGuidance: 'Create a macro detail video. Extreme close-up on a single beautiful element (material veining, handle, LED, mechanism). The viewer should appreciate the craftsmanship.'
+        promptGuidance: 'Create a macro detail video. Extreme close-up on a single beautiful element (material veining, handle, LED, mechanism).'
     }
 };
 
@@ -720,87 +673,81 @@ const OBJECTIVES = {
 const EFFECTS = {
     transformation: [
         { id: 'plan2d3d', name: 'Plan 2D → 3D', emoji: '📐',
-          prompt: 'Start with the 2D technical floor plan, then progressively the walls and furniture rise in 3D, the plan transforms into a photorealistic kitchen. Smooth architectural transformation, magical reveal.' },
+          prompt: 'Start with the 2D technical floor plan, then progressively the walls and furniture rise in 3D, the plan transforms into a photorealistic kitchen.' },
         { id: 'croquis', name: 'Croquis → Photoréalisme', emoji: '✏️',
-          prompt: 'Start with the hand-drawn sketch, then progressively colors and materials fill in, the sketch becomes a photorealistic rendered kitchen. Smooth magical transformation.' },
+          prompt: 'Start with the hand-drawn sketch, then progressively colors and materials fill in, the sketch becomes a photorealistic rendered kitchen.' },
         { id: 'ancienne', name: 'Ancienne → Nouvelle', emoji: '🔄',
-          prompt: 'Start with the old dated kitchen, then progressively transform it into the modern premium kitchen. Each element changes: cabinets, worktop, lighting, materials. Dramatic reveal.' },
+          prompt: 'Start with the old dated kitchen, then progressively transform it into the modern premium kitchen.' },
         { id: 'vide', name: 'Pièce vide → Cuisine', emoji: '🏗️',
-          prompt: 'Start with the empty room, then progressively the kitchen assembles itself: base cabinets, then worktop, then facades, then handles, then appliances, then lighting, then decoration.' },
+          prompt: 'Start with the empty room, then progressively the kitchen assembles itself: base cabinets, worktop, facades, handles, appliances, lighting.' },
         { id: 'sol', name: 'Meubles sortent du sol', emoji: '⬆️',
-          prompt: 'The kitchen components emerge from the floor and assemble themselves: base cabinets rise smoothly, then worktop appears, then facades snap into place, then handles, then appliances.' },
+          prompt: 'The kitchen components emerge from the floor and assemble themselves: base cabinets rise smoothly, then worktop appears, then facades snap into place.' },
         { id: 'plafond', name: 'Meubles du plafond', emoji: '⬇️',
-          prompt: 'The kitchen components descend from the ceiling and assemble: upper cabinets come down, then shelves appear, then lighting integrates, then everything settles into place.' },
+          prompt: 'The kitchen components descend from the ceiling and assemble: upper cabinets come down, then shelves appear.' },
         { id: 'assemblage', name: 'Éléments qui s\'assemblent', emoji: '🧩',
-          prompt: 'The kitchen parts fly in and assemble themselves precisely. Each element snaps into place with elegant ease-out motion. Premium brand commercial aesthetic.' },
+          prompt: 'The kitchen parts fly in and assemble themselves precisely. Each element snaps into place with elegant ease-out motion.' },
         { id: 'wireframe', name: 'Wireframe → Render', emoji: '🕸️',
-          prompt: 'Start with the 3D wireframe structure, then surfaces fill in, materials appear, lighting activates, the wireframe becomes a photorealistic rendered kitchen.' }
+          prompt: 'Start with the 3D wireframe structure, then surfaces fill in, materials appear, lighting activates.' }
     ],
     camera: [
         { id: 'travelling_av', name: 'Travelling avant', emoji: '➡️',
           prompt: 'Slow cinematic push-in toward the main subject, smooth dolly forward with ease-in-out.' },
         { id: 'travelling_ar', name: 'Travelling arrière', emoji: '⬅️',
-          prompt: 'Slow dolly backward revealing more of the scene, elegant pull-out with cinematic pacing.' },
+          prompt: 'Slow dolly backward revealing more of the scene, elegant pull-out.' },
         { id: 'orbit', name: 'Orbit autour de l\'îlot', emoji: '🔄',
-          prompt: 'Smooth 360-degree orbit around the central island, perfectly steady camera rotation, revealing all sides.' },
+          prompt: 'Smooth 360-degree orbit around the central island, perfectly steady camera rotation.' },
         { id: 'rotation180', name: 'Rotation 180°', emoji: '↩️',
           prompt: 'Elegant 180-degree rotation around the subject, half-orbit revealing two complementary angles.' },
-        { id: 'derriere', name: 'Passage derrière un meuble', emoji: '🚶',
-          prompt: 'Camera glides behind a cabinet or island, passing through the space, revealing the kitchen from a new angle.' },
         { id: 'ras_sol', name: 'Caméra ras du sol', emoji: '⬇️',
-          prompt: 'Extreme low angle camera at floor level, slowly moving forward, dramatic perspective emphasizing the scale.' },
+          prompt: 'Extreme low angle camera at floor level, slowly moving forward.' },
         { id: 'plongee', name: 'Plongée architecturale', emoji: '🏛️',
           prompt: 'High angle architectural view, camera slowly descending, revealing the layout from above.' },
-        { id: 'aerienne', name: 'Vue aérienne', emoji: '🛩️',
-          prompt: 'Aerial drone-style shot slowly orbiting above the kitchen, revealing the complete layout and proportions.' },
         { id: 'macro', name: 'Macro matière', emoji: '🔍',
-          prompt: 'Extreme macro shot on material details, texture, veins and finish, shallow depth of field, cinematic focus pull.' },
+          prompt: 'Extreme macro shot on material details, texture, veins and finish, shallow depth of field.' },
         { id: 'dolly_zoom', name: 'Dolly zoom (Vertigo)', emoji: '🌀',
-          prompt: 'Dolly zoom effect (Vertigo/Hitchcock), the camera moves forward while zooming out, creating a dramatic perspective shift.' }
+          prompt: 'Dolly zoom effect (Vertigo/Hitchcock), camera moves forward while zooming out.' }
     ],
     materiaux: [
         { id: 'veinage', name: 'Zoom sur veinage', emoji: '🪨',
-          prompt: 'Extreme close-up on stone or wood veining, slow cinematic zoom, revealing the natural beauty of the material.' },
+          prompt: 'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
         { id: 'pierre', name: 'Pierre qui apparaît', emoji: '💎',
-          prompt: 'The stone surface progressively appears on the worktop, natural veining reveals itself, dramatic lighting.' },
+          prompt: 'The stone surface progressively appears on the worktop, natural veining reveals itself.' },
         { id: 'finition', name: 'Changement de finition', emoji: '🎨',
-          prompt: 'The facade finish progressively changes (matte to glossy, or wood tone to another), smooth elegant transition.' },
+          prompt: 'The facade finish progressively changes (matte to glossy), smooth elegant transition.' },
         { id: 'led', name: 'LED qui s\'allume', emoji: '💡',
-          prompt: 'The integrated LED lighting progressively turns on, warm glow illuminating the surfaces, elegant reveal.' },
+          prompt: 'The integrated LED lighting progressively turns on, warm glow illuminating the surfaces.' },
         { id: 'texture', name: 'Texture qui se révèle', emoji: '✨',
-          prompt: 'The material texture progressively reveals itself under grazing light, showing grain, roughness, and depth.' },
+          prompt: 'The material texture progressively reveals itself under grazing light.' },
         { id: 'mat_brillant', name: 'Mat → Brillant', emoji: '🌟',
-          prompt: 'The matte facade becomes glossy lacquered, deep reflections, premium transformation.' },
+          prompt: 'The matte facade becomes glossy lacquered, deep reflections.' },
         { id: 'bois_clair_fonce', name: 'Bois clair → foncé', emoji: '🪵',
-          prompt: 'The light wood facade progressively darkens to a deep premium walnut tone, smooth color transition.' }
+          prompt: 'The light wood facade progressively darkens to a deep premium walnut tone.' }
     ],
     fonctionnalite: [
         { id: 'tiroir', name: 'Tiroir qui s\'ouvre', emoji: '📦',
-          prompt: 'Drawer slides out smoothly with soft-close mechanism, revealing interior organization, satisfying motion.' },
+          prompt: 'Drawer slides out smoothly with soft-close mechanism, revealing interior organization.' },
         { id: 'coulissant', name: 'Coulissant qui sort', emoji: '↔️',
-          prompt: 'Sliding cabinet or drawer glides out horizontally, smooth mechanical motion, revealing hidden storage.' },
+          prompt: 'Sliding cabinet or drawer glides out horizontally, revealing hidden storage.' },
         { id: 'porte', name: 'Porte qui s\'ouvre', emoji: '🚪',
-          prompt: 'Cabinet door opens to 90 degrees smoothly, revealing interior with LED lighting, elegant motion.' },
+          prompt: 'Cabinet door opens to 90 degrees smoothly, revealing interior with LED lighting.' },
         { id: 'electromenager', name: 'Électroménager qui apparaît', emoji: '🔌',
-          prompt: 'Integrated appliance progressively appears or reveals itself, smooth opening mechanism.' },
+          prompt: 'Integrated appliance progressively appears or reveals itself.' },
         { id: 'escamotable', name: 'Meuble escamotable', emoji: '🪄',
-          prompt: 'A retractable or hidden furniture element emerges smoothly, magical reveal of a clever storage solution.' },
-        { id: 'range_caché', name: 'Rangement caché révélé', emoji: '🎁',
-          prompt: 'A hidden storage compartment progressively reveals itself, elegant opening, showing interior organization.' },
+          prompt: 'A retractable or hidden furniture element emerges smoothly, magical reveal.' },
         { id: 'soft_close', name: 'Soft-close en action', emoji: '🤫',
-          prompt: 'Slow motion of soft-close mechanism, drawer or door gently closing by itself, satisfying mechanical elegance.' }
+          prompt: 'Slow motion of soft-close mechanism, drawer or door gently closing by itself.' }
     ],
     ambiance: [
         { id: 'golden', name: 'Golden hour', emoji: '🌇',
           prompt: 'Golden hour warm sunlight, amber glow, long shadows, luxurious warm atmosphere.' },
         { id: 'matin', name: 'Matin naturel', emoji: '🌅',
-          prompt: 'Soft morning natural light entering through windows, gentle golden tone, serene awakening atmosphere.' },
+          prompt: 'Soft morning natural light entering through windows, gentle golden tone.' },
         { id: 'soir', name: 'Soirée premium', emoji: '🌙',
-          prompt: 'Elegant evening atmosphere, warm interior LED lighting, soft ambient glow, luxury night mood.' },
+          prompt: 'Elegant evening atmosphere, warm interior LED lighting, soft ambient glow.' },
         { id: 'archi', name: 'Éclairage architectural', emoji: '🏛️',
           prompt: 'Professional architectural lighting, precise highlights, balanced shadows, showroom quality.' },
         { id: 'showroom', name: 'Showroom premium', emoji: '💎',
-          prompt: 'High-end furniture showroom lighting, dramatic yet soft, premium product presentation.' },
+          prompt: 'High-end furniture showroom lighting, dramatic yet soft.' },
         { id: 'cocoon', name: 'Ambiance cocooning', emoji: '🕯️',
           prompt: 'Cosy cocooning atmosphere, warm soft lighting, intimate and inviting mood.' },
         { id: 'cinema', name: 'Lumière cinématographique', emoji: '🎬',
@@ -809,202 +756,8 @@ const EFFECTS = {
 };
 
 // ══════════════════════════════════════════════════════════════════
-// MOTEUR DE STORYBOARD AUTOMATIQUE
+// HOOKS (5 par objectif)
 // ══════════════════════════════════════════════════════════════════
-
-/**
- * Analyse les médias et génère un storyboard de plans.
- * Chaque plan = 1 photo + 1 effet + 1 prompt + 1 durée.
- */
-function generateStoryboard(media, objective) {
-    const obj = OBJECTIVES[objective] || OBJECTIVES.premium;
-    const structure = obj.structure;
-    const numPlans = structure.length;
-    const plans = [];
-
-    // Répartition des médias sur les plans
-    // Si plus de plans que de médias, on recycle intelligemment
-    // Si plus de médias que de plans, on sélectionne les meilleurs
-    const mediaCount = media.length;
-    const selection = [];
-    for (let i = 0; i < numPlans; i++) {
-        const mediaIndex = mediaCount >= numPlans
-            ? Math.floor((i / numPlans) * mediaCount)
-            : i % mediaCount;
-        selection.push(media[mediaIndex]);
-    }
-
-    // Choix des effets selon le rôle du plan
-    for (let i = 0; i < numPlans; i++) {
-        const role = structure[i];
-        const plan = {
-            index: i,
-            role: role,
-            media: selection[i],
-            mediaIndex: media.indexOf(selection[i]),
-            duration: 6, // secondes, ajusté plus bas
-            effects: selectEffectsForRole(role, objective, i, numPlans),
-            transition: null // défini après
-        };
-        plans.push(plan);
-    }
-
-    // Calcul des durées pour atteindre la durée cible
-    const targetDuration = obj.duration;
-    const baseDuration = Math.max(5, Math.min(10, Math.floor(targetDuration / numPlans)));
-    for (const plan of plans) {
-        plan.duration = baseDuration;
-    }
-
-    // Définition des transitions (continuité de mouvement)
-    for (let i = 0; i < plans.length - 1; i++) {
-        plans[i].transition = selectTransition(plans[i], plans[i + 1]);
-    }
-    plans[plans.length - 1].transition = { type: 'fade_out', duration: 0.5 };
-
-    return {
-        objective: objective,
-        duration: targetDuration,
-        plans: plans,
-        hook: selectHook(objective)
-    };
-}
-
-/**
- * Sélectionne les effets pertinents pour un rôle de plan.
- */
-function selectEffectsForRole(role, objective, planIndex, totalPlans) {
-    const effects = [];
-
-    switch (role) {
-        case 'hook':
-            // Le hook doit être spectaculaire
-            effects.push(randomFrom(EFFECTS.camera, ['macro', 'travelling_av', 'dolly_zoom']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['cinema', 'showroom']));
-            break;
-
-        case 'transformation':
-            // Construction, morphing, 2D→3D
-            effects.push(randomFrom(EFFECTS.transformation));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'archi']));
-            break;
-
-        case 'before':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'golden']));
-            break;
-
-        case 'construction':
-            effects.push(randomFrom(EFFECTS.transformation, ['sol', 'plafond', 'assemblage']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['archi', 'showroom']));
-            break;
-
-        case 'reveal':
-            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'travelling_ar', 'rotation180']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'cinema']));
-            break;
-
-        case 'ambiance':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'ras_sol', 'plongee']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'soir', 'cocoon']));
-            break;
-
-        case 'macro':
-        case 'detail':
-            effects.push(randomFrom(EFFECTS.camera, ['macro']));
-            effects.push(randomFrom(EFFECTS.materiaux));
-            break;
-
-        case 'orbit':
-        case 'island':
-            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'rotation180']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['showroom', 'cinema']));
-            break;
-
-        case 'hero':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'cinema']));
-            break;
-
-        case 'wide':
-        case 'entrance':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'plongee', 'aerienne']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'archi']));
-            break;
-
-        case 'plan2d':
-            effects.push(EFFECTS.transformation.find(e => e.id === 'plan2d3d'));
-            effects.push(randomFrom(EFFECTS.ambiance, ['archi']));
-            break;
-
-        case 'wireframe':
-            effects.push(EFFECTS.transformation.find(e => e.id === 'wireframe'));
-            effects.push(randomFrom(EFFECTS.ambiance, ['archi']));
-            break;
-
-        case 'problem':
-        case 'solution':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'golden']));
-            break;
-
-        case 'cta':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'showroom']));
-            break;
-
-        default:
-            effects.push(randomFrom(EFFECTS.camera));
-            effects.push(randomFrom(EFFECTS.ambiance));
-    }
-
-    return effects.filter(Boolean);
-}
-
-/**
- * Détermine la transition entre 2 plans (continuité de mouvement).
- */
-function selectTransition(planA, planB) {
-    // Si le plan A finit par un push-in, le plan B commence par un push-in
-    const aCam = planA.effects.find(e => EFFECTS.camera.includes(e));
-    const bCam = planB.effects.find(e => EFFECTS.camera.includes(e));
-
-    if (aCam && bCam) {
-        // Continuité de mouvement : même type de caméra = coupe franche invisible
-        if (aCam.id === bCam.id) {
-            return { type: 'match_cut', duration: 0, note: 'Continuité de mouvement parfaite' };
-        }
-        // Push-in → Push-in = cut direct
-        if (aCam.id.includes('travelling_av') && bCam.id.includes('travelling_av')) {
-            return { type: 'match_cut', duration: 0, note: 'Continuité push-in' };
-        }
-    }
-
-    // Selon les rôles, choix de transition
-    if (planA.role === 'hook' && planB.role === 'transformation') {
-        return { type: 'flash', duration: 0.3 };
-    }
-    if (planB.role === 'cta') {
-        return { type: 'fade', duration: 0.6 };
-    }
-    if (planA.role === 'reveal' && planB.role === 'macro') {
-        return { type: 'whip_pan', duration: 0.4 };
-    }
-    // Par défaut : coupe franche (pas de transition ajoutée, c'est un match cut)
-    return { type: 'cut', duration: 0 };
-}
-
-/**
- * Sélectionne un hook selon l'objectif.
- */
-function selectHook(objective) {
-    const hooks = HOOKS[objective] || HOOKS.premium;
-    return hooks[Math.floor(Math.random() * hooks.length)];
-}
-
-/**
- * 5 hooks alternatifs par objectif (pour tester les performances)
- */
 const HOOKS = {
     vues: [
         'Vous n\'imaginez pas comment cette cuisine a été conçue.',
@@ -1084,13 +837,10 @@ const SOURCE_LOCK = [
     'colors and finishes (matte, glossy, brushed, textured),',
     'appliances (model, position, size),',
     'handles, knobs, hinges, soft-close mechanisms,',
-    'worktops (thickness, edge profile, veining),',
-    'decorative elements (plants, accessories, lighting fixtures).',
+    'worktops (thickness, edge profile, veining).',
     'Do NOT invent any furniture or element not present in the source.',
     'Do NOT move, reshape, or recolor any existing element.',
     'Do NOT change proportions or dimensions.',
-    'Do NOT add windows, doors, or architectural elements.',
-    'Do NOT change the position of appliances.',
     'This is a PROFESSIONAL PRESENTATION of a REAL client project.',
     'Fidelity to the source is NON-NEGOTIABLE.'
 ].join(' ');
@@ -1099,9 +849,141 @@ const REFERENCE_HIERARCHY = [
     'REFERENCE HIERARCHY:',
     'Photo 1 = ABSOLUTE REFERENCE (master view of the project).',
     'Photo 2+ = COMPLEMENTARY REFERENCES (same project, different angles).',
-    'All photos represent the SAME kitchen project.',
-    'The AI must understand these are multiple angles of ONE project, NOT different kitchens.'
+    'All photos represent the SAME kitchen project.'
 ].join(' ');
+
+// ══════════════════════════════════════════════════════════════════
+// MOTEUR DE STORYBOARD
+// ══════════════════════════════════════════════════════════════════
+function generateStoryboard(media, objective) {
+    const obj = OBJECTIVES[objective] || OBJECTIVES.premium;
+    const structure = obj.structure;
+    const numPlans = structure.length;
+    const plans = [];
+    const mediaCount = media.length;
+    const selection = [];
+    for (let i = 0; i < numPlans; i++) {
+        const mediaIndex = mediaCount >= numPlans
+            ? Math.floor((i / numPlans) * mediaCount)
+            : i % mediaCount;
+        selection.push(media[mediaIndex]);
+    }
+    for (let i = 0; i < numPlans; i++) {
+        const role = structure[i];
+        plans.push({
+            index: i,
+            role: role,
+            media: selection[i],
+            mediaIndex: media.indexOf(selection[i]),
+            duration: 6,
+            effects: selectEffectsForRole(role),
+            transition: null
+        });
+    }
+    const targetDuration = obj.duration;
+    const baseDuration = Math.max(5, Math.min(10, Math.floor(targetDuration / numPlans)));
+    for (const plan of plans) plan.duration = baseDuration;
+    for (let i = 0; i < plans.length - 1; i++) {
+        plans[i].transition = selectTransition(plans[i], plans[i + 1]);
+    }
+    plans[plans.length - 1].transition = { type: 'fade_out', duration: 0.5 };
+    return {
+        objective: objective,
+        duration: targetDuration,
+        plans: plans,
+        hook: selectHook(objective)
+    };
+}
+
+function selectEffectsForRole(role) {
+    const effects = [];
+    switch (role) {
+        case 'hook':
+            effects.push(randomFrom(EFFECTS.camera, ['macro', 'travelling_av', 'dolly_zoom']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['cinema', 'showroom']));
+            break;
+        case 'transformation':
+            effects.push(randomFrom(EFFECTS.transformation));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'archi']));
+            break;
+        case 'before':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'golden']));
+            break;
+        case 'construction':
+            effects.push(randomFrom(EFFECTS.transformation, ['sol', 'plafond', 'assemblage']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['archi', 'showroom']));
+            break;
+        case 'reveal':
+            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'travelling_ar', 'rotation180']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'cinema']));
+            break;
+        case 'ambiance':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'ras_sol', 'plongee']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'soir', 'cocoon']));
+            break;
+        case 'macro':
+        case 'detail':
+            effects.push(randomFrom(EFFECTS.camera, ['macro']));
+            effects.push(randomFrom(EFFECTS.materiaux));
+            break;
+        case 'orbit':
+        case 'island':
+            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'rotation180']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['showroom', 'cinema']));
+            break;
+        case 'hero':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'cinema']));
+            break;
+        case 'wide':
+        case 'entrance':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'plongee']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'archi']));
+            break;
+        case 'plan2d':
+            effects.push(EFFECTS.transformation.find(e => e.id === 'plan2d3d'));
+            effects.push(randomFrom(EFFECTS.ambiance, ['archi']));
+            break;
+        case 'wireframe':
+            effects.push(EFFECTS.transformation.find(e => e.id === 'wireframe'));
+            effects.push(randomFrom(EFFECTS.ambiance, ['archi']));
+            break;
+        case 'problem':
+        case 'solution':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'orbit']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['matin', 'golden']));
+            break;
+        case 'cta':
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'showroom']));
+            break;
+        default:
+            effects.push(randomFrom(EFFECTS.camera));
+            effects.push(randomFrom(EFFECTS.ambiance));
+    }
+    return effects.filter(Boolean);
+}
+
+function selectTransition(planA, planB) {
+    const aCam = planA.effects.find(e => EFFECTS.camera.includes(e));
+    const bCam = planB.effects.find(e => EFFECTS.camera.includes(e));
+    if (aCam && bCam) {
+        if (aCam.id === bCam.id) return { type: 'match_cut', duration: 0 };
+        if (aCam.id.includes('travelling_av') && bCam.id.includes('travelling_av')) {
+            return { type: 'match_cut', duration: 0 };
+        }
+    }
+    if (planA.role === 'hook' && planB.role === 'transformation') return { type: 'flash', duration: 0.3 };
+    if (planB.role === 'cta') return { type: 'fade', duration: 0.6 };
+    if (planA.role === 'reveal' && planB.role === 'macro') return { type: 'whip_pan', duration: 0.4 };
+    return { type: 'cut', duration: 0 };
+}
+
+function selectHook(objective) {
+    const hooks = HOOKS[objective] || HOOKS.premium;
+    return hooks[Math.floor(Math.random() * hooks.length)];
+}
 
 // ══════════════════════════════════════════════════════════════════
 // UTILITAIRES
@@ -1143,7 +1025,6 @@ const state = {
     failed: 0,
     selectedObjective: 'premium',
     currentStoryboard: null,
-    currentConcept: null,
     mainPrompt: '',
     durationFrames: 153,
     format: '9:16',
@@ -1167,7 +1048,6 @@ function setStep(step) {
     });
 }
 
-// (SUITE DANS LA PARTIE 3)
 // ══════════════════════════════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════════════════════════════
@@ -1444,16 +1324,9 @@ async function processOneFile(file) {
     try {
         const dataUri = await fileToDataUri(file);
         const thumbnail = await generateThumbnail(dataUri);
-        return {
-            file,
-            dataUri,
-            thumbnail,
-            id: Date.now() + Math.random(),
-            role: null
-        };
+        return { file, dataUri, thumbnail, id: Date.now() + Math.random(), role: null };
     } catch (e) { return null; }
 }
-
 async function handleFiles(files) {
     const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
     if (!imageFiles.length) return;
@@ -1479,14 +1352,12 @@ async function handleFiles(files) {
     state.currentStoryboard = null;
     updateGenerateBtn();
 }
-
 function assignRole(media, index) {
     if (index === 0) media.role = 'Référence';
     else if (index === 1) media.role = 'Complément';
     else if (index === 2) media.role = 'Détail';
     else media.role = 'Angle ' + (index + 1);
 }
-
 function removeMedia(id) {
     state.media = state.media.filter(m => m.id !== id);
     state.media.forEach((m, i) => assignRole(m, i));
@@ -1494,7 +1365,6 @@ function removeMedia(id) {
     state.currentStoryboard = null;
     updateGenerateBtn();
 }
-
 function renderMedia() {
     const grid = document.getElementById('media-grid');
     grid.innerHTML = state.media.map((m, i) => {
@@ -1508,40 +1378,6 @@ function renderMedia() {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             removeMedia(parseFloat(btn.dataset.remove));
-        });
-    });
-    // Drag & drop
-    let draggedId = null;
-    grid.querySelectorAll('.media-card').forEach(card => {
-        card.addEventListener('dragstart', (e) => {
-            draggedId = parseFloat(card.dataset.id);
-            card.classList.add('dragging');
-        });
-        card.addEventListener('dragend', () => {
-            card.classList.remove('dragging');
-            grid.querySelectorAll('.media-card').forEach(c => c.classList.remove('drag-over'));
-        });
-        card.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            card.classList.add('drag-over');
-        });
-        card.addEventListener('dragleave', () => {
-            card.classList.remove('drag-over');
-        });
-        card.addEventListener('drop', (e) => {
-            e.preventDefault();
-            card.classList.remove('drag-over');
-            const targetId = parseFloat(card.dataset.id);
-            if (draggedId === null || draggedId === targetId) return;
-            const fromIdx = state.media.findIndex(m => m.id === draggedId);
-            const toIdx = state.media.findIndex(m => m.id === targetId);
-            if (fromIdx < 0 || toIdx < 0) return;
-            const [moved] = state.media.splice(fromIdx, 1);
-            state.media.splice(toIdx, 0, moved);
-            state.media.forEach((m, i) => assignRole(m, i));
-            renderMedia();
-            state.currentStoryboard = null;
-            updateGenerateBtn();
         });
     });
 }
@@ -1586,18 +1422,13 @@ function renderConcepts() {
     const obj = OBJECTIVES[sb.objective];
     let html = '<div class="concept-card selected">' +
         '<div class="concept-title">' + obj.emoji + ' ' + esc(obj.name) + '</div>' +
-        '<div class="concept-meta">' +
-        '⏱ ' + sb.duration + 's · ' + sb.plans.length + ' plans · ' +
-        '🎯 ' + esc(obj.tone) +
-        '</div>' +
+        '<div class="concept-meta">⏱ ' + sb.duration + 's · ' + sb.plans.length + ' plans · 🎯 ' + esc(obj.tone) + '</div>' +
         '<div class="concept-storyboard">' +
         sb.plans.map((p, i) => {
             return '• Plan ' + (i + 1) + ' — ' + esc(p.role) + ' — ' +
-                p.effects.map(e => e.emoji).join(' ') +
-                ' — ' + p.duration + 's';
+                p.effects.map(e => e.emoji).join(' ') + ' — ' + p.duration + 's';
         }).join('<br>') +
-        '</div>' +
-        '</div>';
+        '</div></div>';
     html += '<div class="hook-list">' +
         '<div style="font-size:0.72rem; font-weight:700; color:var(--mcp); margin-top:0.5rem;">💡 Hook sélectionné :</div>' +
         '<div class="hook-item"><div class="hook-label">Hook principal</div>' + esc(sb.hook) + '</div>' +
@@ -1606,48 +1437,27 @@ function renderConcepts() {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// CONSTRUCTION DU PROMPT FINAL
+// CONSTRUCTION DU PROMPT
 // ══════════════════════════════════════════════════════════════════
 function buildPromptForPlan(plan, objective) {
     const obj = OBJECTIVES[objective] || OBJECTIVES.premium;
     const brandName = document.getElementById('brand-name')?.value.trim() || 'Mon Cuisiniste Privé';
     const brandTagline = document.getElementById('brand-tagline')?.value.trim() || '';
     const userPrompt = state.mainPrompt && state.mainPrompt.trim().length > 0 ? state.mainPrompt.trim() : '';
-
     const parts = [];
-
-    // 1. SOURCE LOCK (priorité absolue)
     parts.push(SOURCE_LOCK);
     parts.push(REFERENCE_HIERARCHY);
-
-    // 2. Objectif global
     parts.push(obj.promptGuidance);
-
-    // 3. Rôle de ce plan dans la structure
     parts.push('This shot is the "' + plan.role + '" sequence of the ' + obj.name + ' video.');
-
-    // 4. Effets spécifiques au plan
-    for (const effect of plan.effects) {
-        parts.push(effect.prompt);
-    }
-
-    // 5. Prompt utilisateur (direction artistique)
-    if (userPrompt) {
-        parts.push('Additional artistic direction: ' + userPrompt);
-    }
-
-    // 6. Intensité
+    for (const effect of plan.effects) parts.push(effect.prompt);
+    if (userPrompt) parts.push('Additional artistic direction: ' + userPrompt);
     const intensityMap = {
         subtle: 'very subtle motion, barely perceptible, elegant and quiet',
         moderate: 'moderate movement, clear but controlled, balanced cinematic pace',
         strong: 'dynamic movement, energetic cinematic motion'
     };
     parts.push(intensityMap[state.intensity] || intensityMap.moderate);
-
-    // 7. Brand context (mentionné pour l'IA, pas incrusté)
     parts.push('Brand context: ' + brandName + (brandTagline ? ' — ' + brandTagline : '') + '.');
-
-    // 8. Format
     const formatMap = {
         '9:16': 'Vertical 9:16 portrait format for Instagram Reels and TikTok',
         '16:9': 'Horizontal 16:9 landscape format for YouTube',
@@ -1655,23 +1465,13 @@ function buildPromptForPlan(plan, objective) {
         '4:5': 'Vertical 4:5 portrait format for Instagram feed'
     };
     parts.push(formatMap[state.format] || formatMap['9:16']);
-
-    // 9. Technique
     parts.push('24fps, photorealistic, luxury commercial quality, no text overlays, no watermarks, no subtitles, no people.');
-
-    // 10. Continuité avec le plan suivant
     if (plan.transition) {
-        if (plan.transition.type === 'match_cut') {
-            parts.push('This shot ends with a movement that flows naturally into the next shot (match cut continuity).');
-        } else if (plan.transition.type === 'fade') {
-            parts.push('This shot ends with a smooth fade to black.');
-        } else if (plan.transition.type === 'flash') {
-            parts.push('This shot ends with a bright flash transition.');
-        } else if (plan.transition.type === 'whip_pan') {
-            parts.push('This shot ends with a fast whip pan motion.');
-        }
+        if (plan.transition.type === 'match_cut') parts.push('This shot ends with a movement that flows naturally into the next shot.');
+        else if (plan.transition.type === 'fade') parts.push('This shot ends with a smooth fade to black.');
+        else if (plan.transition.type === 'flash') parts.push('This shot ends with a bright flash transition.');
+        else if (plan.transition.type === 'whip_pan') parts.push('This shot ends with a fast whip pan motion.');
     }
-
     return parts.join('. ');
 }
 
@@ -1684,10 +1484,6 @@ async function apiFetch(url, options = {}) {
         try {
             const res = await fetch(url, options);
             if (res.status === 429) {
-                state.creationAttemptsSinceLastError = 0;
-                if (createIntervalMs < CREATE_INTERVAL_SAFE) {
-                    createIntervalMs = Math.min(createIntervalMs + 8000, CREATE_INTERVAL_MAX);
-                }
                 const wait = [15, 30, 45, 60, 90, 120, 180][Math.min(attempt, 6)];
                 setStatus('L\'IA se prépare… (' + wait + 's)');
                 await sleep(wait * 1000);
@@ -1699,13 +1495,6 @@ async function apiFetch(url, options = {}) {
                 await sleep(wait * 1000);
                 continue;
             }
-            if (res.ok && createIntervalMs > CREATE_INTERVAL_MIN) {
-                state.creationAttemptsSinceLastError++;
-                if (state.creationAttemptsSinceLastError >= 3) {
-                    createIntervalMs = Math.max(createIntervalMs - 4000, CREATE_INTERVAL_MIN);
-                    state.creationAttemptsSinceLastError = 0;
-                }
-            }
             return res;
         } catch (e) {
             if (e.message === 'Arrêt demandé') throw e;
@@ -1716,7 +1505,6 @@ async function apiFetch(url, options = {}) {
     }
     return fetch(url, options);
 }
-
 async function createVideoTask(imageDataUri, prompt, durationFrames) {
     const body = {
         model: MODEL_VIDEO,
@@ -1739,10 +1527,9 @@ async function createVideoTask(imageDataUri, prompt, durationFrames) {
     }
     const data = await res.json();
     const videoId = data.video_id || data.id || data.task_id;
-    if (!videoId) throw new Error('Pas de video_id retourné');
+    if (!videoId) throw new Error('Pas de video_id');
     return videoId;
 }
-
 async function pollVideo(videoId, onProgress) {
     const estimatedMs = estimateGenerationTime(state.durationFrames);
     const estimatedSec = estimatedMs / 1000;
@@ -1775,22 +1562,21 @@ async function pollVideo(videoId, onProgress) {
         onProgress('Rendu… ' + progress + '%');
         if (status === 'completed' || status === 'succeeded' || status === 'done') {
             const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-            if (!videoUrl) throw new Error('Terminé mais pas d\'URL');
+            if (!videoUrl) throw new Error('Pas d\'URL');
             return videoUrl;
         }
         if (status === 'failed' || status === 'error' || status === 'cancelled') {
             throw new Error('Échec (' + status + ')');
         }
     }
-    throw new Error('Délai maximal dépassé');
+    throw new Error('Délai dépassé');
 }
 
 // ══════════════════════════════════════════════════════════════════
-// FFMPEG.WASM — Chargement et assemblage
+// FFMPEG.WASM
 // ══════════════════════════════════════════════════════════════════
 let ffmpegInstance = null;
 let ffmpegLoading = false;
-
 async function loadFFmpeg() {
     if (ffmpegInstance) return ffmpegInstance;
     if (ffmpegLoading) {
@@ -1803,44 +1589,30 @@ async function loadFFmpeg() {
         const { FFmpeg } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js');
         const { fetchFile } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js');
         ffmpegInstance = new FFmpeg();
-        ffmpegInstance.on('log', ({ message }) => {
-            if (message.includes('frame=')) log('[ffmpeg] ' + message.trim());
-        });
         await ffmpegInstance.load({
             coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js',
             wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm'
         });
         ffmpegInstance.fetchFile = fetchFile;
-        log('FFmpeg prêt');
         return ffmpegInstance;
     } catch (e) {
-        log('FFmpeg échec : ' + e.message);
         ffmpegInstance = null;
         return null;
     } finally {
         ffmpegLoading = false;
     }
 }
-
-async function assembleClips(clipUrls, storyboard, outputFormat = '9:16') {
+async function assembleClips(clipUrls) {
     const ffmpeg = await loadFFmpeg();
-    if (!ffmpeg) {
-        log('FFmpeg indisponible, fallback concaténation simple');
-        return { url: null, fallback: true };
-    }
+    if (!ffmpeg) return { url: null, fallback: true };
     try {
         setStatus('Assemblage des clips…');
         const fetchFile = ffmpeg.fetchFile;
-
-        // Télécharger et écrire chaque clip
         for (let i = 0; i < clipUrls.length; i++) {
             setStatus('Téléchargement clip ' + (i + 1) + '/' + clipUrls.length);
             const data = await fetchFile(clipUrls[i]);
             ffmpeg.writeFile('clip' + i + '.mp4', data);
         }
-
-        // Re-encoder chaque clip pour s'assurer qu'ils sont compatibles
-        // (certaines APIs renvoient des formats différents)
         const normalizedFiles = [];
         for (let i = 0; i < clipUrls.length; i++) {
             setStatus('Normalisation clip ' + (i + 1) + '/' + clipUrls.length);
@@ -1856,39 +1628,21 @@ async function assembleClips(clipUrls, storyboard, outputFormat = '9:16') {
             ]);
             normalizedFiles.push(out);
         }
-
-        // Créer le fichier de concaténation
         const concatList = normalizedFiles.map(f => "file '" + f + "'").join('\n');
-        const encoder = new TextEncoder();
-        ffmpeg.writeFile('concat.txt', encoder.encode(concatList));
-
-        // Concaténer avec transitions (fondu simple via concat demuxer)
+        ffmpeg.writeFile('concat.txt', new TextEncoder().encode(concatList));
         setStatus('Concaténation finale…');
-        const outputFile = 'output.mp4';
-        await ffmpeg.exec([
-            '-f', 'concat',
-            '-safe', '0',
-            '-i', 'concat.txt',
-            '-c', 'copy',
-            outputFile
-        ]);
-
-        // Récupérer le résultat
-        const result = await ffmpeg.readFile(outputFile);
+        await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', 'output.mp4']);
+        const result = await ffmpeg.readFile('output.mp4');
         const blob = new Blob([result.buffer], { type: 'video/mp4' });
         const url = URL.createObjectURL(blob);
-
-        // Nettoyer
         for (let i = 0; i < clipUrls.length; i++) {
             try { ffmpeg.deleteFile('clip' + i + '.mp4'); } catch (e) {}
             try { ffmpeg.deleteFile('norm' + i + '.mp4'); } catch (e) {}
         }
         try { ffmpeg.deleteFile('concat.txt'); } catch (e) {}
-        try { ffmpeg.deleteFile(outputFile); } catch (e) {}
-
+        try { ffmpeg.deleteFile('output.mp4'); } catch (e) {}
         return { url, fallback: false };
     } catch (e) {
-        log('Erreur assemblage : ' + e.message);
         return { url: null, fallback: true };
     }
 }
@@ -1912,9 +1666,7 @@ function renderQueue() {
         '<span class="progress-text">' + done + '/' + total + ' clips</span>' +
         '<span class="eta-text">' + (done < total ? '≈ ' + formatEta(eta) + ' restant' : 'Assemblage…') + '</span>' +
         '</div>';
-    const visible = state.queue.slice(0, MAX_VISIBLE_QUEUE);
-    const hidden = state.queue.length - visible.length;
-    html += visible.map(item => {
+    html += state.queue.slice(0, MAX_VISIBLE_QUEUE).map(item => {
         let icon = '○', statusText = 'En attente', cls = 'pending';
         if (item.status === 'creating') { icon = '◐'; statusText = 'Préparation…'; cls = 'creating'; }
         else if (item.status === 'processing') { icon = '◐'; statusText = item.progress || 'En cours'; cls = 'processing'; }
@@ -1926,11 +1678,11 @@ function renderQueue() {
             '<div class="q-status">' + esc(statusText) + '</div>' +
         '</div>';
     }).join('');
-    if (hidden > 0) html += '<div class="queue-more">… et ' + hidden + ' autres</div>';
     queueEl.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════════════════════════// PIPELINE
+// ══════════════════════════════════════════════════════════════════
+// PIPELINE
 // ══════════════════════════════════════════════════════════════════
 async function createTaskOnly(item) {
     item.status = 'creating';
@@ -1946,7 +1698,6 @@ async function createTaskOnly(item) {
     renderQueue();
     return videoId;
 }
-
 async function pollTaskAndDisplay(item) {
     try {
         const videoUrl = await pollVideo(item.videoId, (prog) => {
@@ -1995,7 +1746,6 @@ async function analyzeAndPropose() {
     document.getElementById('section-concepts').classList.add('open');
     document.getElementById('section-concepts').scrollIntoView({ behavior: 'smooth' });
 }
-
 async function startCampaign() {
     if (state.isRunning) return;
     if (!getApiKey()) {
@@ -2012,7 +1762,6 @@ async function startCampaign() {
     state.stopRequested = false;
     state.completed = 0;
     state.failed = 0;
-    state.creationAttemptsSinceLastError = 0;
     createIntervalMs = CREATE_INTERVAL_MIN;
 
     const sb = state.currentStoryboard;
@@ -2059,7 +1808,7 @@ async function startCampaign() {
                 const waitSec = Math.ceil(createIntervalMs / 1000);
                 for (let r = waitSec; r > 0; r--) {
                     if (state.stopRequested) break;
-                    setStatus('Respiration créative… — Plan ' + (i + 2) + '/' + state.queue.length + ' dans ' + r + 's');
+                    setStatus('Respiration… — Plan ' + (i + 2) + '/' + state.queue.length + ' dans ' + r + 's');
                     await sleep(1000);
                 }
             }
@@ -2068,18 +1817,14 @@ async function startCampaign() {
             setStatus('Attente des derniers rendus…');
             await Promise.allSettled(pollingTasks);
         }
-
-        // Assemblage
         const successClips = state.queue.filter(q => q.status === 'done' && q.videoUrl);
         if (successClips.length >= 2) {
             setStatus('Assemblage de la vidéo finale…');
             const urls = successClips.map(c => c.videoUrl);
-            const assembled = await assembleClips(urls, sb, state.format);
+            const assembled = await assembleClips(urls);
             if (assembled.url) {
                 addToGallery(assembled.url, '🎬 ' + OBJECTIVES[sb.objective].name + ' — Vidéo finale ' + sb.duration + 's');
-                state.generatedVideos.push(assembled.url);
             } else {
-                // Fallback : afficher les clips séparés
                 successClips.forEach((c, i) => {
                     addToGallery(c.videoUrl, 'Clip ' + (i + 1) + ' — ' + c.plan.role);
                 });
@@ -2088,12 +1833,9 @@ async function startCampaign() {
         } else if (successClips.length === 1) {
             addToGallery(successClips[0].videoUrl, 'Clip unique');
         }
-
         setStep(5);
         document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) {
-        log('Erreur globale : ' + e.message);
-    }
+    } catch (e) { log('Erreur : ' + e.message); }
 
     const totalElapsed = (Date.now() - totalStart) / 1000;
     setStatus(state.stopRequested
@@ -2107,7 +1849,6 @@ async function startCampaign() {
     updateGenerateBtn();
     showToast('Campagne terminée ✓', 'success');
 }
-
 function stopGeneration() {
     if (!state.isRunning) return;
     state.stopRequested = true;
@@ -2137,27 +1878,21 @@ function addToGallery(videoUrl, label) {
 // INITIALISATION
 // ══════════════════════════════════════════════════════════════════
 (function init() {
-    // Restaurer l'objectif
     try {
         const savedObj = localStorage.getItem(OBJECTIVE_STORAGE);
         if (savedObj && OBJECTIVES[savedObj]) state.selectedObjective = savedObj;
     } catch (e) {}
-
-    // Restaurer le brand
     try {
         const savedBrand = JSON.parse(localStorage.getItem(BRAND_STORAGE) || '{}');
         if (savedBrand.name) document.getElementById('brand-name').value = savedBrand.name;
         if (savedBrand.tagline) document.getElementById('brand-tagline').value = savedBrand.tagline;
         if (savedBrand.slogan) document.getElementById('brand-slogan').value = savedBrand.slogan;
     } catch (e) {}
-
-    // Restaurer la préférence anti-veille
     try {
         const saved = localStorage.getItem(WAKE_LOCK_PREF);
         wakeLockEnabled = saved === '1';
     } catch (e) {}
 
-    // Upload
     const uploadZone = document.getElementById('upload-zone');
     const fileInput = document.getElementById('file-input');
     if (uploadZone && fileInput) {
@@ -2168,18 +1903,15 @@ function addToGallery(videoUrl, label) {
         });
     }
 
-    // Sections collapsibles
     document.querySelectorAll('[data-toggle]').forEach(header => {
         header.addEventListener('click', () => {
             document.getElementById(header.dataset.toggle).classList.toggle('open');
         });
     });
 
-    // Prompt
     const mainPrompt = document.getElementById('main-prompt');
     if (mainPrompt) mainPrompt.addEventListener('input', e => { state.mainPrompt = e.target.value; });
 
-    // Sélecteurs
     const durationSelect = document.getElementById('duration-select');
     if (durationSelect) {
         durationSelect.addEventListener('change', e => {
@@ -2191,15 +1923,24 @@ function addToGallery(videoUrl, label) {
     const intensitySelect = document.getElementById('intensity-select');
     if (intensitySelect) intensitySelect.addEventListener('change', e => { state.intensity = e.target.value; });
 
-    // Boutons
     const generateBtn = document.getElementById('generate-btn');
     if (generateBtn) generateBtn.addEventListener('click', startCampaign);
     const stopBtn = document.getElementById('stop-btn');
     if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
     const analyzeBtn = document.getElementById('analyze-btn');
     if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeAndPropose);
+    const saveApiBtn = document.getElementById('api-save-btn');
+    if (saveApiBtn) saveApiBtn.addEventListener('click', saveApiKey);
+    const wakeBtn = document.getElementById('wake-toggle-btn');
+    if (wakeBtn) wakeBtn.addEventListener('click', toggleWakeLock);
 
-    // Brand inputs
+    const apiInput = document.getElementById('api-key-input');
+    if (apiInput) {
+        apiInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
+        });
+    }
+
     ['brand-name', 'brand-tagline', 'brand-slogan'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => {
@@ -2214,15 +1955,15 @@ function addToGallery(videoUrl, label) {
         });
     });
 
-    // Rendu initial
     renderObjectives();
     renderMedia();
     renderConcepts();
     setStep(1);
     setStatus(null);
+    updateApiPanel();
+    updateWakeStatus();
     log('MCP Video Studio prêt');
 
-    // Anti-veille auto
     if (wakeLockEnabled) activateWakeLock().then(() => updateWakeStatus());
 })();
 </script>
