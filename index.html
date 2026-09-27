@@ -402,7 +402,432 @@ function updateApiPanel() {
   }
   updateGenBtn();
 }
+function updateGenBtn() {
+  const btn = document.getElementById('gen-btn');
+  if (!btn) return;
+  const hasMedia = state.media.length > 0;
+  const hasKey = !!getKey();
+  const hasStoryboard = state.storyboard !== null;
+  btn.disabled = !hasMedia || !hasKey || state.isRunning || state.isLoadingMedia || !hasStoryboard;
+  if (state.isLoadingMedia) btn.textContent = 'Chargement…';
+  else if (state.isRunning) btn.textContent = 'Génération… (' + (state.completed + state.failed) + '/' + state.queue.length + ')';
+  else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
+  else if (!hasMedia) btn.textContent = 'Ajoutez vos photos';
+  else if (!hasStoryboard) btn.textContent = '🔍 Analysez d\'abord vos photos';
+  else btn.textContent = '🎬 Générer ' + state.storyboard.plans.length + ' clips';
+}
 
+// ══════════════════════════════════════════════
+// MÉDIAS
+// ══════════════════════════════════════════════
+function fileToDataUri(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = () => rej(new Error('read error'));
+    r.readAsDataURL(file);
+  });
+}
+function makeThumb(dataUri) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        const ratio = img.height / img.width;
+        c.width = THUMB_W;
+        c.height = Math.round(THUMB_W * ratio);
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', 0.7));
+      } catch(e) { res(dataUri); }
+    };
+    img.onerror = () => res(dataUri);
+    img.src = dataUri;
+  });
+}
+async function processFile(file) {
+  if (!file.type.startsWith('image/')) return null;
+  if (file.size > MAX_SIZE) return null;
+  try {
+    const dataUri = await fileToDataUri(file);
+    const thumb = await makeThumb(dataUri);
+    return { file, dataUri, thumb, id: Date.now() + Math.random(), role: '' };
+  } catch(e) { return null; }
+}
+async function handleFiles(files) {
+  const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!imgs.length) return;
+  state.isLoadingMedia = true;
+  updateGenBtn();
+  setStatus('Chargement…');
+  document.getElementById('upload').classList.add('loading');
+  let done = 0;
+  for (const f of imgs) {
+    const r = await processFile(f);
+    if (r) { state.media.push(r); done++; }
+    renderMedia();
+    setStatus('Chargement… ' + done + '/' + imgs.length);
+  }
+  state.media.forEach((m, i) => { m.role = i === 0 ? 'Référence' : i === 1 ? 'Complément' : i === 2 ? 'Détail' : 'Angle ' + (i+1); });
+  state.isLoadingMedia = false;
+  document.getElementById('upload').classList.remove('loading');
+  state.storyboard = null;
+  renderMedia();
+  updateGenBtn();
+  setStatus(null);
+}
+function removeMedia(id) {
+  state.media = state.media.filter(m => m.id !== id);
+  state.media.forEach((m, i) => { m.role = i === 0 ? 'Référence' : i === 1 ? 'Complément' : i === 2 ? 'Détail' : 'Angle ' + (i+1); });
+  state.storyboard = null;
+  renderMedia();
+  updateGenBtn();
+}
+function renderMedia() {
+  const g = document.getElementById('media-grid');
+  g.innerHTML = state.media.map(m => 
+    '<div class="media-card">' +
+      '<img src="' + m.thumb + '">' +
+      '<span class="role">' + esc(m.role) + '</span>' +
+      '<button class="rm" data-rm="' + m.id + '">✕</button>' +
+    '</div>'
+  ).join('');
+  g.querySelectorAll('[data-rm]').forEach(b => {
+    b.addEventListener('click', e => { e.stopPropagation(); removeMedia(parseFloat(b.dataset.rm)); });
+  });
+}
+
+// ══════════════════════════════════════════════
+// OBJECTIFS
+// ══════════════════════════════════════════════
+function renderObjectives() {
+  const g = document.getElementById('obj-grid');
+  g.innerHTML = Object.entries(OBJECTIVES).map(([id, o]) => 
+    '<div class="obj-card ' + (state.selectedObjective === id ? 'sel' : '') + '" data-obj="' + id + '">' +
+      '<span class="e">' + o.emoji + '</span>' +
+      '<div class="n">' + esc(o.name) + '</div>' +
+      '<div class="d">' + esc(o.desc) + '</div>' +
+    '</div>'
+  ).join('');
+  g.querySelectorAll('[data-obj]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.selectedObjective = el.dataset.obj;
+      state.storyboard = null;
+      renderObjectives();
+      updateGenBtn();
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// STORYBOARD
+// ══════════════════════════════════════════════
+function pickEffects(role) {
+  const ef = [];
+  switch(role) {
+    case 'hook': ef.push(randomFrom(EFFECTS.camera.filter(e => ['macro','push','dolly'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['cinema','showroom'].includes(e.id)))); break;
+    case 'transformation': ef.push(randomFrom(EFFECTS.transformation)); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','archi'].includes(e.id)))); break;
+    case 'before': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','golden'].includes(e.id)))); break;
+    case 'construction': ef.push(randomFrom(EFFECTS.transformation.filter(e => ['sol','vide','assemblage'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['archi','showroom'].includes(e.id)))); break;
+    case 'reveal': ef.push(randomFrom(EFFECTS.camera.filter(e => ['orbit','reveal','crane'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','cinema'].includes(e.id)))); break;
+    case 'ambiance': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','low','top'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','soir'].includes(e.id)))); break;
+    case 'macro': case 'detail': ef.push(EFFECTS.camera.find(e => e.id === 'macro')); ef.push(randomFrom(EFFECTS.materiaux)); break;
+    case 'orbit': case 'island': ef.push(randomFrom(EFFECTS.camera.filter(e => ['orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['showroom','cinema'].includes(e.id)))); break;
+    case 'hero': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','cinema'].includes(e.id)))); break;
+    case 'wide': case 'entrance': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','top','crane'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','archi'].includes(e.id)))); break;
+    case 'plan2d': ef.push(EFFECTS.transformation.find(e => e.id === 'plan2d3d')); break;
+    case 'wireframe': ef.push(EFFECTS.transformation.find(e => e.id === 'wireframe')); break;
+    case 'problem': case 'solution': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','golden'].includes(e.id)))); break;
+    case 'cta': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','showroom'].includes(e.id)))); break;
+    default: ef.push(randomFrom(EFFECTS.camera)); ef.push(randomFrom(EFFECTS.ambiance));
+  }
+  return ef.filter(Boolean);
+}
+function buildStoryboard() {
+  const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
+  const structure = obj.structure;
+  const n = structure.length;
+  const plans = [];
+  const mediaCount = state.media.length;
+  for (let i = 0; i < n; i++) {
+    const mi = mediaCount >= n ? Math.floor((i / n) * mediaCount) : i % mediaCount;
+    const plan = {
+      index: i,
+      role: structure[i],
+      media: state.media[mi],
+      mediaIndex: mi,
+      duration: Math.max(5, Math.min(10, Math.floor(obj.duration / n))),
+      effects: pickEffects(structure[i])
+    };
+    plans.push(plan);
+  }
+  return {
+    objective: state.selectedObjective,
+    duration: obj.duration,
+    plans: plans,
+    hook: randomFrom(HOOKS[state.selectedObjective] || HOOKS.premium)
+  };
+}
+function renderConcept() {
+  const box = document.getElementById('concept-box');
+  if (!state.storyboard) {
+    box.innerHTML = '<div class="hint" style="text-align:center;padding:1rem;">Importez vos photos et choisissez un objectif, puis cliquez sur <strong>Analyser & proposer</strong>.</div>';
+    return;
+  }
+  const sb = state.storyboard;
+  const obj = OBJECTIVES[sb.objective];
+  let html = '<div class="concept">' +
+    '<div class="title">' + obj.emoji + ' ' + esc(obj.name) + '</div>' +
+    '<div class="meta">⏱ ' + sb.duration + 's · ' + sb.plans.length + ' plans</div>' +
+    '<div class="sb-text">' + sb.plans.map((p, i) => '• Plan ' + (i+1) + ' — ' + esc(p.role) + ' — ' + p.duration + 's').join('<br>') + '</div>' +
+    '</div>';
+  html += '<div class="hook"><div class="lbl">💡 Hook proposé</div>' + esc(sb.hook) + '</div>';
+  box.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// PROMPT
+// ══════════════════════════════════════════════
+function buildPrompt(plan) {
+  const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
+  const brandName = document.getElementById('brand-name')?.value.trim() || '';
+  const brandTag = document.getElementById('brand-tagline')?.value.trim() || '';
+  const userP = state.mainPrompt && state.mainPrompt.trim() ? state.mainPrompt.trim() : '';
+  const intensityMap = { subtle:'subtle elegant motion', moderate:'moderate cinematic motion', strong:'dynamic energetic motion' };
+  const parts = [
+    SOURCE_LOCK,
+    obj.guidance,
+    'Shot role: ' + plan.role + '.',
+    plan.effects.map(e => e.p).join(' '),
+    userP,
+    intensityMap[state.intensity] || intensityMap.moderate,
+    'Portrait 9:16 vertical, 24fps, photorealistic, luxury commercial quality, no text, no watermarks, no people.',
+    'Brand: ' + brandName + (brandTag ? ' — ' + brandTag : '')
+  ];
+  return parts.filter(Boolean).join(' ');
+}
+
+// ══════════════════════════════════════════════
+// API AGNES
+// ══════════════════════════════════════════════
+async function apiPost(imageData, prompt) {
+  const body = { model: MODEL, prompt: prompt, image: imageData, num_frames: state.durationFrames, frame_rate: FPS };
+  const res = await fetch(API + '/videos', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + getKey(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('HTTP ' + res.status + ' — ' + err.slice(0, 150));
+  }
+  const data = await res.json();
+  const id = data.video_id || data.id || data.task_id;
+  if (!id) throw new Error('Pas d\'ID retourné');
+  return { videoId: data.video_id, taskId: data.task_id, fullData: data };
+}
+async function apiPoll(videoId, taskId) {
+  // On teste d'abord avec task_id (semble être le bon paramètre Agnes)
+  const urls = [
+    POLL + '?task_id=' + encodeURIComponent(taskId) + '&model_name=' + encodeURIComponent(MODEL),
+    POLL + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL)
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + getKey() } });
+      const text = await res.text();
+      if (text.includes('task not found') || text.includes('"code":404')) continue;
+      return JSON.parse(text);
+    } catch(e) { continue; }
+  }
+  throw new Error('Polling échoué');
+}
+async function generateClip(item) {
+  item.status = 'creating';
+  item.progress = 'Création…';
+  renderQueue();
+  const prompt = buildPrompt(item.plan);
+  const result = await apiPost(item.plan.media.dataUri, prompt);
+  item.videoId = result.videoId;
+  item.taskId = result.taskId;
+  item.status = 'processing';
+  item.progress = 'En cours…';
+  renderQueue();
+  // Polling
+  for (let i = 0; i < MAX_POLL; i++) {
+    if (state.stopRequested) throw new Error('Arrêt');
+    await sleep(i === 0 ? 20000 : POLL_INTERVAL * 1000);
+    const data = await apiPoll(item.videoId, item.taskId);
+    const st = data.status || 'unknown';
+    const pr = data.progress || 0;
+    item.progress = 'Rendu… ' + pr + '%';
+    renderQueue();
+    if (st === 'completed' || st === 'succeeded' || st === 'done') {
+      const url = (data.metadata && data.metadata.url) || data.url || (data.output && data.output.url);
+      if (!url) throw new Error('URL manquante');
+      item.status = 'done';
+      item.videoUrl = url;
+      item.progress = 'Terminé';
+      state.completed++;
+      renderQueue();
+      updateGenBtn();
+      return url;
+    }
+    if (st === 'failed' || st === 'error' || st === 'cancelled') {
+      throw new Error('Échec (' + st + ')');
+    }
+  }
+  throw new Error('Timeout');
+}
+
+// ══════════════════════════════════════════════
+// QUEUE
+// ══════════════════════════════════════════════
+function renderQueue() {
+  const q = document.getElementById('queue');
+  if (!state.queue.length) { q.style.display = 'none'; return; }
+  q.style.display = 'block';
+  const total = state.queue.length;
+  const done = state.completed + state.failed;
+  let html = '<div class="q-summary"><span>Progression : ' + done + '/' + total + '</span><span>' + (done < total ? 'En cours…' : 'Terminé') + '</span></div>';
+  html += state.queue.map(item => {
+    let ic = '○', st = 'En attente', cls = 'pending';
+    if (item.status === 'creating') { ic = '◐'; st = 'Création…'; cls = 'creating'; }
+    else if (item.status === 'processing') { ic = '◐'; st = item.progress || 'En cours'; cls = 'processing'; }
+    else if (item.status === 'done') { ic = '●'; st = 'Terminé'; cls = 'done'; }
+    else if (item.status === 'failed') { ic = '✕'; st = 'Échec'; cls = 'failed'; }
+    return '<div class="q-item ' + cls + '"><div class="ic">' + ic + '</div><div class="nm">Plan ' + (item.planIndex+1) + ' — ' + esc(item.plan.role) + '</div><div class="st2">' + esc(st) + '</div></div>';
+  }).join('');
+  q.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// GALERIE
+// ══════════════════════════════════════════════
+function addToGallery(url, label) {
+  const g = document.getElementById('gallery');
+  const grid = document.getElementById('g-grid');
+  g.style.display = 'block';
+  const el = document.createElement('div');
+  el.className = 'g-item';
+  el.innerHTML = '<video controls preload="metadata" muted playsinline><source src="' + url + '" type="video/mp4"></video>' +
+    '<div class="cap">' + esc(label) + '</div>' +
+    '<div class="act"><a href="' + url + '" download="mcp-' + Date.now() + '.mp4">⬇ Télécharger</a></div>';
+  grid.appendChild(el);
+}
+
+// ══════════════════════════════════════════════
+// WORKFLOW
+// ══════════════════════════════════════════════
+async function analyzeAndPropose() {
+  if (!state.media.length) { showToast('Ajoutez d\'abord des photos', 'error'); return; }
+  setStatus('Analyse…');
+  await sleep(600);
+  state.storyboard = buildStoryboard();
+  renderConcept();
+  setStatus(null);
+  updateGenBtn();
+  showToast('Storyboard proposé ✓', 'success');
+  document.getElementById('s-concept').classList.add('open');
+}
+async function startGeneration() {
+  if (state.isRunning || !state.media.length) return;
+  if (!getKey()) { showToast('Ajoutez votre clé API', 'error'); return; }
+  if (!state.storyboard) { showToast('Analysez d\'abord vos photos', 'error'); return; }
+  state.mainPrompt = document.getElementById('main-prompt').value.trim();
+  state.isRunning = true;
+  state.stopRequested = false;
+  state.completed = 0;
+  state.failed = 0;
+  state.queue = state.storyboard.plans.map((plan, i) => ({
+    planIndex: i, plan: plan, status: 'pending', progress: null,
+    videoId: null, taskId: null, videoUrl: null
+  }));
+  document.getElementById('g-grid').innerHTML = '';
+  document.getElementById('gallery').style.display = 'none';
+  document.getElementById('stop-btn').classList.add('visible');
+  document.getElementById('gen-btn').disabled = true;
+  renderQueue();
+  updateGenBtn();
+  for (let i = 0; i < state.queue.length; i++) {
+    if (state.stopRequested) break;
+    const item = state.queue[i];
+    try {
+      const url = await generateClip(item);
+      addToGallery(url, OBJECTIVES[state.storyboard.objective].emoji + ' Plan ' + (i+1) + ' — ' + item.plan.role);
+    } catch(e) {
+      if (e.message === 'Arrêt') break;
+      item.status = 'failed';
+      item.progress = 'Échec';
+      state.failed++;
+      log('Erreur plan ' + (i+1) + ': ' + e.message);
+      renderQueue();
+    }
+    if (i < state.queue.length - 1 && !state.stopRequested) {
+      const waitSec = 62;
+      for (let r = waitSec; r > 0; r--) {
+        if (state.stopRequested) break;
+        setStatus('Pause — plan ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
+        await sleep(1000);
+      }
+    }
+  }
+  setStatus('✦ ' + state.completed + '/' + state.queue.length + ' clips ✦');
+  await sleep(3000);
+  setStatus(null);
+  state.isRunning = false;
+  state.stopRequested = false;
+  document.getElementById('stop-btn').classList.remove('visible');
+  updateGenBtn();
+  showToast(state.completed + ' clip(s) généré(s)', 'success');
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+(function init() {
+  // Sections collapsibles
+  document.querySelectorAll('[data-toggle]').forEach(h => {
+    h.addEventListener('click', () => document.getElementById(h.dataset.toggle).classList.toggle('open'));
+  });
+  // API
+  document.getElementById('api-btn').addEventListener('click', saveKey);
+  document.getElementById('api-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+  // Upload
+  const up = document.getElementById('upload');
+  const fi = document.getElementById('file-input');
+  up.addEventListener('click', () => fi.click());
+  fi.addEventListener('change', e => { handleFiles(e.target.files); fi.value = ''; });
+  // Prompt
+  document.getElementById('main-prompt').addEventListener('input', e => { state.mainPrompt = e.target.value; });
+  // Durée
+  document.getElementById('dur').addEventListener('change', e => { state.durationFrames = parseInt(e.target.value, 10); });
+  // Intensité
+  document.getElementById('int').addEventListener('change', e => { state.intensity = e.target.value; });
+  // Brand
+  ['brand-name','brand-tagline'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => {
+      const n = document.getElementById('brand-name').value;
+      const t = document.getElementById('brand-tagline').value;
+      document.getElementById('sig').textContent = n + (t ? ' · ' + t : '');
+    });
+  });
+  // Boutons
+  document.getElementById('gen-btn').addEventListener('click', startGeneration);
+  document.getElementById('stop-btn').addEventListener('click', () => { state.stopRequested = true; setStatus('Arrêt…'); });
+  document.getElementById('analyze-btn').addEventListener('click', analyzeAndPropose);
+  // Render initial
+  renderObjectives();
+  renderMedia();
+  renderConcept();
+  updateApiPanel();
+  updateGenBtn();
+  log('MCP Video Studio prêt');
+})();
+</script>
+</body>
+</html>
 // ══════════════════════════════════════════════
 // BOUTON GÉNÉRER
 // ═════════════════════════════════════════
