@@ -3,1018 +3,406 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MCP Video Studio — Cuisiniste</title>
+<title>MCP Video Studio</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
-    --bg: #fafafa; --panel: #fff; --panel-2: #f5f5f5; --border: #e5e5e5;
-    --ink: #1a1a1a; --ink-dim: #777; --ink-faint: #aaa;
-    --success: #2d8a4e; --error: #c0392b; --warn: #d4a017; --info: #4a6cf7;
-    --mcp: #8b6f47; --mcp-light: #f5efe6;
-    --radius: 12px;
+  --bg: #fafafa; --panel: #fff; --panel2: #f5f5f5; --border: #e5e5e5;
+  --ink: #1a1a1a; --dim: #777; --faint: #aaa;
+  --ok: #2d8a4e; --err: #c0392b; --warn: #d4a017;
+  --mcp: #8b6f47; --mcp-light: #f5efe6;
+  --r: 12px;
 }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: var(--bg); color: var(--ink); min-height: 100vh;
-    padding: 1.5rem 1rem 6rem; font-size: 15px; line-height: 1.5;
-    max-width: 900px; margin: 0 auto;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--ink); min-height: 100vh; padding: 1.5rem 1rem 6rem;
+  font-size: 15px; line-height: 1.5; max-width: 900px; margin: 0 auto; }
 header { margin-bottom: 1.5rem; text-align: center; }
-h1 { font-size: 1.5rem; font-weight: 500; margin-bottom: .3rem; }
+h1 { font-size: 1.5rem; font-weight: 500; }
 h1 .brand { color: var(--mcp); font-weight: 700; }
-.subtitle { font-size: .8rem; color: var(--ink-dim); font-style: italic; }
-.mcp-sig { font-size: .68rem; color: var(--mcp); letter-spacing: .08em; text-transform: uppercase; margin-top: .4rem; font-weight: 600; }
-
-.steps { display: flex; justify-content: space-between; margin: 1rem 0; padding: .6rem .8rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); font-size: .68rem; gap: .2rem; }
-.step { flex: 1; text-align: center; color: var(--ink-faint); }
-.step.active { color: var(--mcp); font-weight: 700; }
-.step.done { color: var(--success); }
-.step .num { display: block; width: 20px; height: 20px; line-height: 20px; margin: 0 auto .2rem; border-radius: 50%; background: var(--panel-2); color: var(--ink-dim); font-weight: 700; font-size: .65rem; }
-.step.active .num { background: var(--mcp); color: #fff; }
-.step.done .num { background: var(--success); color: #fff; }
-
-.toast { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--ink); color: #fff; padding: .85rem 1.4rem; border-radius: 10px; font-size: .85rem; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,.15); z-index: 1000; opacity: 0; transition: transform .35s, opacity .35s; max-width: 90vw; text-align: center; display: flex; align-items: center; gap: .5rem; }
-.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.success { background: var(--success); }
-.toast.error { background: var(--error); }
-.toast.warn { background: var(--warn); }
-.toast .toast-icon { font-size: 1rem; }
-
-.info { background: var(--mcp-light); border-left: 3px solid var(--mcp); padding: .75rem .95rem; border-radius: 8px; font-size: .78rem; color: #4a3a25; margin-bottom: 1rem; line-height: 1.45; }
-.info strong { color: var(--ink); }
-
-.section { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; }
-.section-header { padding: .9rem 1.1rem; cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
-.section-header:active { background: var(--panel-2); }
-.section-title { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-dim); font-weight: 600; }
-.section-title .badge { display: inline-block; margin-left: .4rem; padding: .1rem .4rem; background: var(--mcp); color: #fff; border-radius: 10px; font-size: .65rem; letter-spacing: 0; }
-.section-title .badge.soft { background: var(--info); }
-.section-header .chevron { font-size: .7rem; color: var(--ink-faint); transition: transform .2s; }
-.section.open .section-header .chevron { transform: rotate(180deg); }
-.section-body { max-height: 0; overflow: hidden; transition: max-height .3s; }
-.section.open .section-body { max-height: 8000px; }
-.section-content { padding: 0 1.1rem 1.1rem; }
-
-.api-panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 1rem; }
-.api-panel.ok { border-color: var(--success); }
-.api-key-input { width: 100%; padding: .85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: ui-monospace, Menlo, monospace; font-size: .85rem; margin-bottom: .6rem; }
-.api-key-input:focus { outline: none; border-color: var(--mcp); }
-.api-save-btn { width: 100%; padding: .8rem 1.2rem; border-radius: 8px; border: none; background: var(--mcp); color: #fff; font-size: .9rem; font-weight: 600; cursor: pointer; margin-bottom: .6rem; }
-.api-save-btn:active { transform: scale(.98); }
-.api-status { font-size: .75rem; padding: .55rem .85rem; border-radius: 6px; margin-bottom: .5rem; display: flex; align-items: center; gap: .5rem; background: var(--panel-2); color: var(--ink-dim); }
-.api-status.ok { background: #e3f5e9; color: var(--success); font-weight: 600; }
-.api-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); }
-.api-status.ok .dot { background: var(--success); }
-.api-hint { font-size: .72rem; color: var(--ink-dim); }
+.subtitle { font-size: 0.8rem; color: var(--dim); font-style: italic; }
+.sig { font-size: 0.68rem; color: var(--mcp); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.4rem; font-weight: 600; }
+.banner { background: var(--mcp-light); border-left: 3px solid var(--mcp); padding: 0.75rem 0.95rem; border-radius: 8px; font-size: 0.78rem; color: #4a3a25; margin-bottom: 1rem; line-height: 1.45; }
+.section { background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 1rem; overflow: hidden; }
+.sh { padding: 0.9rem 1.1rem; cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+.sh:active { background: var(--panel2); }
+.st { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 600; }
+.st .bdg { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem; background: var(--mcp); color: #fff; border-radius: 10px; font-size: 0.65rem; }
+.chev { font-size: 0.7rem; color: var(--faint); transition: transform 0.2s; }
+.section.open .chev { transform: rotate(180deg); }
+.sb { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.section.open .sb { max-height: 6000px; }
+.sc { padding: 0 1.1rem 1.1rem; }
+.api-panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem 1.2rem; margin-bottom: 1rem; }
+.api-panel.ok { border-color: var(--ok); }
+.api-input { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem; margin-bottom: 0.6rem; }
+.api-input:focus { outline: none; border-color: var(--mcp); }
+.api-btn { width: 100%; padding: 0.8rem 1.2rem; border-radius: 8px; border: none; background: var(--mcp); color: #fff; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 0.6rem; }
+.api-btn:active { transform: scale(0.98); }
+.api-status { font-size: 0.75rem; padding: 0.55rem 0.85rem; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem; background: var(--panel2); color: var(--dim); }
+.api-status.ok { background: #e3f5e9; color: var(--ok); font-weight: 600; }
+.api-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+.api-status.ok .dot { background: var(--ok); }
+.api-hint { font-size: 0.72rem; color: var(--dim); margin-top: 0.4rem; }
 .api-hint a { color: var(--ink); text-decoration: underline; }
-.wake-status { font-size: .72rem; padding: .5rem .7rem; border-radius: 6px; margin-top: .4rem; display: flex; justify-content: space-between; align-items: center; background: var(--mcp-light); color: var(--mcp); flex-wrap: wrap; gap: .4rem; }
-.wake-status.active { background: #e3f5e9; color: var(--success); }
-.wake-status button { background: transparent; border: 1px solid currentColor; color: inherit; padding: .25rem .6rem; border-radius: 6px; font-size: .68rem; cursor: pointer; font-family: inherit; }
-
-.upload { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem 1rem; text-align: center; cursor: pointer; margin-bottom: 1rem; background: var(--panel); }
+.upload { border: 2px dashed var(--border); border-radius: var(--r); padding: 2rem 1rem; text-align: center; cursor: pointer; margin-bottom: 1rem; background: var(--panel); }
 .upload:active { border-color: var(--mcp); background: var(--mcp-light); }
-.upload.loading { pointer-events: none; opacity: .6; }
-.upload input { display: none; }
-.upload-icon { font-size: 2.2rem; margin-bottom: .6rem; opacity: .6; }
-.upload-text { font-size: .95rem; margin-bottom: .2rem; }
-.upload-hint { font-size: .75rem; color: var(--ink-dim); }
-
-.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: .5rem; margin-bottom: 1rem; }
+.upload.loading { pointer-events: none; opacity: 0.6; }
+.upload input[type=file] { display: none; }
+.upload .icon { font-size: 2.2rem; margin-bottom: 0.6rem; opacity: 0.6; }
+.upload .txt { font-size: 0.95rem; margin-bottom: 0.2rem; }
+.upload .hint { font-size: 0.75rem; color: var(--dim); }
+.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
 .media-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f0f0f0; aspect-ratio: 9/16; }
 .media-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .media-card .role { position: absolute; top: 3px; left: 3px; background: var(--mcp); color: #fff; padding: 1px 5px; border-radius: 5px; font-size: 8px; font-weight: 700; }
-.media-card .rm { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,.65); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
-
-.prompt-main { width: 100%; padding: .85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: .9rem; min-height: 100px; resize: vertical; }
+.media-card .rm { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.65); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
+.obj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+.obj-card { padding: 0.8rem 0.7rem; border-radius: 8px; border: 2px solid var(--border); background: var(--panel2); cursor: pointer; text-align: center; }
+.obj-card.sel { border-color: var(--mcp); background: var(--mcp); color: #fff; }
+.obj-card .e { font-size: 1.3rem; display: block; margin-bottom: 0.2rem; }
+.obj-card .n { font-size: 0.72rem; font-weight: 600; }
+.obj-card .d { font-size: 0.6rem; opacity: 0.7; margin-top: 0.1rem; }
+.concept { padding: 0.9rem 1rem; border-radius: 8px; border: 2px solid var(--mcp); background: var(--mcp-light); margin-bottom: 0.5rem; }
+.concept .title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+.concept .meta { font-size: 0.7rem; color: var(--dim); margin-bottom: 0.4rem; }
+.concept .sb-text { font-size: 0.68rem; line-height: 1.5; color: var(--dim); }
+.hook { padding: 0.6rem 0.8rem; border-radius: 8px; background: var(--panel2); border: 1px solid var(--border); font-size: 0.78rem; margin-top: 0.5rem; }
+.hook .lbl { font-weight: 700; color: var(--mcp); font-size: 0.68rem; text-transform: uppercase; margin-bottom: 0.2rem; }
+.prompt-main { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.9rem; min-height: 80px; resize: vertical; }
 .prompt-main:focus { outline: none; border-color: var(--mcp); }
-.prompt-hint { font-size: .72rem; color: var(--ink-dim); margin-top: .5rem; line-height: 1.4; }
-
-.objective-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
-.obj-card { padding: .8rem .7rem; border-radius: 8px; border: 2px solid var(--border); background: var(--panel-2); cursor: pointer; text-align: center; }
-.obj-card.selected { border-color: var(--mcp); background: var(--mcp); color: #fff; }
-.obj-card .emoji { font-size: 1.3rem; display: block; margin-bottom: .2rem; }
-.obj-card .name { font-size: .72rem; font-weight: 600; line-height: 1.2; }
-.obj-card .desc { font-size: .6rem; opacity: .7; margin-top: .1rem; }
-
-.concept-card { padding: .9rem 1rem; border-radius: 8px; border: 2px solid var(--mcp); background: var(--mcp-light); margin-bottom: .5rem; }
-.concept-card .title { font-size: .85rem; font-weight: 700; margin-bottom: .3rem; }
-.concept-card .meta { font-size: .7rem; color: var(--ink-dim); margin-bottom: .4rem; }
-.concept-card .storyboard { font-size: .68rem; line-height: 1.5; color: var(--ink-dim); }
-.hook-list { margin-top: .5rem; }
-.hook-item { padding: .6rem .8rem; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); font-size: .78rem; line-height: 1.4; }
-.hook-item .label { font-weight: 700; color: var(--mcp); font-size: .68rem; text-transform: uppercase; margin-bottom: .2rem; }
-
-.control-row { margin-bottom: .9rem; }
-.control-label { display: block; font-size: .72rem; color: var(--ink-dim); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
-select, input[type="text"] { width: 100%; padding: .7rem .9rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; color: var(--ink); font-family: inherit; font-size: .88rem; }
-select:focus, input[type="text"]:focus { outline: none; border-color: var(--mcp); }
-
-.btn-primary { width: 100%; padding: 1.1rem; border-radius: var(--radius); border: none; background: var(--mcp); color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; }
-.btn-primary:disabled { opacity: .3; cursor: not-allowed; }
-.btn-secondary { width: 100%; padding: .9rem; border-radius: var(--radius); border: 1px solid var(--mcp); background: var(--panel); color: var(--mcp); font-size: .9rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; }
-.btn-stop { width: 100%; padding: .8rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--panel); color: var(--error); font-size: .85rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; display: none; }
+.hint { font-size: 0.72rem; color: var(--dim); margin-top: 0.5rem; line-height: 1.4; }
+.row { margin-bottom: 0.9rem; }
+.row:last-child { margin-bottom: 0; }
+.lbl { display: block; font-size: 0.72rem; color: var(--dim); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+select, input[type=text] { width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.88rem; }
+select:focus, input[type=text]:focus { outline: none; border-color: var(--mcp); }
+.btn-primary { width: 100%; padding: 1.1rem; border-radius: var(--r); border: none; background: var(--mcp); color: #fff; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; }
+.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-secondary { width: 100%; padding: 0.9rem; border-radius: var(--r); border: 1px solid var(--mcp); background: var(--panel); color: var(--mcp); font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; }
+.btn-stop { width: 100%; padding: 0.8rem; border-radius: var(--r); border: 1px solid var(--border); background: var(--panel); color: var(--err); font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; display: none; }
 .btn-stop.visible { display: block; }
-
-.queue-summary { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: .7rem .9rem; margin-bottom: .6rem; font-size: .78rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: .4rem; }
-.queue-item { display: flex; align-items: center; gap: .8rem; padding: .7rem .8rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: .4rem; background: var(--panel); font-size: .82rem; }
-.queue-item.pending { opacity: .5; }
-.queue-item.creating { border-color: var(--warn); }
-.queue-item.processing { border-color: var(--mcp); }
-.queue-item.done { border-color: var(--success); }
-.queue-item.failed { border-color: var(--error); }
-.queue-item .q-icon { font-size: 1rem; width: 1.5rem; text-align: center; }
-.queue-item .q-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.queue-item .q-status { font-size: .72rem; color: var(--ink-dim); }
-
+.queue { margin-top: 1rem; }
+.q-summary { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.6rem; font-size: 0.78rem; display: flex; justify-content: space-between; }
+.q-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 0.8rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.4rem; background: var(--panel); font-size: 0.82rem; }
+.q-item.pending { opacity: 0.5; }
+.q-item.creating { border-color: var(--warn); }
+.q-item.processing { border-color: var(--mcp); }
+.q-item.done { border-color: var(--ok); }
+.q-item.failed { border-color: var(--err); }
+.q-item .ic { font-size: 1rem; width: 1.5rem; text-align: center; }
+.q-item .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-item .st2 { font-size: 0.72rem; color: var(--dim); text-align: right; flex-shrink: 0; }
 .gallery { margin-top: 1.5rem; }
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .8rem; }
-.gallery-item { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: #000; }
-.gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
-.gallery-item .caption { padding: .4rem .6rem; background: var(--panel); font-size: .7rem; color: var(--ink-dim); }
-.gallery-item .actions { display: flex; gap: .3rem; padding: .4rem .6rem; background: var(--panel); border-top: 1px solid var(--border); }
-.gallery-item .actions a { flex: 1; text-align: center; padding: .5rem; background: var(--mcp); color: #fff; text-decoration: none; border-radius: 6px; font-size: .72rem; font-weight: 700; }
-
-.status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--mcp); color: #fff; padding: .7rem 1rem; font-size: .78rem; display: flex; align-items: center; gap: .6rem; transform: translateY(100%); transition: transform .3s; z-index: 100; }
+.g-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.8rem; }
+.g-item { border-radius: var(--r); overflow: hidden; border: 1px solid var(--border); background: #000; }
+.g-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
+.g-item .cap { padding: 0.4rem 0.6rem; background: var(--panel); font-size: 0.7rem; color: var(--dim); }
+.g-item .act { padding: 0.4rem 0.6rem; background: var(--panel); border-top: 1px solid var(--border); }
+.g-item .act a { display: block; text-align: center; padding: 0.5rem; background: var(--mcp); color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+.status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--mcp); color: #fff; padding: 0.7rem 1rem; font-size: 0.78rem; display: flex; align-items: center; gap: 0.6rem; transform: translateY(100%); transition: transform 0.3s; z-index: 100; }
 .status-bar.visible { transform: translateY(0); }
-.status-bar .spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+.spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-#noSleepCanvas, #noSleepVideo { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: .01; pointer-events: none; z-index: -1; }
+.toast { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--ink); color: #fff; padding: 0.85rem 1.4rem; border-radius: 10px; font-size: 0.85rem; z-index: 1000; opacity: 0; transition: all 0.35s; max-width: 90vw; text-align: center; }
+.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.success { background: var(--ok); }
+.toast.error { background: var(--err); }
+.toast.warn { background: var(--warn); }
 </style>
 </head>
 <body>
 
 <header>
-    <h1><span class="brand">MCP</span> Video Studio</h1>
-    <p class="subtitle">AI Creative Studio for Interior Design</p>
-    <p class="mcp-sig" id="header-sig">Mon Cuisiniste Privé · Rambouillet · Yvelines</p>
+  <h1><span class="brand">MCP</span> Video Studio</h1>
+  <p class="subtitle">AI Creative Studio for Interior Design</p>
+  <p class="sig" id="sig">Mon Cuisiniste Privé · Rambouillet · Yvelines</p>
 </header>
 
-<div class="steps">
-    <div class="step active" data-step="1"><span class="num">1</span>Importer</div>
-    <div class="step" data-step="2"><span class="num">2</span>Analyser</div>
-    <div class="step" data-step="3"><span class="num">3</span>Créer</div>
-    <div class="step" data-step="4"><span class="num">4</span>Produire</div>
-    <div class="step" data-step="5"><span class="num">5</span>Publier</div>
-</div>
-
-<div class="info">
-    <strong>MCP Video Studio</strong> transforme vos photos de cuisine en <strong>campagne vidéo</strong> pour Instagram, TikTok et Facebook.
+<div class="banner">
+  <strong>MCP Video Studio</strong> transforme vos photos de cuisine en clips vidéo publicitaires.
+  Choisissez un objectif, l'IA crée le storyboard, génère les clips. Téléchargez-les, puis montez-les avec CapCut.
 </div>
 
 <!-- API -->
 <div class="api-panel" id="api-panel">
-    <input type="password" class="api-key-input" id="api-key-input" placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off" spellcheck="false">
-    <button type="button" class="api-save-btn" id="api-save-btn">Enregistrer la clé</button>
-    <div class="api-status" id="api-status">
-        <span class="dot"></span>
-        <span id="api-status-text">Aucune clé API enregistrée</span>
-    </div>
-    <div class="api-hint">
-        Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank">platform.agnes-ai.com</a> → Settings → API Keys
-    </div>
-    <div class="wake-status" id="wake-status">
-        <span id="wake-text">💤 Veille automatique</span>
-        <button type="button" id="wake-btn">Garder l'écran allumé</button>
-    </div>
+  <input type="password" class="api-input" id="api-input" placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off">
+  <button type="button" class="api-btn" id="api-btn">Enregistrer la clé</button>
+  <div class="api-status" id="api-status">
+    <span class="dot"></span>
+    <span id="api-text">Aucune clé API</span>
+  </div>
+  <div class="api-hint">Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank">platform.agnes-ai.com</a></div>
 </div>
 
-<!-- 1. IMPORT -->
-<div class="section open" id="sec-import">
-    <div class="section-header" data-toggle="sec-import">
-        <span class="section-title">1️⃣ Importer vos médias <span class="badge">photos</span></span>
-        <span class="chevron">▼</span>
+<!-- 1 IMPORT -->
+<div class="section open" id="s-import">
+  <div class="sh" data-toggle="s-import">
+    <span class="st">1️⃣ Importer vos photos <span class="bdg">photos</span></span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div class="upload" id="upload">
+      <input type="file" id="file-input" accept="image/*" multiple>
+      <div class="icon">＋</div>
+      <div class="txt">Ajoutez vos photos de cuisine</div>
+      <div class="hint">3 à 8 photos recommandées · JPG recommandé</div>
     </div>
-    <div class="section-body"><div class="section-content">
-        <div class="upload" id="upload-zone">
-            <input type="file" id="file-input" accept="image/*" multiple>
-            <div class="upload-icon">＋</div>
-            <div class="upload-text">Ajoutez vos photos de cuisine</div>
-            <div class="upload-hint">3 à 8 photos recommandées — JPG ou PNG</div>
-        </div>
-        <div class="media-grid" id="media-grid"></div>
-        <div class="prompt-hint">💡 La 1ère photo = référence absolue du projet.</div>
-    </div></div>
+    <div class="media-grid" id="media-grid"></div>
+    <div class="hint">💡 <strong>La première photo est la référence absolue</strong> du projet.</div>
+  </div></div>
 </div>
 
-<!-- 2. OBJECTIF -->
-<div class="section" id="sec-objective">
-    <div class="section-header" data-toggle="sec-objective">
-        <span class="section-title">2️⃣ Objectif de la vidéo <span class="badge soft">storytelling</span></span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body"><div class="section-content">
-        <div class="objective-grid" id="objective-grid"></div>
-    </div></div>
+<!-- 2 OBJECTIF -->
+<div class="section" id="s-obj">
+  <div class="sh" data-toggle="s-obj">
+    <span class="st">2️⃣ Objectif de la vidéo <span class="bdg">storytelling</span></span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div class="obj-grid" id="obj-grid"></div>
+  </div></div>
 </div>
 
-<!-- 3. CONCEPTS -->
-<div class="section" id="sec-concepts">
-    <div class="section-header" data-toggle="sec-concepts">
-        <span class="section-title">3️⃣ Concepts vidéo proposés <span class="badge soft">IA</span></span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body"><div class="section-content">
-        <div id="concept-list">
-            <div class="prompt-hint" style="text-align:center; padding:1rem;">Importez vos photos, choisissez un objectif, puis cliquez sur <strong>Analyser</strong>.</div>
-        </div>
-        <button type="button" class="btn-secondary" id="analyze-btn">🔍 Analyser & proposer des concepts</button>
-    </div></div>
+<!-- 3 CONCEPTS -->
+<div class="section" id="s-concept">
+  <div class="sh" data-toggle="s-concept">
+    <span class="st">3️⃣ Concept & storyboard <span class="bdg">IA</span></span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div id="concept-box"></div>
+    <button type="button" class="btn-secondary" id="analyze-btn">🔍 Analyser & proposer</button>
+  </div></div>
 </div>
 
-<!-- IDENTITÉ -->
-<div class="section" id="sec-brand">
-    <div class="section-header" data-toggle="sec-brand">
-        <span class="section-title">🏷️ Identité MCP</span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body"><div class="section-content">
-        <div class="control-row"><label class="control-label">Nom de l'entreprise</label><input type="text" id="brand-name" value="Mon Cuisiniste Privé"></div>
-        <div class="control-row"><label class="control-label">Signature / localisation</label><input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines"></div>
-        <div class="control-row"><label class="control-label">Slogan</label><input type="text" id="brand-slogan" value="Votre cuisine sur mesure, pensée pour vous"></div>
-    </div></div>
+<!-- BRAND -->
+<div class="section" id="s-brand">
+  <div class="sh" data-toggle="s-brand">
+    <span class="st">🏷️ Identité MCP</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div class="row"><label class="lbl">Nom</label><input type="text" id="brand-name" value="Mon Cuisiniste Privé"></div>
+    <div class="row"><label class="lbl">Signature</label><input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines"></div>
+  </div></div>
 </div>
 
 <!-- PROMPT -->
-<div class="section" id="sec-prompt">
-    <div class="section-header" data-toggle="sec-prompt">
-        <span class="section-title">✍️ Votre vision (optionnel)</span>
-        <span class="chevron">▼</span>
-    </div>
-    <div class="section-body"><div class="section-content">
-        <textarea class="prompt-main" id="main-prompt" placeholder="Direction artistique particulière..."></textarea>
-    </div></div>
+<div class="section" id="s-prompt">
+  <div class="sh" data-toggle="s-prompt">
+    <span class="st">✍️ Votre vision (optionnel)</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <textarea class="prompt-main" id="main-prompt" placeholder="Direction artistique : « Cuisine haut de gamme, lumière naturelle du matin, ambiance chaleureuse. »"></textarea>
+  </div></div>
 </div>
 
 <!-- TECH -->
-<div class="section" id="sec-tech">
-    <div class="section-header" data-toggle="sec-tech">
-        <span class="section-title">📷 Réglages techniques</span>
-        <span class="chevron">▼</span>
+<div class="section" id="s-tech">
+  <div class="sh" data-toggle="s-tech">
+    <span class="st">📷 Réglages</span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div class="row"><label class="lbl">Durée par clip</label>
+      <select id="dur"><option value="121">5 s</option><option value="153" selected>6,4 s (recommandé)</option><option value="193">8 s</option><option value="241">10 s</option></select>
     </div>
-    <div class="section-body"><div class="section-content">
-        <div class="control-row"><label class="control-label">Durée par clip (max 10s API)</label>
-            <select id="duration-select">
-                <option value="121">5 secondes</option>
-                <option value="153" selected>6,4 secondes</option>
-                <option value="193">8 secondes</option>
-                <option value="241">10 secondes</option>
-            </select>
-        </div>
-        <div class="control-row"><label class="control-label">Intensité du mouvement</label>
-            <select id="intensity-select">
-                <option value="subtle">Subtile</option>
-                <option value="moderate" selected>Modérée</option>
-                <option value="strong">Forte</option>
-            </select>
-        </div>
-    </div></div>
+    <div class="row"><label class="lbl">Intensité mouvement</label>
+      <select id="int"><option value="subtle">Subtile</option><option value="moderate" selected>Modérée</option><option value="strong">Forte</option></select>
+    </div>
+  </div></div>
 </div>
 
-<button type="button" class="btn-primary" id="generate-btn" disabled>🎬 Créer la campagne vidéo</button>
-<button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter la génération</button>
+<button type="button" class="btn-primary" id="gen-btn" disabled>🎬 Générer les clips</button>
+<button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter</button>
 
-<div id="queue"></div>
+<div class="queue" id="queue" style="display:none;"></div>
 
 <div class="gallery" id="gallery" style="display:none;">
-    <div class="section-title" style="margin-bottom:.8rem;">🎥 Vidéos générées</div>
-    <div class="gallery-grid" id="gallery-grid"></div>
+  <div class="st" style="margin-bottom:0.8rem;">🎥 Clips générés</div>
+  <div class="g-grid" id="g-grid"></div>
 </div>
 
-<div class="status-bar" id="status-bar">
-    <div class="spinner"></div>
-    <span id="status-text">Préparation…</span>
-</div>
-
-<div class="toast" id="toast">
-    <span class="toast-icon" id="toast-icon">✓</span>
-    <span id="toast-text">Message</span>
-</div>
-
-<canvas id="noSleepCanvas" width="2" height="2"></canvas>
-<video id="noSleepVideo" playsinline muted loop></video>
+<div class="status-bar" id="status-bar"><div class="spinner"></div><span id="status-text">Préparation…</span></div>
+<div class="toast" id="toast"><span id="toast-text">Message</span></div>
 
 <script>
-'use strict';
-
-// ============ CONFIG ============
-const API_BASE = 'https://apihub.agnes-ai.com/v1';
-const POLL_BASE = 'https://apihub.agnes-ai.com/agnesapi';
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
+const API = 'https://apihub.agnes-ai.com/v1';
+const POLL = 'https://apihub.agnes-ai.com/agnesapi';
 const MODEL = 'agnes-video-v2.0';
 const FPS = 24;
-const CREATE_INTERVAL_MS = 62000;
-const POLL_INTERVAL_S = 8;
-const MAX_POLL = 100;
-const KEY_STORAGE = 'mcp_vs_api_key';
-const WAKE_STORAGE = 'mcp_vs_wake';
-const OBJ_STORAGE = 'mcp_vs_objective';
-const BRAND_STORAGE = 'mcp_vs_brand';
-const MAX_IMG_SIZE = 50 * 1024 * 1024;
+const KEY_STORE = 'mcp_vs_key_v2';
+const POLL_INTERVAL = 8;
+const MAX_POLL = 120;
+const MAX_SIZE = 50 * 1024 * 1024;
 const THUMB_W = 200;
+let createIntervalMs = 62000;
 
-// ============ OBJECTIFS (9) ============
+// ══════════════════════════════════════════════
+// OBJECTIFS
+// ══════════════════════════════════════════════
 const OBJECTIVES = {
-    vues: { emoji:'🔥', name:'Obtenir des vues', desc:'Viral, spectaculaire', duration:20,
-        structure:['hook','transformation','reveal','cta'],
-        guidance:'Create a scroll-stopping viral video. Fast pace, punchy transitions, spectacular visual effects. First frame grabs attention.' },
-    envie: { emoji:'❤️', name:'Donner envie', desc:'Lumière, lifestyle', duration:30,
-        structure:['hook','ambiance','macro','reveal','cta'],
-        guidance:'Create a desire-driven video. Warm cinematic lighting, luxurious materials, lifestyle atmosphere. Slow, elegant pace.' },
-    savoirfaire: { emoji:'🏆', name:'Savoir-faire', desc:'Détails, expertise', duration:35,
-        structure:['hook','detail','macro','construction','reveal'],
-        guidance:'Create a craftsmanship showcase. Emphasize precision, quality of materials, technical details.' },
-    transformation: { emoji:'🔄', name:'Transformation', desc:'Avant/après', duration:25,
-        structure:['hook','before','construction','reveal','cta'],
-        guidance:'Create a spectacular before/after transformation video. Smooth morphing, magical reveal.' },
-    conception: { emoji:'📐', name:'Conception', desc:'Plans, 2D→3D', duration:35,
-        structure:['hook','plan2d','construction','reveal','cta'],
-        guidance:'Create a design process video. From 2D plan to 3D to photorealistic result.' },
-    premium: { emoji:'💰', name:'Haut de gamme', desc:'Luxe, élégance', duration:40,
-        structure:['hook','ambiance','macro','orbit','hero','cta'],
-        guidance:'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details, slow elegant camera movements.' },
-    devis: { emoji:'📩', name:'Demandes de devis', desc:'Problème → solution', duration:25,
-        structure:['hook','problem','solution','reveal','cta'],
-        guidance:'Create a lead-generation video. Problem, solution, beautiful result, clear call-to-action.' },
-    realisation: { emoji:'🏠', name:'Présenter réalisation', desc:'Walkthrough', duration:45,
-        structure:['hook','entrance','wide','island','detail','hero','cta'],
-        guidance:'Create a complete project showcase. Camera walks through the kitchen, revealing space, island, details.' },
-    detail: { emoji:'👀', name:'Découvrir un détail', desc:'Macro, zoom', duration:15,
-        structure:['hook','macro','reveal'],
-        guidance:'Create a macro detail video. Extreme close-up on a single beautiful element.' }
+  vues: { emoji:'🔥', name:'Obtenir des vues', desc:'Viral, spectaculaire', duration:20, structure:['hook','transformation','reveal','cta'], guidance:'Create a scroll-stopping viral video. Fast pace, punchy transitions, spectacular effects.' },
+  envie: { emoji:'❤️', name:'Donner envie', desc:'Lumière, matières', duration:30, structure:['hook','ambiance','macro','reveal','cta'], guidance:'Create a desire-driven video. Warm cinematic lighting, luxurious materials, elegant pace.' },
+  savoirfaire: { emoji:'🏆', name:'Savoir-faire', desc:'Détails, technique', duration:30, structure:['hook','detail','macro','reveal'], guidance:'Create a craftsmanship showcase. Emphasize precision, quality, technical details.' },
+  transformation: { emoji:'🔄', name:'Transformation', desc:'Avant / après', duration:25, structure:['hook','before','construction','reveal','cta'], guidance:'Create a before/after transformation. Progressive reveal of the finished kitchen.' },
+  conception: { emoji:'📐', name:'Conception', desc:'Plans, 2D → 3D', duration:30, structure:['hook','plan2d','wireframe','reveal'], guidance:'Create a design process video. 2D plan → 3D wireframe → photorealistic result.' },
+  premium: { emoji:'💰', name:'Haut de gamme', desc:'Luxe, macro', duration:35, structure:['hook','ambiance','macro','orbit','hero'], guidance:'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details.' },
+  devis: { emoji:'📩', name:'Générer devis', desc:'Problème → CTA', duration:25, structure:['hook','problem','solution','cta'], guidance:'Create a lead-generation video. Problem → solution → beautiful result → call-to-action.' },
+  realisation: { emoji:'🏠', name:'Présenter réalisation', desc:'Visite complète', duration:40, structure:['hook','entrance','wide','island','hero'], guidance:'Create a complete project showcase. Camera walks through, revealing space and details.' },
+  detail: { emoji:'👀', name:'Découvrir un détail', desc:'Macro, zoom', duration:15, structure:['hook','macro','reveal'], guidance:'Create a macro detail video. Extreme close-up on one beautiful element.' }
 };
 
-// ============ EFFETS ============
+// ══════════════════════════════════════════════
+// EFFETS
+// ══════════════════════════════════════════════
 const EFFECTS = {
-    transformation: [
-        { id:'plan2d3d', emoji:'📐', prompt:'Start with 2D floor plan, walls and furniture rise in 3D, plan transforms into photorealistic kitchen.' },
-        { id:'croquis', emoji:'✏️', prompt:'Start with hand-drawn sketch, colors and materials fill in, becomes photorealistic render.' },
-        { id:'ancienne', emoji:'🔄', prompt:'Old dated kitchen transforms into modern premium kitchen. Dramatic reveal.' },
-        { id:'vide', emoji:'🏗️', prompt:'Empty room progressively becomes complete kitchen: cabinets, worktop, facades, handles, appliances, lighting.' },
-        { id:'sol', emoji:'⬆️', prompt:'Kitchen components emerge from the floor and assemble: base cabinets rise, worktop appears, facades snap, handles, appliances.' },
-        { id:'plafond', emoji:'⬇️', prompt:'Kitchen components descend from ceiling and assemble.' },
-        { id:'assemblage', emoji:'🧩', prompt:'Kitchen parts fly in and assemble precisely with elegant ease-out motion.' },
-        { id:'wireframe', emoji:'🕸️', prompt:'Start with 3D wireframe, surfaces fill in, materials appear, becomes photorealistic.' }
-    ],
-    camera: [
-        { id:'travelling_av', emoji:'➡️', prompt:'Slow cinematic push-in toward main subject, smooth dolly forward.' },
-        { id:'travelling_ar', emoji:'⬅️', prompt:'Slow dolly backward revealing more of the scene.' },
-        { id:'orbit', emoji:'🔄', prompt:'Smooth 360-degree orbit around central island, steady rotation.' },
-        { id:'rotation180', emoji:'↩️', prompt:'Elegant 180-degree rotation around subject.' },
-        { id:'ras_sol', emoji:'⬇️', prompt:'Extreme low angle camera at floor level, moving forward.' },
-        { id:'plongee', emoji:'🏛️', prompt:'High angle architectural view, camera descending.' },
-        { id:'macro', emoji:'🔍', prompt:'Extreme macro shot on material details, shallow depth of field.' }
-    ],
-    materiaux: [
-        { id:'veinage', emoji:'🪨', prompt:'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
-        { id:'led', emoji:'💡', prompt:'Integrated LED lighting progressively turns on, warm glow reveals surfaces.' },
-        { id:'texture', emoji:'✨', prompt:'Material texture reveals itself under grazing light.' },
-        { id:'mat_brillant', emoji:'🌟', prompt:'Matte facade becomes glossy lacquered, deep reflections.' }
-    ],
-    fonctionnalite: [
-        { id:'tiroir', emoji:'📦', prompt:'Drawer slides out smoothly with soft-close mechanism.' },
-        { id:'porte', emoji:'🚪', prompt:'Cabinet door opens to 90 degrees smoothly, revealing interior with LED.' },
-        { id:'soft_close', emoji:'🤫', prompt:'Slow motion of soft-close mechanism, drawer gently closing.' }
-    ],
-    ambiance: [
-        { id:'golden', emoji:'🌇', prompt:'Golden hour warm sunlight, amber glow, luxurious atmosphere.' },
-        { id:'matin', emoji:'🌅', prompt:'Soft morning natural light through windows.' },
-        { id:'soir', emoji:'🌙', prompt:'Elegant evening atmosphere, warm interior LED lighting.' },
-        { id:'archi', emoji:'🏛️', prompt:'Professional architectural lighting, precise highlights, showroom quality.' },
-        { id:'showroom', emoji:'💎', prompt:'High-end furniture showroom lighting, dramatic yet soft.' },
-        { id:'cinema', emoji:'🎬', prompt:'Cinematic film lighting, dramatic highlights, deep shadows.' }
-    ]
+  transformation: [
+    { id:'plan2d3d', p:'Start with 2D floor plan, then walls and furniture rise in 3D, plan becomes photorealistic kitchen.' },
+    { id:'ancienne', p:'Start with old dated kitchen, progressively transform into modern premium kitchen.' },
+    { id:'vide', p:'Start with empty room, progressively assemble the kitchen: cabinets, worktop, facades, handles, appliances.' },
+    { id:'sol', p:'Kitchen components emerge from the floor and assemble themselves: base cabinets rise, worktop appears, facades snap in.' },
+    { id:'assemblage', p:'Kitchen parts fly in and assemble precisely with elegant ease-out motion.' },
+    { id:'wireframe', p:'Start with 3D wireframe, surfaces fill in, materials appear, becomes photorealistic.' }
+  ],
+  camera: [
+    { id:'push', p:'Slow cinematic push-in toward the main subject, smooth dolly forward.' },
+    { id:'orbit', p:'Smooth 360-degree orbit around the central island, steady camera.' },
+    { id:'crane', p:'Slow crane shot rising vertically, revealing the scene bottom to top.' },
+    { id:'parallax', p:'Subtle lateral parallax movement revealing depth and layering.' },
+    { id:'top', p:'Slow top-down shot, camera rising to reveal the layout from above.' },
+    { id:'macro', p:'Extreme macro shot on material details, texture, veins, shallow depth of field.' },
+    { id:'reveal', p:'Camera starts on close detail then slowly pulls back to reveal the entire kitchen.' },
+    { id:'low', p:'Extreme low angle camera at floor level, slowly moving forward, dramatic perspective.' },
+    { id:'dolly', p:'Dolly zoom effect (Vertigo), camera moves forward while zooming out.' }
+  ],
+  materiaux: [
+    { id:'veinage', p:'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
+    { id:'pierre', p:'The stone surface progressively appears on the worktop, natural veining reveals itself.' },
+    { id:'finition', p:'The facade finish progressively changes (matte to glossy or another tone).' },
+    { id:'led', p:'Integrated LED lighting progressively turns on, warm glow illuminating surfaces.' },
+    { id:'texture', p:'Material texture reveals itself under grazing light, showing grain and depth.' }
+  ],
+  fonctionnalite: [
+    { id:'tiroir', p:'Drawer slides out smoothly with soft-close mechanism, revealing interior organization.' },
+    { id:'porte', p:'Cabinet door opens to 90 degrees smoothly, revealing interior with LED lighting.' },
+    { id:'coulissant', p:'Sliding cabinet glides out horizontally, revealing hidden storage.' }
+  ],
+  ambiance: [
+    { id:'golden', p:'Golden hour warm sunlight, amber glow, luxurious atmosphere.' },
+    { id:'matin', p:'Soft morning natural light entering through windows, serene atmosphere.' },
+    { id:'soir', p:'Elegant evening atmosphere, warm LED lighting, luxury night mood.' },
+    { id:'archi', p:'Professional architectural lighting, precise highlights, showroom quality.' },
+    { id:'showroom', p:'High-end furniture showroom lighting, dramatic yet soft.' },
+    { id:'cinema', p:'Cinematic film lighting, dramatic highlights, professional color grading.' }
+  ]
 };
 
-// ============ SOURCE LOCK ============
-const SOURCE_LOCK = 'SOURCE LOCK: Preserve exactly the architecture, furniture geometry, dimensions, materials, colors, appliances, handles, worktops, doors, windows and decorative elements of the source image. Do NOT invent, move, reshape or recolor anything. This is a real client project presentation.';
-const REF_HIERARCHY = 'All photos = same project, multiple angles.';
-
-// ============ HOOKS ============
+// ══════════════════════════════════════════════
+// HOOKS
+// ══════════════════════════════════════════════
 const HOOKS = {
-    vues:['Vous n\'imaginez pas comment cette cuisine a été conçue.','Cette transformation va vous surprendre.','Regardez ce que l\'on peut faire avec 3 mètres.'],
-    envie:['Imaginez votre matin dans cette cuisine.','Quand la lumière rencontre la pierre.','Le luxe, c\'est dans les détails.'],
-    savoirfaire:['Chaque centimètre de cette cuisine a été pensé.','Voici comment on conçoit une cuisine sur mesure.'],
-    transformation:['Voici ce que nous avons fait de cet espace.','3 mètres de cuisine transformés.','Vous ne reconnaîtrez pas cette pièce.'],
-    conception:['Du plan à la réalité : le processus complet.','Comment on conçoit une cuisine de A à Z.'],
-    premium:['Quand la cuisine devient une pièce d\'architecture.','Le raffinement à l\'état pur.','Le luxe se cache dans les détails.'],
-    devis:['Combien coûte vraiment une cuisine sur mesure ?','Vous voulez une cuisine comme celle-ci ?'],
-    realisation:['Bienvenue dans cette réalisation exceptionnelle.','Visitez cette cuisine comme si vous y étiez.'],
-    detail:['Ce détail fait toute la différence.','Regardez ce détail de plus près.']
+  vues: ['Vous n\'imaginez pas comment cette cuisine a été conçue.', 'Cette transformation va vous surprendre.', 'Regardez ce que l\'on peut faire avec 3 mètres.'],
+  envie: ['Imaginez votre matin dans cette cuisine.', 'Quand la lumière rencontre la pierre.', 'Le luxe, c\'est dans les détails.'],
+  savoirfaire: ['Chaque centimètre de cette cuisine a été pensé.', 'Voici comment on conçoit une cuisine sur mesure.', 'Le savoir-faire derrière cette réalisation.'],
+  transformation: ['Voici ce que nous avons fait de cet espace.', '3 mètres de cuisine transformés.', 'Vous ne reconnaîtrez pas cette pièce.'],
+  conception: ['Du plan à la réalité : le processus complet.', 'Comment on conçoit une cuisine de A à Z.', 'Chaque trait de ce plan a une raison.'],
+  premium: ['Quand la cuisine devient une pièce d\'architecture.', 'Le raffinement à l\'état pur.', 'Le luxe se cache dans les détails.'],
+  devis: ['Combien coûte vraiment une cuisine sur mesure ?', 'Vous voulez une cuisine comme celle-ci ?', '3 erreurs à éviter dans votre projet.'],
+  realisation: ['Bienvenue dans cette réalisation exceptionnelle.', 'Visitez cette cuisine comme si vous y étiez.', 'Un projet transformé en réalité.'],
+  detail: ['Ce détail fait toute la différence.', 'Regardez ce détail de plus près.', 'Le petit plus qui fait la différence.']
 };
 
-// ============ STATE ============
+// ══════════════════════════════════════════════
+// SOURCE LOCK (compact)
+// ══════════════════════════════════════════════
+const SOURCE_LOCK = 'SOURCE LOCK: Preserve exactly the architecture, furniture geometry, dimensions, materials, colors, appliances, handles, worktops of the source image. Do NOT invent, move or reshape anything. All photos = same project.';
+
+// ══════════════════════════════════════════════
+// ÉTAT
+// ══════════════════════════════════════════════
 const state = {
-    media: [], isRunning: false, stopRequested: false,
-    queue: [], completed: 0, failed: 0,
-    selectedObjective: 'premium', currentStoryboard: null,
-    mainPrompt: '', durationFrames: 153, intensity: 'moderate',
-    isLoading: false, generatedVideos: []
+  media: [], isRunning: false, stopRequested: false,
+  queue: [], completed: 0, failed: 0,
+  selectedObjective: 'premium', storyboard: null,
+  mainPrompt: '', durationFrames: 153, intensity: 'moderate',
+  isLoadingMedia: false
 };
 
-// ============ UTILS ============
-function $(id) { return document.getElementById(id); }
+// ══════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function log(msg) { console.log('[MCP]', msg); }
-function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function pick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
-function pickFiltered(arr, ids) { const f = arr.filter(e => ids.includes(e.id)); return f.length ? pick(f) : pick(arr); }
-function fmtEta(s) { if(s<60) return Math.round(s)+'s'; const m=Math.floor(s/60), r=Math.round(s%60); return m+'m'+(r>0?' '+r+'s':''); }
+function log(m) { console.log('[MCP]', m); }
+function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function randomFrom(a) { return a[Math.floor(Math.random()*a.length)]; }
 
-// ============ TOAST ============
-let toastTO = null;
-function toast(msg, type='success', dur=2500) {
-    const t = $('toast'), icon = $('toast-icon'), txt = $('toast-text');
-    if (!t || !icon || !txt) return;
-    t.classList.remove('visible','success','error','warn'); void t.offsetWidth;
-    icon.textContent = { success:'✓', error:'✕', warn:'⚠' }[type] || '✓';
-    txt.textContent = msg;
-    t.classList.add(type);
-    requestAnimationFrame(() => t.classList.add('visible'));
-    if (toastTO) clearTimeout(toastTO);
-    toastTO = setTimeout(() => t.classList.remove('visible'), dur);
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  const txt = document.getElementById('toast-text');
+  t.className = 'toast';
+  void t.offsetWidth;
+  txt.textContent = msg;
+  t.classList.add(type || 'success', 'visible');
+  setTimeout(() => t.classList.remove('visible'), 2500);
 }
 
-// ============ STATUS ============
-function setStatus(text) {
-    const bar = $('status-bar'), txt = $('status-text');
-    if (!bar || !txt) return;
-    if (text) { bar.classList.add('visible'); txt.textContent = text; }
-    else bar.classList.remove('visible');
+function setStatus(txt) {
+  const b = document.getElementById('status-bar');
+  const t = document.getElementById('status-text');
+  if (txt) { b.classList.add('visible'); t.textContent = txt; }
+  else b.classList.remove('visible');
 }
 
-// ============ API KEY ============
+// ══════════════════════════════════════════════
+// CLÉ API
+// ══════════════════════════════════════════════
 function getKey() {
-    try { return (localStorage.getItem(KEY_STORAGE) || '').trim(); }
-    catch (e) { return ''; }
+  try { return (localStorage.getItem(KEY_STORE) || '').trim(); }
+  catch(e) { return ''; }
 }
 function saveKey() {
-    const input = $('api-key-input');
-    if (!input) return;
-    const key = input.value.trim();
-    if (!key) {
-        try { localStorage.removeItem(KEY_STORAGE); } catch(e){}
-        refreshApiPanel();
-        toast('Clé supprimée', 'warn');
-        return;
-    }
-    try {
-        localStorage.setItem(KEY_STORAGE, key);
-        refreshApiPanel();
-        toast('Clé API enregistrée ✓', 'success');
-    } catch(e) {
-        toast('Erreur de sauvegarde', 'error');
-    }
+  const input = document.getElementById('api-input');
+  const key = input.value.trim();
+  if (!key) {
+    try { localStorage.removeItem(KEY_STORE); } catch(e){}
+    updateApiPanel();
+    showToast('Clé supprimée', 'warn');
+    return;
+  }
+  try {
+    localStorage.setItem(KEY_STORE, key);
+    updateApiPanel();
+    showToast('Clé enregistrée ✓', 'success');
+  } catch(e) {
+    showToast('Erreur stockage', 'error');
+  }
 }
-function refreshApiPanel() {
-    const panel = $('api-panel'), input = $('api-key-input'),
-          status = $('api-status'), text = $('api-status-text');
-    if (!panel || !input || !status || !text) return;
-    const key = getKey();
-    if (key) {
-        panel.classList.add('ok');
-        status.classList.add('ok');
-        text.textContent = 'Clé active · ' + key.slice(0,8) + '…' + key.slice(-4);
-        input.value = key;
-        input.placeholder = '';
-    } else {
-        panel.classList.remove('ok');
-        status.classList.remove('ok');
-        text.textContent = 'Aucune clé API enregistrée';
-        input.value = '';
-        input.placeholder = 'Collez votre clé API Agnes (sk-...)';
-    }
-    refreshGenBtn();
+function updateApiPanel() {
+  const panel = document.getElementById('api-panel');
+  const input = document.getElementById('api-input');
+  const status = document.getElementById('api-status');
+  const text = document.getElementById('api-text');
+  const key = getKey();
+  if (key) {
+    panel.classList.add('ok');
+    status.classList.add('ok');
+    text.textContent = 'Clé active · ' + key.slice(0,8) + '…' + key.slice(-4);
+    input.value = key;
+  } else {
+    panel.classList.remove('ok');
+    status.classList.remove('ok');
+    text.textContent = 'Aucune clé API';
+    input.value = '';
+  }
+  updateGenBtn();
 }
 
-// ============ BOUTON GÉNÉRER ============
-function refreshGenBtn() {
-    const btn = $('generate-btn');
-    if (!btn) return;
-    const hasMedia = state.media.length > 0;
-    const hasKey = !!getKey();
-    const hasStoryboard = !!state.currentStoryboard;
-    btn.disabled = !hasMedia || !hasKey || state.isRunning || state.isLoading || !hasStoryboard;
-    if (state.isLoading) btn.textContent = 'Chargement…';
-    else if (state.isRunning) { const d = state.completed + state.failed; btn.textContent = 'Génération… (' + d + '/' + state.queue.length + ')'; }
-    else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
-    else if (!hasMedia) btn.textContent = 'Ajoutez vos photos';
-    else if (!hasStoryboard) btn.textContent = '🔍 Analysez d\'abord vos photos';
-    else btn.textContent = '🎬 Créer ' + state.currentStoryboard.plans.length + ' clips — ' + state.currentStoryboard.duration + 's';
-}
-
-// ============ ÉTAPES ============
-function setStep(n) {
-    document.querySelectorAll('.step').forEach(el => {
-        const i = parseInt(el.dataset.step, 10);
-        el.classList.remove('active','done');
-        if (i < n) el.classList.add('done');
-        else if (i === n) el.classList.add('active');
-    });
-}
-
-// ============ ANTI-VEILLE ============
-let wakeLock = null, wakeEnabled = false, canvasStream = null, canvasInterval = null;
-
-async function activateWake() {
-    if ('wakeLock' in navigator) {
-        try { wakeLock = await navigator.wakeLock.request('screen'); return true; } catch(e){}
-    }
-    try {
-        const c = $('noSleepCanvas'), v = $('noSleepVideo');
-        const ctx = c.getContext('2d');
-        ctx.fillStyle = '#000'; ctx.fillRect(0,0,2,2);
-        canvasStream = c.captureStream(1);
-        let t = false;
-        canvasInterval = setInterval(() => { t = !t; ctx.fillStyle = t ? '#000' : '#010101'; ctx.fillRect(0,0,2,2); }, 1000);
-        v.srcObject = canvasStream; v.muted = true; v.playsInline = true;
-        const p = v.play(); if (p && p.catch) p.catch(()=>{});
-        return true;
-    } catch(e) { return false; }
-}
-async function deactivateWake() {
-    if (wakeLock) { try { await wakeLock.release(); } catch(e){} wakeLock = null; }
-    if (canvasInterval) clearInterval(canvasInterval);
-    if (canvasStream) { canvasStream.getTracks().forEach(t => t.stop()); canvasStream = null; }
-    const v = $('noSleepVideo'); if (v) { try { v.pause(); v.srcObject = null; } catch(e){} }
-}
-function refreshWakeStatus() {
-    const el = $('wake-status'), txt = $('wake-text'), btn = $('wake-btn');
-    if (!el || !txt || !btn) return;
-    el.classList.remove('active');
-    const active = wakeLock !== null || canvasStream !== null;
-    if (wakeEnabled && active) { el.classList.add('active'); txt.textContent = '✅ Écran allumé'; btn.textContent = 'Désactiver'; }
-    else if (wakeEnabled) { txt.textContent = '⏳ En attente'; btn.textContent = 'Désactiver'; }
-    else { txt.textContent = '💤 Veille automatique'; btn.textContent = 'Garder l\'écran allumé'; }
-}
-async function toggleWake() {
-    if (wakeEnabled) {
-        wakeEnabled = false; await deactivateWake();
-        try { localStorage.setItem(WAKE_STORAGE, '0'); } catch(e){}
-        toast('Veille automatique', 'warn');
-    } else {
-        wakeEnabled = true;
-        const ok = await activateWake();
-        try { localStorage.setItem(WAKE_STORAGE, '1'); } catch(e){}
-        toast(ok ? 'Écran maintenu allumé' : 'Activez manuellement', ok ? 'success' : 'warn');
-    }
-    refreshWakeStatus();
-}
-
-// ============ MÉDIAS ============
-function readFile(file) {
-    return new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload = e => res(e.target.result);
-        r.onerror = () => rej(new Error('read'));
-        r.readAsDataURL(file);
-    });
-}
-function makeThumb(dataUri) {
-    return new Promise(res => {
-        const img = new Image();
-        img.onload = () => {
-            try {
-                const c = document.createElement('canvas');
-                c.width = THUMB_W; c.height = Math.round(THUMB_W * img.height / img.width);
-                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-                res(c.toDataURL('image/jpeg', 0.7));
-            } catch(e) { res(dataUri); }
-        };
-        img.onerror = () => res(dataUri);
-        img.src = dataUri;
-    });
-}
-async function processFile(file) {
-    if (!file.type.startsWith('image/')) return null;
-    if (file.size > MAX_IMG_SIZE) return null;
-    try {
-        const dataUri = await readFile(file);
-        const thumb = await makeThumb(dataUri);
-        return { file, dataUri, thumb, id: Date.now() + Math.random() };
-    } catch(e) { return null; }
-}
-async function handleFiles(files) {
-    const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
-    if (!imgs.length) return;
-    state.isLoading = true; refreshGenBtn();
-    setStatus('Chargement de ' + imgs.length + ' photo(s)…');
-    const zone = $('upload-zone'); zone.classList.add('loading');
-    let n = 0;
-    for (const f of imgs) {
-        const r = await processFile(f);
-        if (r) { state.media.push(r); n++; }
-        renderMedia();
-        setStatus('Chargement… ' + n + '/' + imgs.length);
-    }
-    state.isLoading = false;
-    zone.classList.remove('loading');
-    setStatus(null);
-    state.currentStoryboard = null;
-    refreshGenBtn();
-}
-function removeMedia(id) {
-    state.media = state.media.filter(m => m.id !== id);
-    renderMedia();
-    state.currentStoryboard = null;
-    refreshGenBtn();
-}
-function renderMedia() {
-    const grid = $('media-grid');
-    if (!grid) return;
-    grid.innerHTML = state.media.map((m, i) => {
-        const role = i === 0 ? 'Référence' : (i === 1 ? 'Complément' : (i === 2 ? 'Détail' : 'Angle ' + (i+1)));
-        return '<div class="media-card">' +
-            '<img src="' + (m.thumb || m.dataUri) + '" alt="">' +
-            '<span class="role">' + role + '</span>' +
-            '<button class="rm" data-rm="' + m.id + '">✕</button>' +
-        '</div>';
-    }).join('');
-    grid.querySelectorAll('[data-rm]').forEach(b => {
-        b.addEventListener('click', e => { e.stopPropagation(); removeMedia(parseFloat(b.dataset.rm)); });
-    });
-}
-
-// ============ OBJECTIFS ============
-function renderObjectives() {
-    const grid = $('objective-grid');
-    if (!grid) return;
-    grid.innerHTML = Object.entries(OBJECTIVES).map(([id, o]) =>
-        '<div class="obj-card ' + (state.selectedObjective===id?'selected':'') + '" data-obj="' + id + '">' +
-            '<span class="emoji">' + o.emoji + '</span>' +
-            '<div class="name">' + esc(o.name) + '</div>' +
-            '<div class="desc">' + esc(o.desc) + '</div>' +
-        '</div>'
-    ).join('');
-    grid.querySelectorAll('[data-obj]').forEach(el => {
-        el.addEventListener('click', () => {
-            state.selectedObjective = el.dataset.obj;
-            try { localStorage.setItem(OBJ_STORAGE, state.selectedObjective); } catch(e){}
-            renderObjectives();
-            state.currentStoryboard = null;
-            refreshGenBtn();
-        });
-    });
-}
-
-// ============ STORYBOARD ============
-function generateStoryboard(media, objKey) {
-    const obj = OBJECTIVES[objKey] || OBJECTIVES.premium;
-    const numPlans = obj.structure.length;
-    const plans = [];
-    for (let i = 0; i < numPlans; i++) {
-        const mediaIdx = media.length >= numPlans ? Math.floor((i/numPlans)*media.length) : i % media.length;
-        plans.push({
-            index: i,
-            role: obj.structure[i],
-            media: media[mediaIdx],
-            duration: Math.max(5, Math.min(10, Math.floor(obj.duration / numPlans))),
-            effects: selectEffectsForRole(obj.structure[i])
-        });
-    }
-    return { objective: objKey, duration: obj.duration, plans, hook: pick(HOOKS[objKey] || HOOKS.premium) };
-}
-function selectEffectsForRole(role) {
-    const e = [];
-    switch (role) {
-        case 'hook': e.push(pickFiltered(EFFECTS.camera,['travelling_av','macro'])); e.push(pickFiltered(EFFECTS.ambiance,['cinema','showroom'])); break;
-        case 'transformation': e.push(pick(EFFECTS.transformation)); e.push(pickFiltered(EFFECTS.ambiance,['golden','archi'])); break;
-        case 'before': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','golden'])); break;
-        case 'construction': e.push(pickFiltered(EFFECTS.transformation,['sol','plafond','assemblage'])); e.push(pickFiltered(EFFECTS.ambiance,['archi','showroom'])); break;
-        case 'reveal': e.push(pickFiltered(EFFECTS.camera,['orbit','travelling_ar','rotation180'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','cinema'])); break;
-        case 'ambiance': e.push(pickFiltered(EFFECTS.camera,['travelling_av','ras_sol','plongee'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','soir'])); break;
-        case 'macro': case 'detail': e.push(EFFECTS.camera.find(c=>c.id==='macro')); e.push(pick(EFFECTS.materiaux)); break;
-        case 'orbit': case 'island': e.push(pickFiltered(EFFECTS.camera,['orbit','rotation180'])); e.push(pickFiltered(EFFECTS.ambiance,['showroom','cinema'])); break;
-        case 'hero': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','cinema'])); break;
-        case 'wide': case 'entrance': e.push(pickFiltered(EFFECTS.camera,['travelling_av','plongee'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','archi'])); break;
-        case 'plan2d': e.push(EFFECTS.transformation.find(t=>t.id==='plan2d3d')); e.push(pickFiltered(EFFECTS.ambiance,['archi'])); break;
-        case 'problem': case 'solution': e.push(pickFiltered(EFFECTS.camera,['travelling_av','orbit'])); e.push(pickFiltered(EFFECTS.ambiance,['matin','golden'])); break;
-        case 'cta': e.push(pickFiltered(EFFECTS.camera,['travelling_av'])); e.push(pickFiltered(EFFECTS.ambiance,['golden','showroom'])); break;
-        default: e.push(pick(EFFECTS.camera)); e.push(pick(EFFECTS.ambiance));
-    }
-    return e.filter(Boolean);
-}
-
-// ============ PROMPT ============
-function buildPrompt(plan) {
-    const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
-    const brandName = ($('brand-name')?.value || '').trim() || 'Mon Cuisiniste Privé';
-    const brandTag = ($('brand-tagline')?.value || '').trim();
-    const userPrompt = (state.mainPrompt || '').trim();
-    const parts = [
-        SOURCE_LOCK,
-        REF_HIERARCHY,
-        obj.guidance,
-        'Shot role: ' + plan.role + '.',
-        plan.effects.map(e => e.prompt).join(' ')
-    ];
-    if (userPrompt) parts.push(userPrompt);
-    parts.push(state.intensity === 'subtle' ? 'subtle elegant motion' : state.intensity === 'strong' ? 'dynamic energetic motion' : 'moderate cinematic motion');
-    parts.push('Brand context: ' + brandName + (brandTag ? ' — ' + brandTag : '') + '.');
-    parts.push('Portrait 9:16 vertical, 24fps, photorealistic, luxury commercial quality, no text, no watermarks, no people.');
-    return parts.join(' ');
-}
-
-// ============ API ============
-async function apiFetch(url, opts, retries = 5) {
-    for (let i = 0; i < retries; i++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        try {
-            const r = await fetch(url, opts);
-            if (r.status === 429 || r.status === 503) {
-                const w = [15,30,45,60,90][i] || 90;
-                setStatus('API en préparation… (' + w + 's)');
-                await sleep(w * 1000);
-                continue;
-            }
-            return r;
-        } catch(e) {
-            if (e.message === 'Arrêt demandé') throw e;
-            const w = [3,5,8,12,20][i] || 20;
-            setStatus('Connexion… (' + w + 's)');
-            await sleep(w * 1000);
-        }
-    }
-    return fetch(url, opts);
-}
-async function createTask(dataUri, prompt, frames) {
-    const r = await apiFetch(API_BASE + '/videos', {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + getKey(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: MODEL, prompt, image: dataUri, num_frames: frames, frame_rate: FPS })
-    });
-    if (!r.ok) { const t = await r.text(); throw new Error('HTTP ' + r.status + ' — ' + t.slice(0,200)); }
-    const d = await r.json();
-    const id = d.video_id || d.task_id || d.id;
-    if (!id) throw new Error('Pas de video_id');
-    return { videoId: d.video_id || id, taskId: d.task_id || id };
-}
-async function pollTask(videoId, taskId, onProg) {
-    const start = Date.now();
-    while (Date.now() - start < 30000) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        onProg('Préparation… ' + Math.round((Date.now()-start)/1000) + 's');
-        await sleep(1000);
-    }
-    for (let i = 0; i < MAX_POLL; i++) {
-        if (state.stopRequested) throw new Error('Arrêt demandé');
-        if (i > 0) { for (let s = POLL_INTERVAL_S; s > 0; s--) { if (state.stopRequested) throw new Error('Arrêt demandé'); onProg('Rendu… ' + s + 's'); await sleep(1000); } }
-        // Essaie les deux paramètres : video_id et task_id
-        const urls = [
-            POLL_BASE + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + MODEL,
-            POLL_BASE + '?task_id=' + encodeURIComponent(taskId) + '&model_name=' + MODEL
-        ];
-        for (const url of urls) {
-            try {
-                const r = await apiFetch(url, { method:'GET', headers:{ 'Authorization':'Bearer ' + getKey() } });
-                const d = await r.json();
-                if (d && d.error && d.error.code === 404) continue;
-                const st = (d.status || '').toLowerCase();
-                onProg('Rendu… ' + (d.progress || 0) + '%');
-                if (['completed','succeeded','done','success'].includes(st)) {
-                    const u = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-                    if (u) return u;
-                    throw new Error('Pas d\'URL');
-                }
-                if (['failed','error','cancelled'].includes(st)) throw new Error('Échec (' + st + ')');
-                break;
-            } catch(e) { if (e.message === 'Arrêt demandé') throw e; }
-        }
-    }
-    throw new Error('Délai dépassé');
-}
-
-// ============ FILE D'ATTENTE ============
-function renderQueue() {
-    const q = $('queue');
-    if (!q) return;
-    if (!state.queue.length) { q.innerHTML = ''; return; }
-    const total = state.queue.length;
-    const done = state.completed + state.failed;
-    q.innerHTML = '<div class="queue-summary"><span>Progression : ' + done + '/' + total + '</span><span>' + (done<total?'≈ '+fmtEta((total-done)*60)+' restant':'Terminé') + '</span></div>' +
-        state.queue.map(item => {
-            let icon = '○', st = 'En attente', cls = 'pending';
-            if (item.status==='creating') { icon='◐'; st='Préparation…'; cls='creating'; }
-            else if (item.status==='processing') { icon='◐'; st=item.progress||'En cours'; cls='processing'; }
-            else if (item.status==='done') { icon='●'; st='Terminé'; cls='done'; }
-            else if (item.status==='failed') { icon='✕'; st='Échec'; cls='failed'; }
-            return '<div class="queue-item ' + cls + '"><div class="q-icon">' + icon + '</div><div class="q-name">Plan ' + (item.planIndex+1) + ' — ' + esc(item.plan.role) + '</div><div class="q-status">' + esc(st) + '</div></div>';
-        }).join('');
-}
-
-// ============ GALERIE ============
-function addToGallery(url, label) {
-    const g = $('gallery'), grid = $('gallery-grid');
-    g.style.display = 'block';
-    const el = document.createElement('div');
-    el.className = 'gallery-item';
-    el.innerHTML = '<video controls preload="metadata" muted playsinline><source src="' + url + '" type="video/mp4"></video>' +
-        '<div class="caption">' + esc(label) + '</div>' +
-        '<div class="actions"><a href="' + url + '" download="mcp-' + Date.now() + '.mp4">⬇ Télécharger</a></div>';
-    grid.appendChild(el);
-}
-
-// ============ ANALYSE ============
-function analyzeAndPropose() {
-    if (!state.media.length) { toast('Ajoutez d\'abord des photos', 'error'); return; }
-    setStep(2);
-    setStatus('Analyse des médias…');
-    setTimeout(() => {
-        state.currentStoryboard = generateStoryboard(state.media, state.selectedObjective);
-        setStep(3);
-        renderConcepts();
-        setStatus(null);
-        refreshGenBtn();
-        toast('Concept proposé ✓', 'success');
-        $('sec-concepts').classList.add('open');
-        $('sec-concepts').scrollIntoView({ behavior:'smooth' });
-    }, 500);
-}
-function renderConcepts() {
-    const box = $('concept-list');
-    if (!box) return;
-    if (!state.currentStoryboard) {
-        box.innerHTML = '<div class="prompt-hint" style="text-align:center; padding:1rem;">Importez vos photos, choisissez un objectif, puis cliquez sur <strong>Analyser</strong>.</div>';
-        return;
-    }
-    const sb = state.currentStoryboard;
-    const obj = OBJECTIVES[sb.objective];
-    box.innerHTML = '<div class="concept-card">' +
-        '<div class="title">' + obj.emoji + ' ' + esc(obj.name) + '</div>' +
-        '<div class="meta">⏱ ' + sb.duration + 's · ' + sb.plans.length + ' plans</div>' +
-        '<div class="storyboard">' + sb.plans.map((p,i) => '• Plan ' + (i+1) + ' — ' + esc(p.role) + ' — ' + p.effects.map(e => e.emoji).join(' ') + ' — ' + p.duration + 's').join('<br>') + '</div>' +
-        '</div>' +
-        '<div class="hook-list"><div class="hook-item"><div class="label">Hook</div>' + esc(sb.hook) + '</div></div>';
-}
-
-// ============ GÉNÉRATION ============
-async function startGeneration() {
-    if (state.isRunning) return;
-    if (!getKey()) { toast('Ajoutez votre clé API', 'error'); $('api-key-input').focus(); return; }
-    if (!state.currentStoryboard) { toast('Analysez d\'abord vos photos', 'error'); return; }
-    state.mainPrompt = ($('main-prompt')?.value || '').trim();
-    state.isRunning = true;
-    state.stopRequested = false;
-    state.completed = 0;
-    state.failed = 0;
-    const sb = state.currentStoryboard;
-    state.queue = sb.plans.map((plan, i) => ({
-        planIndex: i, plan, status: 'pending', progress: null,
-        videoId: null, taskId: null, videoUrl: null, startTime: null
-    }));
-    $('gallery-grid').innerHTML = '';
-    $('gallery').style.display = 'none';
-    $('stop-btn').classList.add('visible');
-    $('generate-btn').disabled = true;
-    setStep(4);
-    if (wakeEnabled) await activateWake();
-    renderQueue();
-    refreshGenBtn();
-
-    const tasks = [];
-    try {
-        for (let i = 0; i < state.queue.length; i++) {
-            if (state.stopRequested) break;
-            const item = state.queue[i];
-            try {
-                item.status = 'creating'; item.progress = 'Préparation…'; renderQueue();
-                const prompt = buildPrompt(item.plan);
-                item.prompt = prompt;
-                const ids = await createTask(item.plan.media.dataUri, prompt, state.durationFrames);
-                item.videoId = ids.videoId;
-                item.taskId = ids.taskId;
-                item.startTime = Date.now();
-                item.status = 'processing'; item.progress = 'En cours…';
-                renderQueue();
-                tasks.push(processTask(item));
-            } catch(e) {
-                if (e.message === 'Arrêt demandé') break;
-                item.status = 'failed'; item.progress = 'Échec'; state.failed++;
-                renderQueue();
-            }
-            if (i < state.queue.length - 1 && !state.stopRequested) {
-                const sec = Math.ceil(CREATE_INTERVAL_MS / 1000);
-                for (let r = sec; r > 0; r--) {
-                    if (state.stopRequested) break;
-                    setStatus('Respiration… Plan ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
-                    await sleep(1000);
-                }
-            }
-        }
-        if (tasks.length) { setStatus('Attente des derniers rendus…'); await Promise.allSettled(tasks); }
-
-        const okClips = state.queue.filter(q => q.status === 'done' && q.videoUrl);
-        if (okClips.length >= 1) {
-            okClips.forEach((c, i) => addToGallery(c.videoUrl, 'Clip ' + (i+1) + ' — ' + c.plan.role));
-        }
-        setStep(5);
-        $('gallery').scrollIntoView({ behavior:'smooth' });
-    } catch(e) { log('Erreur: ' + e.message); }
-
-    setStatus(state.stopRequested ? 'Arrêté — ' + state.completed + ' clips' : '✦ ' + state.completed + '/' + state.queue.length + ' clips créés ✦');
-    await sleep(4000); setStatus(null);
-    state.isRunning = false;
-    state.stopRequested = false;
-    $('stop-btn').classList.remove('visible');
-    refreshGenBtn();
-    toast(state.completed + ' clip(s) créé(s)', 'success');
-}
-async function processTask(item) {
-    try {
-        const url = await pollTask(item.videoId, item.taskId, p => { item.progress = p; renderQueue(); });
-        item.status = 'done'; item.videoUrl = url; item.progress = 'Terminé';
-        state.completed++;
-        renderQueue(); refreshGenBtn();
-    } catch(e) {
-        if (e.message === 'Arrêt demandé') { item.status='failed'; item.progress='Arrêté'; }
-        else { item.status='failed'; item.progress='Échec'; state.failed++; }
-        renderQueue(); refreshGenBtn();
-    }
-}
-function stopGeneration() {
-    if (!state.isRunning) return;
-    state.stopRequested = true;
-    setStatus('Arrêt en cours…');
-}
-
-// ============ INIT ============
-function init() {
-    log('Initialisation…');
-
-    // Restaurer préférences
-    try {
-        const obj = localStorage.getItem(OBJ_STORAGE);
-        if (obj && OBJECTIVES[obj]) state.selectedObjective = obj;
-        wakeEnabled = localStorage.getItem(WAKE_STORAGE) === '1';
-        const brand = JSON.parse(localStorage.getItem(BRAND_STORAGE) || '{}');
-        if (brand.name) $('brand-name').value = brand.name;
-        if (brand.tagline) $('brand-tagline').value = brand.tagline;
-        if (brand.slogan) $('brand-slogan').value = brand.slogan;
-    } catch(e){}
-
-    // Bouton clé API
-    const saveBtn = $('api-save-btn');
-    if (saveBtn) saveBtn.addEventListener('click', saveKey);
-    const keyInput = $('api-key-input');
-    if (keyInput) keyInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveKey(); } });
-
-    // Anti-veille
-    const wakeBtn = $('wake-btn');
-    if (wakeBtn) wakeBtn.addEventListener('click', toggleWake);
-
-    // Sections
-    document.querySelectorAll('[data-toggle]').forEach(h => {
-        h.addEventListener('click', () => $(h.dataset.toggle)?.classList.toggle('open'));
-    });
-
-    // Upload
-    const zone = $('upload-zone'), fileInput = $('file-input');
-    if (zone && fileInput) {
-        zone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', e => { handleFiles(e.target.files); fileInput.value = ''; });
-    }
-
-    // Prompt
-    const mainPrompt = $('main-prompt');
-    if (mainPrompt) mainPrompt.addEventListener('input', e => { state.mainPrompt = e.target.value; });
-
-    // Sélecteurs
-    const dur = $('duration-select');
-    if (dur) dur.addEventListener('change', e => { state.durationFrames = parseInt(e.target.value, 10); });
-    const inten = $('intensity-select');
-    if (inten) inten.addEventListener('change', e => { state.intensity = e.target.value; });
-
-    // Boutons principaux
-    const genBtn = $('generate-btn');
-    if (genBtn) genBtn.addEventListener('click', startGeneration);
-    const stopBtn = $('stop-btn');
-    if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
-    const anaBtn = $('analyze-btn');
-    if (anaBtn) anaBtn.addEventListener('click', analyzeAndPropose);
-
-    // Brand inputs
-    ['brand-name','brand-tagline','brand-slogan'].forEach(id => {
-        const el = $(id);
-        if (el) el.addEventListener('input', () => {
-            const b = { name: $('brand-name').value, tagline: $('brand-tagline').value, slogan: $('brand-slogan').value };
-            try { localStorage.setItem(BRAND_STORAGE, JSON.stringify(b)); } catch(e){}
-            const sig = $('header-sig');
-            if (sig) sig.textContent = b.name + (b.tagline ? ' · ' + b.tagline : '');
-        });
-    });
-
-    // Rendu initial
-    renderObjectives();
-    renderMedia();
-    renderConcepts();
-    refreshApiPanel();
-    refreshWakeStatus();
-    setStep(1);
-    refreshGenBtn();
-    setStatus(null);
-
-    log('Prêt.');
-}
-document.addEventListener('DOMContentLoaded', init);
-</script>
-</body>
-</html>
+// ══════════════════════════════════════════════
+// BOUTON GÉNÉRER
+// ═════════════════════════════════════════
