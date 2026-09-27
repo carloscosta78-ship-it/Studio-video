@@ -23,282 +23,95 @@
     h1 { font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
     h1 .brand { color: var(--mcp); font-weight: 700; }
     .subtitle { font-size: 0.8rem; color: var(--ink-dim); font-style: italic; }
-    .mcp-signature {
-        font-size: 0.68rem; color: var(--mcp); letter-spacing: 0.08em;
-        text-transform: uppercase; margin-top: 0.4rem; font-weight: 600;
-    }
-    .progress-steps {
-        display: flex; justify-content: space-between; align-items: center;
-        margin: 1rem 0; padding: 0.6rem 0.8rem; background: var(--panel);
-        border: 1px solid var(--border); border-radius: var(--radius);
-        font-size: 0.68rem; gap: 0.2rem;
-    }
-    .step { flex: 1; text-align: center; color: var(--ink-faint); }
+    .mcp-signature { font-size: 0.68rem; color: var(--mcp); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.4rem; font-weight: 600; }
+    .progress-steps { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; padding: 0.6rem 0.8rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.68rem; gap: 0.2rem; }
+    .step { flex: 1; text-align: center; color: var(--ink-faint); position: relative; }
     .step.active { color: var(--mcp); font-weight: 700; }
     .step.done { color: var(--success); }
-    .step .num {
-        display: block; width: 20px; height: 20px; line-height: 20px;
-        margin: 0 auto 0.2rem; border-radius: 50%;
-        background: var(--panel-2); color: var(--ink-dim); font-weight: 700;
-        font-size: 0.65rem;
-    }
+    .step .num { display: block; width: 20px; height: 20px; line-height: 20px; margin: 0 auto 0.2rem; border-radius: 50%; background: var(--panel-2); color: var(--ink-dim); font-weight: 700; font-size: 0.65rem; }
     .step.active .num { background: var(--mcp); color: #fff; }
     .step.done .num { background: var(--success); color: #fff; }
-
-    .toast {
-        position: fixed; top: 1.5rem; left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        background: var(--ink); color: #fff;
-        padding: 0.85rem 1.4rem; border-radius: 10px;
-        font-size: 0.85rem; font-weight: 500;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        z-index: 1000; opacity: 0;
-        transition: transform 0.35s ease, opacity 0.35s ease;
-        max-width: 90vw; text-align: center;
-        display: flex; align-items: center; gap: 0.5rem;
-    }
+    .toast { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--ink); color: #fff; padding: 0.85rem 1.4rem; border-radius: 10px; font-size: 0.85rem; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: transform 0.35s ease, opacity 0.35s ease; max-width: 90vw; text-align: center; display: flex; align-items: center; gap: 0.5rem; }
     .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { background: var(--success); }
     .toast.error { background: var(--error); }
     .toast.warn { background: var(--warn); }
     .toast .toast-icon { font-size: 1rem; }
-
-    .info-banner {
-        background: var(--mcp-light); border-left: 3px solid var(--mcp);
-        padding: 0.75rem 0.95rem; border-radius: 8px;
-        font-size: 0.78rem; color: #4a3a25;
-        margin-bottom: 1rem; line-height: 1.45;
-    }
+    .info-banner { background: var(--mcp-light); border-left: 3px solid var(--mcp); padding: 0.75rem 0.95rem; border-radius: 8px; font-size: 0.78rem; color: #4a3a25; margin-bottom: 1rem; line-height: 1.45; }
     .info-banner strong { color: var(--ink); }
-
-    .api-panel {
-        background: var(--panel); border: 1px solid var(--border);
-        border-radius: var(--radius); padding: 1rem 1.2rem;
-        margin-bottom: 1rem; transition: border-color 0.3s;
-    }
-    .api-panel.ok { border-color: var(--success); }
-    .api-key-input {
-        width: 100%; padding: 0.85rem 1rem;
-        border-radius: 8px; border: 1px solid var(--border);
-        background: #fafafa; color: var(--ink);
-        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-        font-size: 0.85rem; margin-bottom: 0.6rem;
-    }
-    .api-key-input:focus { outline: none; border-color: var(--mcp); }
-    .api-save-btn {
-        width: 100%; padding: 0.8rem 1.2rem;
-        border-radius: 8px; border: none;
-        background: var(--mcp); color: #fff;
-        font-size: 0.9rem; font-weight: 600; font-family: inherit;
-        cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-        margin-bottom: 0.6rem;
-    }
-    .api-save-btn:active { transform: scale(0.98); }
-    .api-status-line {
-        font-size: 0.75rem; padding: 0.55rem 0.85rem;
-        border-radius: 6px; margin-bottom: 0.5rem;
-        display: flex; align-items: center; gap: 0.5rem;
-        background: var(--panel-2); color: var(--ink-dim);
-    }
-    .api-status-line.ok {
-        background: #e3f5e9; color: var(--success); font-weight: 600;
-    }
-    .api-status-line .status-dot {
-        width: 8px; height: 8px; border-radius: 50%;
-        background: var(--ink-faint); flex-shrink: 0;
-    }
-    .api-status-line.ok .status-dot { background: var(--success); }
-    .api-hint { font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.4rem; }
-    .api-hint a { color: var(--ink); text-decoration: underline; }
-    .wake-status {
-        font-size: 0.72rem; padding: 0.5rem 0.7rem;
-        border-radius: 6px; margin-top: 0.4rem;
-        display: flex; justify-content: space-between; align-items: center;
-        background: var(--mcp-light); color: var(--mcp);
-        flex-wrap: wrap; gap: 0.4rem;
-    }
-    .wake-status.active { background: #e3f5e9; color: var(--success); }
-    .wake-status.warn { background: #fdf5e3; color: var(--warn); }
-    .wake-status button {
-        background: transparent; border: 1px solid currentColor;
-        color: inherit; padding: 0.25rem 0.6rem; border-radius: 6px;
-        font-size: 0.68rem; cursor: pointer; font-family: inherit;
-    }
-
-    .section {
-        background: var(--panel); border: 1px solid var(--border);
-        border-radius: var(--radius); margin-bottom: 1rem;
-        overflow: hidden;
-    }
-    .section-header {
-        padding: 0.9rem 1.1rem; cursor: pointer; user-select: none;
-        display: flex; justify-content: space-between; align-items: center;
-    }
+    .section { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; }
+    .section-header { padding: 0.9rem 1.1rem; cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
     .section-header:active { background: var(--panel-2); }
-    .section-title {
-        font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
-        color: var(--ink-dim); font-weight: 600;
-    }
-    .section-title .badge {
-        display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem;
-        background: var(--mcp); color: #fff; border-radius: 10px;
-        font-size: 0.65rem; letter-spacing: 0;
-    }
+    .section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-dim); font-weight: 600; }
+    .section-title .badge { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem; background: var(--mcp); color: #fff; border-radius: 10px; font-size: 0.65rem; letter-spacing: 0; }
     .section-title .badge.soft { background: var(--info); }
-    .section-header .chevron {
-        font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s;
-    }
+    .section-title .badge.ok { background: var(--success); }
+    .section-header .chevron { font-size: 0.7rem; color: var(--ink-faint); transition: transform 0.2s; }
     .section.open .section-header .chevron { transform: rotate(180deg); }
     .section-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
     .section.open .section-body { max-height: 8000px; }
     .section-content { padding: 0 1.1rem 1.1rem; }
-
-    .upload-zone {
-        border: 2px dashed var(--border); border-radius: var(--radius);
-        padding: 2rem 1rem; text-align: center; cursor: pointer;
-        transition: border-color 0.2s, background 0.2s; margin-bottom: 1rem;
-        background: var(--panel);
-    }
+    .api-panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: 1rem; transition: border-color 0.3s; }
+    .api-panel.ok { border-color: var(--success); }
+    .api-key-input { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; color: var(--ink); font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.85rem; margin-bottom: 0.6rem; }
+    .api-key-input:focus { outline: none; border-color: var(--mcp); }
+    .api-save-btn { width: 100%; padding: 0.8rem 1.2rem; border-radius: 8px; border: none; background: var(--mcp); color: #fff; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-bottom: 0.6rem; }
+    .api-save-btn:active { transform: scale(0.98); }
+    .api-status-line { font-size: 0.75rem; padding: 0.55rem 0.85rem; border-radius: 6px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; background: var(--panel-2); color: var(--ink-dim); }
+    .api-status-line.ok { background: #e3f5e9; color: var(--success); font-weight: 600; }
+    .api-status-line .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); flex-shrink: 0; }
+    .api-status-line.ok .status-dot { background: var(--success); }
+    .api-hint { font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.4rem; }
+    .api-hint a { color: var(--ink); text-decoration: underline; }
+    .wake-status { font-size: 0.72rem; padding: 0.5rem 0.7rem; border-radius: 6px; margin-top: 0.4rem; display: flex; justify-content: space-between; align-items: center; background: var(--mcp-light); color: var(--mcp); flex-wrap: wrap; gap: 0.4rem; }
+    .wake-status.active { background: #e3f5e9; color: var(--success); }
+    .wake-status.warn { background: #fdf5e3; color: var(--warn); }
+    .wake-status button { background: transparent; border: 1px solid currentColor; color: inherit; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.68rem; cursor: pointer; font-family: inherit; }
+    .upload-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem 1rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 1rem; background: var(--panel); }
     .upload-zone:active { border-color: var(--mcp); background: var(--mcp-light); }
     .upload-zone.loading { pointer-events: none; opacity: 0.6; }
     .upload-zone input[type="file"] { display: none; }
     .upload-icon { font-size: 2.2rem; margin-bottom: 0.6rem; opacity: 0.6; }
     .upload-text { font-size: 0.95rem; color: var(--ink); margin-bottom: 0.2rem; }
     .upload-hint { font-size: 0.75rem; color: var(--ink-dim); }
-
-    .media-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 0.5rem; margin-bottom: 1rem;
-    }
-    .media-card {
-        position: relative; border-radius: 8px; overflow: hidden;
-        border: 1px solid var(--border); background: #f0f0f0;
-        aspect-ratio: 9/16; cursor: grab;
-    }
-    .media-card:active { cursor: grabbing; }
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+    .media-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f0f0f0; aspect-ratio: 9/16; cursor: grab; }
     .media-card.dragging { opacity: 0.4; }
     .media-card.drag-over { border: 2px dashed var(--mcp); }
-    .media-card img {
-        width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    .media-card .media-role {
-        position: absolute; top: 3px; left: 3px;
-        background: var(--mcp); color: #fff;
-        padding: 1px 5px; border-radius: 5px;
-        font-size: 8px; font-weight: 700;
-    }
-    .media-card .remove-btn {
-        position: absolute; top: 3px; right: 3px;
-        background: rgba(0,0,0,0.65); color: #fff; border: none;
-        width: 20px; height: 20px; border-radius: 50%; font-size: 10px;
-        cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
-
-    .prompt-main {
-        width: 100%; padding: 0.85rem 1rem;
-        border-radius: 8px; border: 1px solid var(--border);
-        background: #fafafa; color: var(--ink);
-        font-family: inherit; font-size: 0.9rem;
-        min-height: 100px; resize: vertical; line-height: 1.5;
-    }
+    .media-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .media-card .media-role { position: absolute; top: 3px; left: 3px; background: var(--mcp); color: #fff; padding: 1px 5px; border-radius: 5px; font-size: 8px; font-weight: 700; }
+    .media-card .remove-btn { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.65); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .prompt-main { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; color: var(--ink); font-family: inherit; font-size: 0.9rem; min-height: 100px; resize: vertical; line-height: 1.5; }
     .prompt-main:focus { outline: none; border-color: var(--mcp); }
-    .prompt-main-hint {
-        font-size: 0.72rem; color: var(--ink-dim);
-        margin-top: 0.5rem; line-height: 1.4;
-    }
-
-    .objective-grid {
-        display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;
-    }
-    .objective-card {
-        padding: 0.8rem 0.7rem; border-radius: 8px;
-        border: 2px solid var(--border); background: var(--panel-2);
-        cursor: pointer; transition: all 0.15s; text-align: center;
-    }
-    .objective-card:active { transform: scale(0.98); }
-    .objective-card.selected {
-        border-color: var(--mcp); background: var(--mcp); color: #fff;
-    }
+    .prompt-main-hint { font-size: 0.72rem; color: var(--ink-dim); margin-top: 0.5rem; line-height: 1.4; }
+    .objective-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .objective-card { padding: 0.8rem 0.7rem; border-radius: 8px; border: 2px solid var(--border); background: var(--panel-2); cursor: pointer; transition: all 0.15s; text-align: center; }
+    .objective-card.selected { border-color: var(--mcp); background: var(--mcp); color: #fff; }
     .objective-card .obj-emoji { font-size: 1.3rem; display: block; margin-bottom: 0.2rem; }
     .objective-card .obj-name { font-size: 0.72rem; font-weight: 600; line-height: 1.2; }
     .objective-card .obj-desc { font-size: 0.6rem; opacity: 0.7; margin-top: 0.1rem; }
-
-    .concept-list {
-        display: flex; flex-direction: column; gap: 0.5rem;
-    }
-    .concept-card {
-        padding: 0.9rem 1rem; border-radius: 8px;
-        border: 2px solid var(--border); background: var(--panel-2);
-    }
-    .concept-card.selected {
-        border-color: var(--mcp); background: var(--mcp-light);
-    }
-    .concept-card .concept-title {
-        font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;
-    }
-    .concept-card .concept-meta {
-        font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 0.4rem;
-    }
-    .concept-card .concept-storyboard {
-        font-size: 0.68rem; line-height: 1.5; color: var(--ink-dim);
-    }
-
+    .concept-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .concept-card { padding: 0.9rem 1rem; border-radius: 8px; border: 2px solid var(--border); background: var(--panel-2); cursor: pointer; }
+    .concept-card.selected { border-color: var(--mcp); background: var(--mcp-light); }
+    .concept-card .concept-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+    .concept-card .concept-meta { font-size: 0.7rem; color: var(--ink-dim); margin-bottom: 0.4rem; }
+    .concept-card .concept-storyboard { font-size: 0.68rem; line-height: 1.5; color: var(--ink-dim); }
     .control-row { margin-bottom: 0.9rem; }
-    .control-label {
-        display: block; font-size: 0.72rem; color: var(--ink-dim);
-        margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em;
-        font-weight: 600;
-    }
-    select, input[type="text"] {
-        width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px;
-        border: 1px solid var(--border); background: #fafafa;
-        color: var(--ink); font-family: inherit; font-size: 0.88rem;
-    }
+    .control-label { display: block; font-size: 0.72rem; color: var(--ink-dim); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    select, input[type="text"] { width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; color: var(--ink); font-family: inherit; font-size: 0.88rem; }
     select:focus, input[type="text"]:focus { outline: none; border-color: var(--mcp); }
-
-    .btn-primary {
-        width: 100%; padding: 1.1rem; border-radius: var(--radius);
-        border: none; background: var(--mcp); color: #fff;
-        font-size: 1rem; font-weight: 600; font-family: inherit;
-        cursor: pointer; transition: opacity 0.2s, transform 0.1s;
-        margin-bottom: 1rem;
-    }
+    .btn-primary { width: 100%; padding: 1.1rem; border-radius: var(--radius); border: none; background: var(--mcp); color: #fff; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-bottom: 1rem; }
     .btn-primary:active:not(:disabled) { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    .btn-secondary {
-        width: 100%; padding: 0.9rem; border-radius: var(--radius);
-        border: 1px solid var(--mcp); background: var(--panel);
-        color: var(--mcp); font-size: 0.9rem; font-weight: 600;
-        font-family: inherit; cursor: pointer; margin-bottom: 1rem;
-    }
+    .btn-secondary { width: 100%; padding: 0.9rem; border-radius: var(--radius); border: 1px solid var(--mcp); background: var(--panel); color: var(--mcp); font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; }
     .btn-secondary:active { transform: scale(0.98); background: var(--mcp-light); }
-
-    .btn-stop {
-        width: 100%; padding: 0.8rem; border-radius: var(--radius);
-        border: 1px solid var(--border); background: var(--panel);
-        color: var(--error); font-size: 0.85rem; font-weight: 600;
-        font-family: inherit; cursor: pointer; margin-bottom: 1rem;
-        display: none;
-    }
+    .btn-stop { width: 100%; padding: 0.8rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--panel); color: var(--error); font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; display: none; }
     .btn-stop.visible { display: block; }
-
     .queue { margin-top: 1rem; }
-    .queue-summary {
-        background: var(--panel); border: 1px solid var(--border);
-        border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.6rem;
-        font-size: 0.78rem; display: flex; justify-content: space-between;
-        align-items: center; flex-wrap: wrap; gap: 0.4rem;
-    }
+    .queue-summary { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.6rem; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
     .queue-summary .progress-text { color: var(--ink); font-weight: 600; }
     .queue-summary .eta-text { color: var(--ink-dim); }
-
-    .queue-item {
-        display: flex; align-items: center; gap: 0.8rem;
-        padding: 0.7rem 0.8rem; border-radius: 8px;
-        border: 1px solid var(--border); margin-bottom: 0.4rem;
-        background: var(--panel); font-size: 0.82rem;
-    }
+    .queue-item { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 0.8rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0.4rem; background: var(--panel); transition: border-color 0.3s, opacity 0.3s; font-size: 0.82rem; }
     .queue-item.pending { opacity: 0.5; }
     .queue-item.creating { border-color: var(--warn); }
     .queue-item.processing { border-color: var(--mcp); }
@@ -307,58 +120,21 @@
     .queue-item .q-icon { font-size: 1rem; width: 1.5rem; text-align: center; flex-shrink: 0; }
     .queue-item .q-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .queue-item .q-status { font-size: 0.72rem; color: var(--ink-dim); text-align: right; flex-shrink: 0; }
-
     .gallery { margin-top: 1.5rem; }
-    .gallery-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 0.8rem;
-    }
-    .gallery-item {
-        border-radius: var(--radius); overflow: hidden;
-        border: 1px solid var(--border); background: #000;
-    }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.8rem; }
+    .gallery-item { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: #000; animation: fadeIn 0.4s ease; }
     .gallery-item video { width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover; }
-    .gallery-item .g-caption {
-        padding: 0.4rem 0.6rem; background: var(--panel);
-        font-size: 0.7rem; color: var(--ink-dim);
-    }
-    .gallery-item .g-actions {
-        display: flex; gap: 0.3rem; padding: 0.4rem 0.6rem;
-        background: var(--panel); border-top: 1px solid var(--border);
-    }
-    .gallery-item .g-actions a {
-        flex: 1; text-align: center; padding: 0.5rem;
-        background: var(--mcp); color: #fff; text-decoration: none;
-        border-radius: 6px; font-size: 0.72rem; font-weight: 700;
-    }
-
-    .status-bar {
-        position: fixed; bottom: 0; left: 0; right: 0;
-        background: var(--mcp); color: #fff; padding: 0.7rem 1rem;
-        font-size: 0.78rem; display: flex; align-items: center; gap: 0.6rem;
-        transform: translateY(100%); transition: transform 0.3s;
-        z-index: 100;
-    }
+    .gallery-item .g-caption { padding: 0.4rem 0.6rem; background: var(--panel); font-size: 0.7rem; color: var(--ink-dim); }
+    .gallery-item .g-actions { display: flex; gap: 0.3rem; padding: 0.4rem 0.6rem; background: var(--panel); border-top: 1px solid var(--border); }
+    .gallery-item .g-actions a { flex: 1; text-align: center; padding: 0.5rem; background: var(--mcp); color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
+    .status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--mcp); color: #fff; padding: 0.7rem 1rem; font-size: 0.78rem; display: flex; align-items: center; gap: 0.6rem; transform: translateY(100%); transition: transform 0.3s; z-index: 100; }
     .status-bar.visible { transform: translateY(0); }
-    .status-bar .spinner {
-        width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3);
-        border-top-color: #fff; border-radius: 50%;
-        animation: spin 0.8s linear infinite; flex-shrink: 0;
-    }
+    .status-bar .spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .hook-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
-    .hook-item {
-        padding: 0.6rem 0.8rem; border-radius: 8px;
-        background: var(--panel-2); border: 1px solid var(--border);
-        font-size: 0.78rem; line-height: 1.4;
-    }
-    .hook-item .hook-label {
-        font-weight: 700; color: var(--mcp); font-size: 0.68rem;
-        text-transform: uppercase; letter-spacing: 0.05em;
-        margin-bottom: 0.2rem;
-    }
-
+    .hook-item { padding: 0.6rem 0.8rem; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); font-size: 0.78rem; line-height: 1.4; }
+    .hook-item .hook-label { font-weight: 700; color: var(--mcp); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; }
     #noSleepCanvas { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
     #noSleepVideo { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
 </style>
@@ -385,7 +161,7 @@
     des vidéos publicitaires de 15 à 45 secondes.
 </div>
 
-<!-- ── CLÉ API ── -->
+<!-- CLÉ API -->
 <div class="api-panel" id="api-panel">
     <input type="password" class="api-key-input" id="api-key-input"
            placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off" spellcheck="false">
@@ -426,7 +202,7 @@
     </div>
 </div>
 
-<!-- ÉTAPE 2 — ANALYSER -->
+<!-- ÉTAPE 2 — OBJECTIF -->
 <div class="section" id="section-objective">
     <div class="section-header" data-toggle="section-objective">
         <span class="section-title">2️⃣ Objectif de la vidéo <span class="badge soft">storytelling</span></span>
@@ -436,14 +212,13 @@
         <div class="section-content">
             <div class="objective-grid" id="objective-grid"></div>
             <div class="prompt-main-hint" style="margin-top:0.8rem;">
-                💡 L'IA construira automatiquement le storyboard, les hooks et les effets
-                en fonction de votre objectif.
+                💡 L'IA construira automatiquement le storyboard en fonction de votre objectif.
             </div>
         </div>
     </div>
 </div>
 
-<!-- ÉTAPE 3 — CRÉER -->
+<!-- ÉTAPE 3 — CONCEPTS -->
 <div class="section" id="section-concepts">
     <div class="section-header" data-toggle="section-concepts">
         <span class="section-title">3️⃣ Concepts vidéo proposés <span class="badge soft">IA</span></span>
@@ -474,21 +249,21 @@
         <div class="section-content">
             <div class="control-row">
                 <label class="control-label">Nom de l'entreprise</label>
-                <input type="text" id="brand-name" value="Mon Cuisiniste Privé">
+                <input type="text" id="brand-name" value="Mon Cuisiniste Privé" placeholder="Votre marque">
             </div>
             <div class="control-row">
                 <label class="control-label">Signature / localisation</label>
-                <input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines">
+                <input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines" placeholder="Votre signature">
             </div>
             <div class="control-row">
-                <label class="control-label">Slogan</label>
-                <input type="text" id="brand-slogan" value="Votre cuisine sur mesure, pensée pour vous">
+                <label class="control-label">Slogan (apparaît en fin de vidéo)</label>
+                <input type="text" id="brand-slogan" value="Votre cuisine sur mesure, pensée pour vous" placeholder="Slogan">
             </div>
         </div>
     </div>
 </div>
 
-<!-- PROMPT PERSONNALISÉ -->
+<!-- VISION -->
 <div class="section" id="section-prompt">
     <div class="section-header" data-toggle="section-prompt">
         <span class="section-title">✍️ Votre vision (optionnel) <span class="badge">+</span></span>
@@ -497,15 +272,15 @@
     <div class="section-body">
         <div class="section-content">
             <textarea class="prompt-main" id="main-prompt"
-                placeholder="Ajoutez une direction artistique : « Cuisine haut de gamme, lumière naturelle du matin. »"></textarea>
+                placeholder="Ajoutez une direction artistique : « Cuisine haut de gamme, lumière naturelle du matin, ambiance chaleureuse. »"></textarea>
             <div class="prompt-main-hint">
-                💡 Ce prompt s'ajoute aux instructions automatiques de l'IA.
+                💡 Ce prompt s'ajoute aux instructions automatiques. Laissez vide pour une génération 100% automatique.
             </div>
         </div>
     </div>
 </div>
 
-<!-- RÉGLAGES TECHNIQUES -->
+<!-- RÉGLAGES -->
 <div class="section" id="section-tech">
     <div class="section-header" data-toggle="section-tech">
         <span class="section-title">📷 Réglages techniques</span>
@@ -528,15 +303,14 @@
                     <option value="9:16" selected>9:16 — Reels / TikTok / Shorts</option>
                     <option value="16:9">16:9 — YouTube / Site web</option>
                     <option value="1:1">1:1 — Instagram Feed</option>
-                    <option value="4:5">4:5 — Instagram Portrait</option>
                 </select>
             </div>
             <div class="control-row">
                 <label class="control-label">Intensité du mouvement</label>
                 <select id="intensity-select">
-                    <option value="subtle">Subtile — élégant, posé</option>
-                    <option value="moderate" selected>Modérée — équilibré</option>
-                    <option value="strong">Forte — dynamique</option>
+                    <option value="subtle">Subtile</option>
+                    <option value="moderate" selected>Modérée</option>
+                    <option value="strong">Forte</option>
                 </select>
             </div>
         </div>
@@ -547,14 +321,12 @@
     🎬 Créer la campagne vidéo
 </button>
 
-<button type="button" class="btn-stop" id="stop-btn">
-    ⏹ Arrêter la génération
-</button>
+<button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter la génération</button>
 
 <div class="queue" id="queue" style="display:none;"></div>
 
 <div class="gallery" id="gallery" style="display:none;">
-    <div class="section-title" style="margin-bottom:0.8rem;">🎥 Vidéos générées — MCP Studio</div>
+    <div class="section-title" style="margin-bottom:0.8rem;">🎥 Vidéos générées</div>
     <div class="gallery-grid" id="gallery-grid"></div>
 </div>
 
@@ -570,9 +342,7 @@
 
 <canvas id="noSleepCanvas" width="2" height="2"></canvas>
 <video id="noSleepVideo" playsinline muted loop></video>
-
 <script>
-
 // ══════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ══════════════════════════════════════════════════════════════════
@@ -581,12 +351,12 @@ const POLL_BASE = 'https://apihub.agnes-ai.com/agnesapi';
 const MODEL_VIDEO = 'agnes-video-v2.0';
 const FRAME_RATE = 24;
 
-let createIntervalMs = 150000;
-const CREATE_INTERVAL_MIN = 150000;
-const CREATE_INTERVAL_MAX = 180000;
+let createIntervalMs = 62000;
+const CREATE_INTERVAL_MIN = 62000;
+const CREATE_INTERVAL_MAX = 90000;
 const CREATE_INTERVAL_SAFE = 75000;
 const POLL_INTERVAL_SEC = 8;
-const MAX_POLL_ATTEMPTS = 100;
+const MAX_POLL_ATTEMPTS = 200;
 
 const TIMING_CACHE_KEY = 'mcp_vs_timing_v1';
 const API_KEY_STORAGE = 'mcp_vs_api_key';
@@ -604,154 +374,103 @@ const THUMBNAIL_MAX_WIDTH = 200;
 const OBJECTIVES = {
     vues: {
         emoji: '🔥', name: 'Obtenir des vues', desc: 'Effets spectaculaires, viral',
-        duration: 20, category: 'vues',
-        structure: ['hook', 'transformation', 'reveal', 'cta'],
+        duration: 20, structure: ['hook', 'transformation', 'reveal', 'cta'],
         tone: 'Spectaculaire, rapide, percutant',
-        promptGuidance: 'Create a scroll-stopping viral video. Fast pace, punchy transitions, spectacular visual effects. The first frame must grab attention immediately. Designed for TikTok and Instagram Reels.'
+        promptGuidance: 'Create a scroll-stopping viral video. Fast pace, punchy transitions, spectacular visual effects. The first frame must grab attention immediately.'
     },
     envie: {
         emoji: '❤️', name: 'Donner envie', desc: 'Lumière, matières, lifestyle',
-        duration: 30, category: 'desir',
-        structure: ['hook', 'ambiance', 'macro', 'reveal', 'cta'],
+        duration: 30, structure: ['hook', 'ambiance', 'macro', 'reveal', 'cta'],
         tone: 'Sensuel, chaleureux, inspirant',
-        promptGuidance: 'Create a desire-driven video. Warm cinematic lighting, luxurious materials, lifestyle atmosphere. The viewer should dream of owning this kitchen. Slow, elegant pace.'
+        promptGuidance: 'Create a desire-driven video. Warm cinematic lighting, luxurious materials, lifestyle atmosphere. The viewer should dream of owning this kitchen.'
     },
     savoirfaire: {
         emoji: '🏆', name: 'Montrer le savoir-faire', desc: 'Détails, technique, expertise',
-        duration: 35, category: 'lead',
-        structure: ['hook', 'detail', 'macro', 'construction', 'reveal'],
+        duration: 35, structure: ['hook', 'detail', 'macro', 'construction', 'reveal'],
         tone: 'Expert, précis, rassurant',
-        promptGuidance: 'Create a craftsmanship showcase video. Emphasize precision, quality of materials, technical details. The viewer should trust the expertise of the maker.'
+        promptGuidance: 'Create a craftsmanship showcase video. Emphasize precision, quality of materials, technical details.'
     },
     transformation: {
         emoji: '🔄', name: 'Montrer une transformation', desc: 'Avant/après spectaculaire',
-        duration: 25, category: 'vues',
-        structure: ['hook', 'before', 'construction', 'reveal', 'cta'],
-        tone: 'Surprenant, magique, impressionnant',
-        promptGuidance: 'Create a spectacular before/after transformation video. Start with the original space, then progressively reveal the finished kitchen. Smooth morphing, magical reveal.'
+        duration: 25, structure: ['hook', 'before', 'construction', 'reveal', 'cta'],
+        tone: 'Surprenant, magique',
+        promptGuidance: 'Create a spectacular before/after transformation video. Start with the original space, then progressively reveal the finished kitchen.'
     },
     conception: {
-        emoji: '📐', name: 'Montrer la conception', desc: 'Plans, 2D→3D, technique',
-        duration: 35, category: 'lead',
-        structure: ['hook', 'plan2d', 'wireframe', 'construction', 'reveal'],
+        emoji: '📐', name: 'Montrer la conception', desc: 'Plans, 2D→3D',
+        duration: 35, structure: ['hook', 'plan2d', 'wireframe', 'construction', 'reveal'],
         tone: 'Technique, précis, professionnel',
         promptGuidance: 'Create a design process video. Start with the 2D plan, then show the 3D wireframe, then the construction, then the photorealistic result.'
     },
     premium: {
         emoji: '💰', name: 'Valoriser le haut de gamme', desc: 'Luxe, macro, élégance',
-        duration: 40, category: 'desir',
-        structure: ['hook', 'ambiance', 'macro', 'orbit', 'hero', 'cta'],
+        duration: 40, structure: ['hook', 'ambiance', 'macro', 'orbit', 'hero', 'cta'],
         tone: 'Luxueux, raffiné, prestigieux',
         promptGuidance: 'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details on materials, slow elegant camera movements.'
     },
     devis: {
-        emoji: '📩', name: 'Générer des demandes de devis', desc: 'Problème → solution → CTA',
-        duration: 25, category: 'lead',
-        structure: ['hook', 'problem', 'solution', 'reveal', 'cta'],
-        tone: 'Direct, convaincant, orienté bénéfice',
+        emoji: '📩', name: 'Générer des devis', desc: 'Problème → solution → CTA',
+        duration: 25, structure: ['hook', 'problem', 'solution', 'reveal', 'cta'],
+        tone: 'Direct, convaincant',
         promptGuidance: 'Create a lead-generation video. Start with a common kitchen problem, then show the solution, then the beautiful result, then a clear call-to-action.'
     },
     realisation: {
-        emoji: '🏠', name: 'Présenter une réalisation', desc: 'Visite complète, walkthrough',
-        duration: 45, category: 'desir',
-        structure: ['hook', 'entrance', 'wide', 'island', 'detail', 'hero', 'cta'],
-        tone: 'Immersion, découverte, storytelling',
-        promptGuidance: 'Create a complete project showcase video. The camera walks through the kitchen, revealing the space, the island, the details, and the atmosphere.'
+        emoji: '🏠', name: 'Présenter une réalisation', desc: 'Visite complète',
+        duration: 45, structure: ['hook', 'entrance', 'wide', 'island', 'detail', 'hero', 'cta'],
+        tone: 'Immersion, découverte',
+        promptGuidance: 'Create a complete project showcase video. The camera walks through the kitchen, revealing space, island, details, atmosphere.'
     },
     detail: {
-        emoji: '👀', name: 'Faire découvrir un détail', desc: 'Macro, zoom, révélation',
-        duration: 15, category: 'desir',
-        structure: ['hook', 'macro', 'reveal'],
+        emoji: '👀', name: 'Faire découvrir un détail', desc: 'Macro, zoom',
+        duration: 15, structure: ['hook', 'macro', 'reveal'],
         tone: 'Intime, sensoriel, précis',
-        promptGuidance: 'Create a macro detail video. Extreme close-up on a single beautiful element (material veining, handle, LED, mechanism).'
+        promptGuidance: 'Create a macro detail video. Extreme close-up on a single beautiful element. The viewer should appreciate the craftsmanship.'
     }
 };
 
 // ══════════════════════════════════════════════════════════════════
-// BIBLIOTHÈQUE D'EFFETS (5 catégories)
+// EFFETS (5 catégories)
 // ══════════════════════════════════════════════════════════════════
 const EFFECTS = {
     transformation: [
-        { id: 'plan2d3d', name: 'Plan 2D → 3D', emoji: '📐',
-          prompt: 'Start with the 2D technical floor plan, then progressively the walls and furniture rise in 3D, the plan transforms into a photorealistic kitchen.' },
-        { id: 'croquis', name: 'Croquis → Photoréalisme', emoji: '✏️',
-          prompt: 'Start with the hand-drawn sketch, then progressively colors and materials fill in, the sketch becomes a photorealistic rendered kitchen.' },
-        { id: 'ancienne', name: 'Ancienne → Nouvelle', emoji: '🔄',
-          prompt: 'Start with the old dated kitchen, then progressively transform it into the modern premium kitchen.' },
-        { id: 'vide', name: 'Pièce vide → Cuisine', emoji: '🏗️',
-          prompt: 'Start with the empty room, then progressively the kitchen assembles itself: base cabinets, worktop, facades, handles, appliances, lighting.' },
-        { id: 'sol', name: 'Meubles sortent du sol', emoji: '⬆️',
-          prompt: 'The kitchen components emerge from the floor and assemble themselves: base cabinets rise smoothly, then worktop appears, then facades snap into place.' },
-        { id: 'plafond', name: 'Meubles du plafond', emoji: '⬇️',
-          prompt: 'The kitchen components descend from the ceiling and assemble: upper cabinets come down, then shelves appear.' },
-        { id: 'assemblage', name: 'Éléments qui s\'assemblent', emoji: '🧩',
-          prompt: 'The kitchen parts fly in and assemble themselves precisely. Each element snaps into place with elegant ease-out motion.' },
-        { id: 'wireframe', name: 'Wireframe → Render', emoji: '🕸️',
-          prompt: 'Start with the 3D wireframe structure, then surfaces fill in, materials appear, lighting activates.' }
+        { id: 'plan2d3d', name: 'Plan 2D → 3D', emoji: '📐', prompt: 'Start with the 2D technical floor plan, then progressively the walls and furniture rise in 3D, transforming into a photorealistic kitchen.' },
+        { id: 'croquis', name: 'Croquis → Photo', emoji: '✏️', prompt: 'Start with the hand-drawn sketch, then colors and materials fill in, becoming a photorealistic rendered kitchen.' },
+        { id: 'ancienne', name: 'Ancienne → Nouvelle', emoji: '🔄', prompt: 'Start with the old dated kitchen, then progressively transform into the modern premium kitchen.' },
+        { id: 'vide', name: 'Pièce vide → Cuisine', emoji: '🏗️', prompt: 'Start with the empty room, then progressively the kitchen assembles itself.' },
+        { id: 'sol', name: 'Meubles du sol', emoji: '⬆️', prompt: 'The kitchen components emerge from the floor and assemble: base cabinets rise, worktop appears, facades snap into place.' },
+        { id: 'plafond', name: 'Meubles du plafond', emoji: '⬇️', prompt: 'The kitchen components descend from the ceiling and assemble into place.' },
+        { id: 'assemblage', name: 'Assemblage', emoji: '🧩', prompt: 'The kitchen parts fly in and assemble themselves precisely with elegant ease-out motion.' },
+        { id: 'wireframe', name: 'Wireframe → Render', emoji: '🕸️', prompt: 'Start with the 3D wireframe, then surfaces fill in, materials appear, the wireframe becomes a photorealistic kitchen.' }
     ],
     camera: [
-        { id: 'travelling_av', name: 'Travelling avant', emoji: '➡️',
-          prompt: 'Slow cinematic push-in toward the main subject, smooth dolly forward with ease-in-out.' },
-        { id: 'travelling_ar', name: 'Travelling arrière', emoji: '⬅️',
-          prompt: 'Slow dolly backward revealing more of the scene, elegant pull-out.' },
-        { id: 'orbit', name: 'Orbit autour de l\'îlot', emoji: '🔄',
-          prompt: 'Smooth 360-degree orbit around the central island, perfectly steady camera rotation.' },
-        { id: 'rotation180', name: 'Rotation 180°', emoji: '↩️',
-          prompt: 'Elegant 180-degree rotation around the subject, half-orbit revealing two complementary angles.' },
-        { id: 'ras_sol', name: 'Caméra ras du sol', emoji: '⬇️',
-          prompt: 'Extreme low angle camera at floor level, slowly moving forward.' },
-        { id: 'plongee', name: 'Plongée architecturale', emoji: '🏛️',
-          prompt: 'High angle architectural view, camera slowly descending, revealing the layout from above.' },
-        { id: 'macro', name: 'Macro matière', emoji: '🔍',
-          prompt: 'Extreme macro shot on material details, texture, veins and finish, shallow depth of field.' },
-        { id: 'dolly_zoom', name: 'Dolly zoom (Vertigo)', emoji: '🌀',
-          prompt: 'Dolly zoom effect (Vertigo/Hitchcock), camera moves forward while zooming out.' }
+        { id: 'travelling_av', name: 'Travelling avant', emoji: '➡️', prompt: 'Slow cinematic push-in toward the main subject, smooth dolly forward.' },
+        { id: 'travelling_ar', name: 'Travelling arrière', emoji: '⬅️', prompt: 'Slow dolly backward revealing more of the scene.' },
+        { id: 'orbit', name: 'Orbit îlot', emoji: '🔄', prompt: 'Smooth 360-degree orbit around the central island, steady rotation.' },
+        { id: 'rotation180', name: 'Rotation 180°', emoji: '↩️', prompt: 'Elegant 180-degree rotation around the subject.' },
+        { id: 'ras_sol', name: 'Ras du sol', emoji: '⬇️', prompt: 'Extreme low angle camera at floor level, slow forward movement.' },
+        { id: 'plongee', name: 'Plongée archi', emoji: '🏛️', prompt: 'High angle architectural view, camera slowly descending.' },
+        { id: 'macro', name: 'Macro matière', emoji: '🔍', prompt: 'Extreme macro shot on material details, texture, veins, shallow depth of field.' },
+        { id: 'dolly_zoom', name: 'Dolly zoom', emoji: '🌀', prompt: 'Dolly zoom effect, camera moves forward while zooming out, dramatic perspective shift.' }
     ],
     materiaux: [
-        { id: 'veinage', name: 'Zoom sur veinage', emoji: '🪨',
-          prompt: 'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
-        { id: 'pierre', name: 'Pierre qui apparaît', emoji: '💎',
-          prompt: 'The stone surface progressively appears on the worktop, natural veining reveals itself.' },
-        { id: 'finition', name: 'Changement de finition', emoji: '🎨',
-          prompt: 'The facade finish progressively changes (matte to glossy), smooth elegant transition.' },
-        { id: 'led', name: 'LED qui s\'allume', emoji: '💡',
-          prompt: 'The integrated LED lighting progressively turns on, warm glow illuminating the surfaces.' },
-        { id: 'texture', name: 'Texture qui se révèle', emoji: '✨',
-          prompt: 'The material texture progressively reveals itself under grazing light.' },
-        { id: 'mat_brillant', name: 'Mat → Brillant', emoji: '🌟',
-          prompt: 'The matte facade becomes glossy lacquered, deep reflections.' },
-        { id: 'bois_clair_fonce', name: 'Bois clair → foncé', emoji: '🪵',
-          prompt: 'The light wood facade progressively darkens to a deep premium walnut tone.' }
+        { id: 'veinage', name: 'Zoom veinage', emoji: '🪨', prompt: 'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
+        { id: 'led', name: 'LED qui s\'allume', emoji: '💡', prompt: 'Integrated LED lighting progressively turns on, warm glow.' },
+        { id: 'texture', name: 'Texture révélée', emoji: '✨', prompt: 'Material texture reveals itself under grazing light.' },
+        { id: 'mat_brillant', name: 'Mat → Brillant', emoji: '🌟', prompt: 'Matte facade becomes glossy, deep reflections.' },
+        { id: 'bois_clair_fonce', name: 'Bois clair → foncé', emoji: '🪵', prompt: 'Light wood facade progressively darkens to deep premium walnut.' }
     ],
     fonctionnalite: [
-        { id: 'tiroir', name: 'Tiroir qui s\'ouvre', emoji: '📦',
-          prompt: 'Drawer slides out smoothly with soft-close mechanism, revealing interior organization.' },
-        { id: 'coulissant', name: 'Coulissant qui sort', emoji: '↔️',
-          prompt: 'Sliding cabinet or drawer glides out horizontally, revealing hidden storage.' },
-        { id: 'porte', name: 'Porte qui s\'ouvre', emoji: '🚪',
-          prompt: 'Cabinet door opens to 90 degrees smoothly, revealing interior with LED lighting.' },
-        { id: 'electromenager', name: 'Électroménager qui apparaît', emoji: '🔌',
-          prompt: 'Integrated appliance progressively appears or reveals itself.' },
-        { id: 'escamotable', name: 'Meuble escamotable', emoji: '🪄',
-          prompt: 'A retractable or hidden furniture element emerges smoothly, magical reveal.' },
-        { id: 'soft_close', name: 'Soft-close en action', emoji: '🤫',
-          prompt: 'Slow motion of soft-close mechanism, drawer or door gently closing by itself.' }
+        { id: 'tiroir', name: 'Tiroir qui s\'ouvre', emoji: '📦', prompt: 'Drawer slides out smoothly with soft-close mechanism.' },
+        { id: 'porte', name: 'Porte à 90°', emoji: '🚪', prompt: 'Cabinet door opens to 90 degrees smoothly.' },
+        { id: 'range_caché', name: 'Rangement caché', emoji: '🎁', prompt: 'Hidden storage compartment reveals itself elegantly.' }
     ],
     ambiance: [
-        { id: 'golden', name: 'Golden hour', emoji: '🌇',
-          prompt: 'Golden hour warm sunlight, amber glow, long shadows, luxurious warm atmosphere.' },
-        { id: 'matin', name: 'Matin naturel', emoji: '🌅',
-          prompt: 'Soft morning natural light entering through windows, gentle golden tone.' },
-        { id: 'soir', name: 'Soirée premium', emoji: '🌙',
-          prompt: 'Elegant evening atmosphere, warm interior LED lighting, soft ambient glow.' },
-        { id: 'archi', name: 'Éclairage architectural', emoji: '🏛️',
-          prompt: 'Professional architectural lighting, precise highlights, balanced shadows, showroom quality.' },
-        { id: 'showroom', name: 'Showroom premium', emoji: '💎',
-          prompt: 'High-end furniture showroom lighting, dramatic yet soft.' },
-        { id: 'cocoon', name: 'Ambiance cocooning', emoji: '🕯️',
-          prompt: 'Cosy cocooning atmosphere, warm soft lighting, intimate and inviting mood.' },
-        { id: 'cinema', name: 'Lumière cinématographique', emoji: '🎬',
-          prompt: 'Cinematic film lighting, dramatic highlights, deep shadows, professional color grading.' }
+        { id: 'golden', name: 'Golden hour', emoji: '🌇', prompt: 'Golden hour warm sunlight, amber glow, long shadows.' },
+        { id: 'matin', name: 'Matin naturel', emoji: '🌅', prompt: 'Soft morning natural light entering through windows.' },
+        { id: 'soir', name: 'Soirée premium', emoji: '🌙', prompt: 'Elegant evening atmosphere with warm LED lighting.' },
+        { id: 'archi', name: 'Éclairage archi', emoji: '🏛️', prompt: 'Professional architectural lighting, precise highlights.' },
+        { id: 'showroom', name: 'Showroom premium', emoji: '💎', prompt: 'High-end furniture showroom lighting, dramatic yet soft.' },
+        { id: 'cinema', name: 'Lumière cinéma', emoji: '🎬', prompt: 'Cinematic film lighting, dramatic highlights, deep shadows.' }
     ]
 };
 
@@ -759,98 +478,56 @@ const EFFECTS = {
 // HOOKS (5 par objectif)
 // ══════════════════════════════════════════════════════════════════
 const HOOKS = {
-    vues: [
-        'Vous n\'imaginez pas comment cette cuisine a été conçue.',
-        'Cette transformation va vous surprendre.',
-        'Regardez ce que l\'on peut faire avec 3 mètres.',
-        'La cuisine que tout le monde veut avoir.',
-        'Ce détail change absolument tout.'
-    ],
-    envie: [
-        'Imaginez votre matin dans cette cuisine.',
-        'Quand la lumière rencontre la pierre.',
-        'Le luxe, c\'est dans les détails.',
-        'Une cuisine qui donne envie de cuisiner.',
-        'L\'élégance à l\'état pur.'
-    ],
-    savoirfaire: [
-        'Chaque centimètre de cette cuisine a été pensé.',
-        'Voici comment on conçoit une cuisine sur mesure.',
-        'Le savoir-faire derrière cette réalisation.',
-        'Ce que vous ne voyez pas dans cette cuisine.',
-        'L\'artisanat à l\'état pur.'
-    ],
-    transformation: [
-        'Voici ce que nous avons fait de cet espace.',
-        '3 mètres de cuisine transformés.',
-        'Vous ne reconnaîtrez pas cette pièce.',
-        'Avant / Après : le choc visuel.',
-        'Cette pièce n\'existait que sur un plan.'
-    ],
-    conception: [
-        'Du plan à la réalité : le processus complet.',
-        'Comment on conçoit une cuisine de A à Z.',
-        'Chaque trait de ce plan a une raison.',
-        'De l\'esquisse à la réalisation.',
-        'L\'envers du décor : la conception.'
-    ],
-    premium: [
-        'Quand la cuisine devient une pièce d\'architecture.',
-        'Le raffinement à l\'état pur.',
-        'Cette cuisine n\'a pas de prix.',
-        'Le luxe se cache dans les détails.',
-        'Une réalisation d\'exception.'
-    ],
-    devis: [
-        'Combien coûte vraiment une cuisine sur mesure ?',
-        'Vous voulez une cuisine comme celle-ci ?',
-        'Ce que personne ne vous dit sur les cuisines.',
-        '3 erreurs à éviter dans votre projet.',
-        'Votre cuisine mérite mieux que ça.'
-    ],
-    realisation: [
-        'Bienvenue dans cette réalisation exceptionnelle.',
-        'Visitez cette cuisine comme si vous y étiez.',
-        'La cuisine dont rêvait ce client.',
-        'Un projet transformé en réalité.',
-        'Découvrez chaque recoin de cette cuisine.'
-    ],
-    detail: [
-        'Ce détail fait toute la différence.',
-        'Regardez ce détail de plus près.',
-        'L\'élément qui change tout.',
-        'Une finition exceptionnelle.',
-        'Le petit plus qui fait la différence.'
-    ]
+    vues: ['Vous n\'imaginez pas comment cette cuisine a été conçue.', 'Cette transformation va vous surprendre.', 'Regardez ce que l\'on peut faire avec 3 mètres.', 'La cuisine que tout le monde veut avoir.', 'Ce détail change absolument tout.'],
+    envie: ['Imaginez votre matin dans cette cuisine.', 'Quand la lumière rencontre la pierre.', 'Le luxe, c\'est dans les détails.', 'Une cuisine qui donne envie de cuisiner.', 'L\'élégance à l\'état pur.'],
+    savoirfaire: ['Chaque centimètre de cette cuisine a été pensé.', 'Voici comment on conçoit une cuisine sur mesure.', 'Le savoir-faire derrière cette réalisation.', 'Ce que vous ne voyez pas dans cette cuisine.', 'L\'artisanat à l\'état pur.'],
+    transformation: ['Voici ce que nous avons fait de cet espace.', '3 mètres de cuisine transformés.', 'Vous ne reconnaîtrez pas cette pièce.', 'Avant / Après : le choc visuel.', 'Cette pièce n\'existait que sur un plan.'],
+    conception: ['Du plan à la réalité : le processus complet.', 'Comment on conçoit une cuisine de A à Z.', 'Chaque trait de ce plan a une raison.', 'De l\'esquisse à la réalisation.', 'L\'envers du décor : la conception.'],
+    premium: ['Quand la cuisine devient une pièce d\'architecture.', 'Le raffinement à l\'état pur.', 'Cette cuisine n\'a pas de prix.', 'Le luxe se cache dans les détails.', 'Une réalisation d\'exception.'],
+    devis: ['Combien coûte vraiment une cuisine sur mesure ?', 'Vous voulez une cuisine comme celle-ci ?', 'Ce que personne ne vous dit sur les cuisines.', '3 erreurs à éviter dans votre projet.', 'Votre cuisine mérite mieux que ça.'],
+    realisation: ['Bienvenue dans cette réalisation exceptionnelle.', 'Visitez cette cuisine comme si vous y étiez.', 'La cuisine dont rêvait ce client.', 'Un projet transformé en réalité.', 'Découvrez chaque recoin de cette cuisine.'],
+    detail: ['Ce détail fait toute la différence.', 'Regardez ce détail de plus près.', 'L\'élément qui change tout.', 'Une finition exceptionnelle.', 'Le petit plus qui fait la différence.']
 };
 
 // ══════════════════════════════════════════════════════════════════
-// SOURCE LOCK — Anti-déformation
+// SOURCE LOCK (version compacte)
 // ══════════════════════════════════════════════════════════════════
-const SOURCE_LOCK = [
-    'SOURCE LOCK — ABSOLUTE PRIORITY',
-    'Preserve EXACTLY and WITHOUT ANY MODIFICATION:',
-    'architecture of the room (walls, ceiling, floor, windows, doors),',
-    'geometry of all furniture (cabinets, island, worktop, shelves),',
-    'dimensions and proportions of every element,',
-    'materials (wood, stone, ceramic, metal, glass),',
-    'colors and finishes (matte, glossy, brushed, textured),',
-    'appliances (model, position, size),',
-    'handles, knobs, hinges, soft-close mechanisms,',
-    'worktops (thickness, edge profile, veining).',
-    'Do NOT invent any furniture or element not present in the source.',
-    'Do NOT move, reshape, or recolor any existing element.',
-    'Do NOT change proportions or dimensions.',
-    'This is a PROFESSIONAL PRESENTATION of a REAL client project.',
-    'Fidelity to the source is NON-NEGOTIABLE.'
-].join(' ');
+const SOURCE_LOCK = 'SOURCE LOCK: Preserve exactly the architecture, furniture geometry, dimensions, materials, colors, appliances, handles, worktops, doors, windows and decorative elements of the source image. Do NOT invent, move, reshape or recolor anything. This is a real client project presentation.';
 
-const REFERENCE_HIERARCHY = [
-    'REFERENCE HIERARCHY:',
-    'Photo 1 = ABSOLUTE REFERENCE (master view of the project).',
-    'Photo 2+ = COMPLEMENTARY REFERENCES (same project, different angles).',
-    'All photos represent the SAME kitchen project.'
-].join(' ');
+// ══════════════════════════════════════════════════════════════════
+// UTILITAIRES
+// ══════════════════════════════════════════════════════════════════
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function log(msg) { console.log('[MCP VS] ' + msg); }
+function setStatus(text) {
+    const bar = document.getElementById('status-bar');
+    const txt = document.getElementById('status-text');
+    if (!bar || !txt) return;
+    if (text) { bar.classList.add('visible'); txt.textContent = text; }
+    else bar.classList.remove('visible');
+}
+function randomFrom(arr, preferredIds = null) {
+    if (preferredIds && preferredIds.length) {
+        const filtered = arr.filter(e => preferredIds.includes(e.id));
+        if (filtered.length) return filtered[Math.floor(Math.random() * filtered.length)];
+    }
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+}
+function formatEta(seconds) {
+    if (seconds < 60) return Math.round(seconds) + 's';
+    const m = Math.floor(seconds / 60);
+    const s = Math.round(seconds % 60);
+    return m + 'm' + (s > 0 ? ' ' + s + 's' : '');
+}
+function getApiKey() {
+    try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); }
+    catch (e) { return ''; }
+}
 
 // ══════════════════════════════════════════════════════════════════
 // MOTEUR DE STORYBOARD
@@ -875,21 +552,18 @@ function generateStoryboard(media, objective) {
             role: role,
             media: selection[i],
             mediaIndex: media.indexOf(selection[i]),
-            duration: 6,
+            duration: Math.max(5, Math.min(10, Math.floor(obj.duration / numPlans))),
             effects: selectEffectsForRole(role),
             transition: null
         });
     }
-    const targetDuration = obj.duration;
-    const baseDuration = Math.max(5, Math.min(10, Math.floor(targetDuration / numPlans)));
-    for (const plan of plans) plan.duration = baseDuration;
     for (let i = 0; i < plans.length - 1; i++) {
         plans[i].transition = selectTransition(plans[i], plans[i + 1]);
     }
-    plans[plans.length - 1].transition = { type: 'fade_out', duration: 0.5 };
+    plans[plans.length - 1].transition = { type: 'fade_out' };
     return {
         objective: objective,
-        duration: targetDuration,
+        duration: obj.duration,
         plans: plans,
         hook: selectHook(objective)
     };
@@ -899,7 +573,7 @@ function selectEffectsForRole(role) {
     const effects = [];
     switch (role) {
         case 'hook':
-            effects.push(randomFrom(EFFECTS.camera, ['macro', 'travelling_av', 'dolly_zoom']));
+            effects.push(randomFrom(EFFECTS.camera, ['macro', 'travelling_av']));
             effects.push(randomFrom(EFFECTS.ambiance, ['cinema', 'showroom']));
             break;
         case 'transformation':
@@ -915,12 +589,12 @@ function selectEffectsForRole(role) {
             effects.push(randomFrom(EFFECTS.ambiance, ['archi', 'showroom']));
             break;
         case 'reveal':
-            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'travelling_ar', 'rotation180']));
+            effects.push(randomFrom(EFFECTS.camera, ['orbit', 'travelling_ar']));
             effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'cinema']));
             break;
         case 'ambiance':
-            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'ras_sol', 'plongee']));
-            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'soir', 'cocoon']));
+            effects.push(randomFrom(EFFECTS.camera, ['travelling_av', 'ras_sol']));
+            effects.push(randomFrom(EFFECTS.ambiance, ['golden', 'soir']));
             break;
         case 'macro':
         case 'detail':
@@ -968,56 +642,16 @@ function selectEffectsForRole(role) {
 function selectTransition(planA, planB) {
     const aCam = planA.effects.find(e => EFFECTS.camera.includes(e));
     const bCam = planB.effects.find(e => EFFECTS.camera.includes(e));
-    if (aCam && bCam) {
-        if (aCam.id === bCam.id) return { type: 'match_cut', duration: 0 };
-        if (aCam.id.includes('travelling_av') && bCam.id.includes('travelling_av')) {
-            return { type: 'match_cut', duration: 0 };
-        }
+    if (aCam && bCam && aCam.id === bCam.id) {
+        return { type: 'match_cut' };
     }
-    if (planA.role === 'hook' && planB.role === 'transformation') return { type: 'flash', duration: 0.3 };
-    if (planB.role === 'cta') return { type: 'fade', duration: 0.6 };
-    if (planA.role === 'reveal' && planB.role === 'macro') return { type: 'whip_pan', duration: 0.4 };
-    return { type: 'cut', duration: 0 };
+    if (planB.role === 'cta') return { type: 'fade' };
+    return { type: 'cut' };
 }
 
 function selectHook(objective) {
     const hooks = HOOKS[objective] || HOOKS.premium;
     return hooks[Math.floor(Math.random() * hooks.length)];
-}
-
-// ══════════════════════════════════════════════════════════════════
-// UTILITAIRES
-// ══════════════════════════════════════════════════════════════════
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-   function setStatus(text) {
-    const bar = document.getElementById('status-bar');
-    const txt = document.getElementById('status-text');
-    if (!bar || !txt) return;
-    if (text) { bar.classList.add('visible'); txt.textContent = text; }
-    else bar.classList.remove('visible');
-}
-function log(msg) { console.log('[MCP VS] ' + msg); }
-function randomFrom(arr, preferredIds = null) {
-    if (preferredIds && preferredIds.length) {
-        const filtered = arr.filter(e => preferredIds.includes(e.id));
-        if (filtered.length) return filtered[Math.floor(Math.random() * filtered.length)];
-    }
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-}
-function formatEta(seconds) {
-    if (seconds < 60) return Math.round(seconds) + 's';
-    const m = Math.floor(seconds / 60);
-    const s = Math.round(seconds % 60);
-    return m + 'm' + (s > 0 ? ' ' + s + 's' : '');
-}
-function getApiKey() {
-    try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); }
-    catch (e) { return ''; }
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1038,8 +672,7 @@ const state = {
     intensity: 'moderate',
     isLoadingMedia: false,
     creationAttemptsSinceLastError: 0,
-    currentStep: 1,
-    generatedVideos: []
+    currentStep: 1
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -1054,6 +687,8 @@ function setStep(step) {
         else if (n === step) el.classList.add('active');
     });
 }
+
+// (SUITE DANS LA PARTIE 3)
 
 // ══════════════════════════════════════════════════════════════════
 // TOAST
@@ -1434,8 +1069,7 @@ function renderConcepts() {
         sb.plans.map((p, i) => {
             return '• Plan ' + (i + 1) + ' — ' + esc(p.role) + ' — ' +
                 p.effects.map(e => e.emoji).join(' ') + ' — ' + p.duration + 's';
-        }).join('<br>') +
-        '</div></div>';
+        }).join('<br>') + '</div></div>';
     html += '<div class="hook-list">' +
         '<div style="font-size:0.72rem; font-weight:700; color:var(--mcp); margin-top:0.5rem;">💡 Hook sélectionné :</div>' +
         '<div class="hook-item"><div class="hook-label">Hook principal</div>' + esc(sb.hook) + '</div>' +
@@ -1449,37 +1083,22 @@ function renderConcepts() {
 function buildPromptForPlan(plan, objective) {
     const obj = OBJECTIVES[objective] || OBJECTIVES.premium;
     const brandName = document.getElementById('brand-name')?.value.trim() || 'Mon Cuisiniste Privé';
-    const brandTagline = document.getElementById('brand-tagline')?.value.trim() || '';
     const userPrompt = state.mainPrompt && state.mainPrompt.trim().length > 0 ? state.mainPrompt.trim() : '';
     const parts = [];
     parts.push(SOURCE_LOCK);
-    parts.push(REFERENCE_HIERARCHY);
     parts.push(obj.promptGuidance);
-    parts.push('This shot is the "' + plan.role + '" sequence of the ' + obj.name + ' video.');
-    for (const effect of plan.effects) parts.push(effect.prompt);
-    if (userPrompt) parts.push('Additional artistic direction: ' + userPrompt);
+    parts.push('Shot role: ' + plan.role + '.');
+    parts.push(plan.effects.map(e => e.prompt).join(' '));
+    if (userPrompt) parts.push(userPrompt);
     const intensityMap = {
-        subtle: 'very subtle motion, barely perceptible, elegant and quiet',
-        moderate: 'moderate movement, clear but controlled, balanced cinematic pace',
-        strong: 'dynamic movement, energetic cinematic motion'
+        subtle: 'subtle elegant motion',
+        moderate: 'moderate cinematic motion',
+        strong: 'dynamic energetic motion'
     };
     parts.push(intensityMap[state.intensity] || intensityMap.moderate);
-    parts.push('Brand context: ' + brandName + (brandTagline ? ' — ' + brandTagline : '') + '.');
-    const formatMap = {
-        '9:16': 'Vertical 9:16 portrait format for Instagram Reels and TikTok',
-        '16:9': 'Horizontal 16:9 landscape format for YouTube',
-        '1:1': 'Square 1:1 format for Instagram feed',
-        '4:5': 'Vertical 4:5 portrait format for Instagram feed'
-    };
-    parts.push(formatMap[state.format] || formatMap['9:16']);
-    parts.push('24fps, photorealistic, luxury commercial quality, no text overlays, no watermarks, no subtitles, no people.');
-    if (plan.transition) {
-        if (plan.transition.type === 'match_cut') parts.push('This shot ends with a movement that flows naturally into the next shot.');
-        else if (plan.transition.type === 'fade') parts.push('This shot ends with a smooth fade to black.');
-        else if (plan.transition.type === 'flash') parts.push('This shot ends with a bright flash transition.');
-        else if (plan.transition.type === 'whip_pan') parts.push('This shot ends with a fast whip pan motion.');
-    }
-    return parts.join('. ');
+    parts.push('Brand: ' + brandName + '.');
+    parts.push('Portrait 9:16 vertical, 24fps, photorealistic, luxury quality, no text, no watermarks, no people.');
+    return parts.join(' ');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1491,7 +1110,7 @@ async function apiFetch(url, options = {}) {
         try {
             const res = await fetch(url, options);
             if (res.status === 429) {
-                const wait = [30, 60, 120, 240, 300, 300, 300][Math.min(attempt, 6)];
+                const wait = [15, 30, 45, 60, 90, 120, 180][Math.min(attempt, 6)];
                 setStatus('L\'IA se prépare… (' + wait + 's)');
                 await sleep(wait * 1000);
                 continue;
@@ -1512,12 +1131,13 @@ async function apiFetch(url, options = {}) {
     }
     return fetch(url, options);
 }
-async function createVideoTask(imageDataUri, prompt, durationFrames) {
+
+async function createVideoTask(imageDataUri, prompt) {
     const body = {
         model: MODEL_VIDEO,
         prompt: prompt,
         image: imageDataUri,
-        num_frames: durationFrames,
+        num_frames: state.durationFrames,
         frame_rate: FRAME_RATE
     };
     const res = await apiFetch(API_BASE + '/videos', {
@@ -1533,32 +1153,19 @@ async function createVideoTask(imageDataUri, prompt, durationFrames) {
         throw new Error('HTTP ' + res.status + ' — ' + err.slice(0, 200));
     }
     const data = await res.json();
-    const videoId = data.video_id || data.id || data.task_id;
-    if (!videoId) throw new Error('Pas de video_id');
-    return videoId;
+    // ⚠️ On garde les DEUX identifiants
+    const videoId = data.video_id || data.id;
+    const taskId = data.task_id || data.id;
+    if (!videoId && !taskId) throw new Error('Pas d\'identifiant retourné');
+    return { videoId, taskId };
 }
-async function pollVideo(videoId, onProgress) {
-    // ─── CORRECTION : Décoder l'ID composite base64 ───
-    let realVideoId = videoId;
-    if (typeof videoId === 'string' && videoId.startsWith('video_')) {
-        try {
-            const base64Part = videoId.replace('video_', '');
-            if (base64Part.length > 60) {
-                const decoded = atob(base64Part);
-                const match = decoded.match(/video_id:(.+)$/);
-                if (match && match[1]) {
-                    realVideoId = match[1];
-                    log('ID décodé : ' + realVideoId);
-                }
-            }
-        } catch (e) {
-            log('Pas un ID composite, utilisation directe');
-        }
-    }
 
+async function pollVideo(ids, onProgress) {
+    // ids = { videoId, taskId }
+    let currentVideoId = ids.videoId || ids.taskId;
     const estimatedMs = estimateGenerationTime(state.durationFrames);
     const estimatedSec = estimatedMs / 1000;
-    let remaining = Math.max(20, Math.floor(estimatedSec * 0.8));
+    let remaining = Math.max(15, Math.floor(estimatedSec * 0.5));
     while (remaining > 0) {
         if (state.stopRequested) throw new Error('Arrêt demandé');
         onProgress('Préparation… — ' + remaining + 's');
@@ -1576,17 +1183,23 @@ async function pollVideo(videoId, onProgress) {
                 r--;
             }
         }
-        const url = POLL_BASE + '?video_id=' + encodeURIComponent(realVideoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
+        const url = POLL_BASE + '?video_id=' + encodeURIComponent(currentVideoId) + '&model_name=' + encodeURIComponent(MODEL_VIDEO);
         const res = await apiFetch(url, {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + getApiKey() }
         });
         const d = await res.json();
-        const status = d.status || d.internal_status || 'unknown';
-        const progress = d.progress || d.internal_progress || 0;
+        const status = d.status || 'unknown';
+        const progress = d.progress || 0;
         onProgress('Rendu… ' + progress + '%');
+
+        // ⚠️ CORRECTION CLÉ : si l'API renvoie un id court, l'utiliser pour les prochains pollings
+        if (d.id && typeof d.id === 'string' && d.id.startsWith('video_') && d.id !== currentVideoId) {
+            currentVideoId = d.id;
+        }
+
         if (status === 'completed' || status === 'succeeded' || status === 'done') {
-            const videoUrl = d.url || (d.metadata && d.metadata.url) || (d.output && d.output.url);
+            const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
             if (!videoUrl) throw new Error('Terminé mais pas d\'URL');
             return videoUrl;
         }
@@ -1598,81 +1211,6 @@ async function pollVideo(videoId, onProgress) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// FFMPEG.WASM
-// ══════════════════════════════════════════════════════════════════
-let ffmpegInstance = null;
-let ffmpegLoading = false;
-async function loadFFmpeg() {
-    if (ffmpegInstance) return ffmpegInstance;
-    if (ffmpegLoading) {
-        while (ffmpegLoading) await sleep(500);
-        return ffmpegInstance;
-    }
-    ffmpegLoading = true;
-    setStatus('Chargement de l\'outil d\'assemblage… (25 Mo)');
-    try {
-        const { FFmpeg } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js');
-        const { fetchFile } = await import('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js');
-        ffmpegInstance = new FFmpeg();
-        await ffmpegInstance.load({
-            coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js',
-            wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm'
-        });
-        ffmpegInstance.fetchFile = fetchFile;
-        return ffmpegInstance;
-    } catch (e) {
-        ffmpegInstance = null;
-        return null;
-    } finally {
-        ffmpegLoading = false;
-    }
-}
-async function assembleClips(clipUrls) {
-    const ffmpeg = await loadFFmpeg();
-    if (!ffmpeg) return { url: null, fallback: true };
-    try {
-        setStatus('Assemblage des clips…');
-        const fetchFile = ffmpeg.fetchFile;
-        for (let i = 0; i < clipUrls.length; i++) {
-            setStatus('Téléchargement clip ' + (i + 1) + '/' + clipUrls.length);
-            const data = await fetchFile(clipUrls[i]);
-            ffmpeg.writeFile('clip' + i + '.mp4', data);
-        }
-        const normalizedFiles = [];
-        for (let i = 0; i < clipUrls.length; i++) {
-            setStatus('Normalisation clip ' + (i + 1) + '/' + clipUrls.length);
-            const out = 'norm' + i + '.mp4';
-            await ffmpeg.exec([
-                '-i', 'clip' + i + '.mp4',
-                '-c:v', 'libx264',
-                '-pix_fmt', 'yuv420p',
-                '-preset', 'fast',
-                '-crf', '23',
-                '-an',
-                out
-            ]);
-            normalizedFiles.push(out);
-        }
-        const concatList = normalizedFiles.map(f => "file '" + f + "'").join('\n');
-        ffmpeg.writeFile('concat.txt', new TextEncoder().encode(concatList));
-        setStatus('Concaténation finale…');
-        await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', 'output.mp4']);
-        const result = await ffmpeg.readFile('output.mp4');
-        const blob = new Blob([result.buffer], { type: 'video/mp4' });
-        const url = URL.createObjectURL(blob);
-        for (let i = 0; i < clipUrls.length; i++) {
-            try { ffmpeg.deleteFile('clip' + i + '.mp4'); } catch (e) {}
-            try { ffmpeg.deleteFile('norm' + i + '.mp4'); } catch (e) {}
-        }
-        try { ffmpeg.deleteFile('concat.txt'); } catch (e) {}
-        try { ffmpeg.deleteFile('output.mp4'); } catch (e) {}
-        return { url, fallback: false };
-    } catch (e) {
-        return { url: null, fallback: true };
-    }
-}
-
-// ══════════════════════════════════════════════════════════════════
 // FILE D'ATTENTE
 // ══════════════════════════════════════════════════════════════════
 function renderQueue() {
@@ -1681,17 +1219,15 @@ function renderQueue() {
     queueEl.style.display = 'block';
     const total = state.queue.length;
     const done = state.completed + state.failed;
-    const inProgress = state.queue.filter(q => q.status === 'processing').length;
-    const pending = total - done - inProgress;
     const estGen = estimateGenerationTime(state.durationFrames) / 1000;
-    const eta = pending > 0
-        ? (pending * (createIntervalMs / 1000)) + estGen
-        : (inProgress * estGen / Math.max(inProgress, 1));
+    const pending = total - done;
+    const eta = pending > 0 ? (pending * (createIntervalMs / 1000)) + estGen : 0;
     let html = '<div class="queue-summary">' +
         '<span class="progress-text">' + done + '/' + total + ' clips</span>' +
-        '<span class="eta-text">' + (done < total ? '≈ ' + formatEta(eta) + ' restant' : 'Assemblage…') + '</span>' +
+        '<span class="eta-text">' + (done < total ? '≈ ' + formatEta(eta) + ' restant' : 'Terminé') + '</span>' +
         '</div>';
-    html += state.queue.slice(0, MAX_VISIBLE_QUEUE).map(item => {
+    const visible = state.queue.slice(0, MAX_VISIBLE_QUEUE);
+    html += visible.map(item => {
         let icon = '○', statusText = 'En attente', cls = 'pending';
         if (item.status === 'creating') { icon = '◐'; statusText = 'Préparation…'; cls = 'creating'; }
         else if (item.status === 'processing') { icon = '◐'; statusText = item.progress || 'En cours'; cls = 'processing'; }
@@ -1715,20 +1251,22 @@ async function createTaskOnly(item) {
     renderQueue();
     const prompt = buildPromptForPlan(item.plan, state.selectedObjective);
     item.prompt = prompt;
-    const videoId = await createVideoTask(item.plan.media.dataUri, prompt, state.durationFrames);
-    item.videoId = videoId;
+    const ids = await createVideoTask(item.plan.media.dataUri, prompt);
+    item.videoId = ids.videoId;
+    item.taskId = ids.taskId;
     item.startTime = Date.now();
     item.status = 'processing';
     item.progress = 'En cours…';
     renderQueue();
-    return videoId;
+    return ids;
 }
+
 async function pollTaskAndDisplay(item) {
     try {
-        const videoUrl = await pollVideo(item.videoId, (prog) => {
-            item.progress = prog;
-            renderQueue();
-        });
+        const videoUrl = await pollVideo(
+            { videoId: item.videoId, taskId: item.taskId },
+            (prog) => { item.progress = prog; renderQueue(); }
+        );
         const elapsed = Date.now() - item.startTime;
         recordGenerationTime(state.durationFrames, elapsed);
         item.status = 'done';
@@ -1737,13 +1275,14 @@ async function pollTaskAndDisplay(item) {
         state.completed++;
         renderQueue();
         updateGenerateBtn();
+        addToGallery(videoUrl, 'Plan ' + (item.planIndex + 1) + ' — ' + item.plan.role);
     } catch (e) {
         if (e.message === 'Arrêt demandé') {
             item.status = 'failed';
             item.progress = 'Arrêté';
         } else {
             item.status = 'failed';
-            item.progress = 'Échec';
+            item.progress = 'Échec: ' + e.message.slice(0, 30);
             state.failed++;
         }
         renderQueue();
@@ -1771,6 +1310,7 @@ async function analyzeAndPropose() {
     document.getElementById('section-concepts').classList.add('open');
     document.getElementById('section-concepts').scrollIntoView({ behavior: 'smooth' });
 }
+
 async function startCampaign() {
     if (state.isRunning) return;
     if (!getApiKey()) {
@@ -1788,7 +1328,6 @@ async function startCampaign() {
     state.completed = 0;
     state.failed = 0;
     createIntervalMs = CREATE_INTERVAL_MIN;
-
     const sb = state.currentStoryboard;
     state.queue = sb.plans.map((plan, i) => ({
         planIndex: i,
@@ -1796,24 +1335,21 @@ async function startCampaign() {
         status: 'pending',
         progress: null,
         videoId: null,
+        taskId: null,
         videoUrl: null,
         prompt: null,
         startTime: null
     }));
-
     document.getElementById('gallery-grid').innerHTML = '';
     document.getElementById('gallery').style.display = 'none';
     document.getElementById('stop-btn').classList.add('visible');
     document.getElementById('generate-btn').disabled = true;
-
     setStep(4);
     await ensureWakeLockActive();
     renderQueue();
     updateGenerateBtn();
-
     const totalStart = Date.now();
     const pollingTasks = [];
-
     try {
         for (let i = 0; i < state.queue.length; i++) {
             if (state.stopRequested) break;
@@ -1842,26 +1378,9 @@ async function startCampaign() {
             setStatus('Attente des derniers rendus…');
             await Promise.allSettled(pollingTasks);
         }
-        const successClips = state.queue.filter(q => q.status === 'done' && q.videoUrl);
-        if (successClips.length >= 2) {
-            setStatus('Assemblage de la vidéo finale…');
-            const urls = successClips.map(c => c.videoUrl);
-            const assembled = await assembleClips(urls);
-            if (assembled.url) {
-                addToGallery(assembled.url, '🎬 ' + OBJECTIVES[sb.objective].name + ' — Vidéo finale ' + sb.duration + 's');
-            } else {
-                successClips.forEach((c, i) => {
-                    addToGallery(c.videoUrl, 'Clip ' + (i + 1) + ' — ' + c.plan.role);
-                });
-                showToast('Clips générés (assemblage auto indisponible)', 'warn', 5000);
-            }
-        } else if (successClips.length === 1) {
-            addToGallery(successClips[0].videoUrl, 'Clip unique');
-        }
         setStep(5);
         document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-    } catch (e) { log('Erreur : ' + e.message); }
-
+    } catch (e) { log('Erreur globale : ' + e.message); }
     const totalElapsed = (Date.now() - totalStart) / 1000;
     setStatus(state.stopRequested
         ? 'Arrêté — ' + state.completed + ' clips'
@@ -1874,6 +1393,7 @@ async function startCampaign() {
     updateGenerateBtn();
     showToast('Campagne terminée ✓', 'success');
 }
+
 function stopGeneration() {
     if (!state.isRunning) return;
     state.stopRequested = true;
@@ -1907,12 +1427,14 @@ function addToGallery(videoUrl, label) {
         const savedObj = localStorage.getItem(OBJECTIVE_STORAGE);
         if (savedObj && OBJECTIVES[savedObj]) state.selectedObjective = savedObj;
     } catch (e) {}
+
     try {
         const savedBrand = JSON.parse(localStorage.getItem(BRAND_STORAGE) || '{}');
         if (savedBrand.name) document.getElementById('brand-name').value = savedBrand.name;
         if (savedBrand.tagline) document.getElementById('brand-tagline').value = savedBrand.tagline;
         if (savedBrand.slogan) document.getElementById('brand-slogan').value = savedBrand.slogan;
     } catch (e) {}
+
     try {
         const saved = localStorage.getItem(WAKE_LOCK_PREF);
         wakeLockEnabled = saved === '1';
@@ -1943,55 +1465,4 @@ function addToGallery(videoUrl, label) {
             state.durationFrames = parseInt(e.target.value, 10);
         });
     }
-    const formatSelect = document.getElementById('format-select');
-    if (formatSelect) formatSelect.addEventListener('change', e => { state.format = e.target.value; });
-    const intensitySelect = document.getElementById('intensity-select');
-    if (intensitySelect) intensitySelect.addEventListener('change', e => { state.intensity = e.target.value; });
-
-    const generateBtn = document.getElementById('generate-btn');
-    if (generateBtn) generateBtn.addEventListener('click', startCampaign);
-    const stopBtn = document.getElementById('stop-btn');
-    if (stopBtn) stopBtn.addEventListener('click', stopGeneration);
-    const analyzeBtn = document.getElementById('analyze-btn');
-    if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeAndPropose);
-    const saveApiBtn = document.getElementById('api-save-btn');
-    if (saveApiBtn) saveApiBtn.addEventListener('click', saveApiKey);
-    const wakeBtn = document.getElementById('wake-toggle-btn');
-    if (wakeBtn) wakeBtn.addEventListener('click', toggleWakeLock);
-
-    const apiInput = document.getElementById('api-key-input');
-    if (apiInput) {
-        apiInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
-        });
-    }
-
-    ['brand-name', 'brand-tagline', 'brand-slogan'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', () => {
-            const brand = {
-                name: document.getElementById('brand-name').value,
-                tagline: document.getElementById('brand-tagline').value,
-                slogan: document.getElementById('brand-slogan').value
-            };
-            try { localStorage.setItem(BRAND_STORAGE, JSON.stringify(brand)); } catch (e) {}
-            const sig = document.getElementById('header-signature');
-            if (sig) sig.textContent = brand.name + (brand.tagline ? ' · ' + brand.tagline : '');
-        });
-    });
-
-    renderObjectives();
-    renderMedia();
-    renderConcepts();
-    setStep(1);
-    setStatus(null);
-    updateApiPanel();
-    updateWakeStatus();
-    log('MCP Video Studio prêt');
-
-    if (wakeLockEnabled) activateWakeLock().then(() => updateWakeStatus());
-})();
-</script>
-
-</body>
-</html>
+   
