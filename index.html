@@ -989,6 +989,13 @@ function selectHook(objective) {
 // UTILITAIRES
 // ══════════════════════════════════════════════════════════════════
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+   function setStatus(text) {
+    const bar = document.getElementById('status-bar');
+    const txt = document.getElementById('status-text');
+    if (!bar || !txt) return;
+    if (text) { bar.classList.add('visible'); txt.textContent = text; }
+    else bar.classList.remove('visible');
+}
 function log(msg) { console.log('[MCP VS] ' + msg); }
 function randomFrom(arr, preferredIds = null) {
     if (preferredIds && preferredIds.length) {
