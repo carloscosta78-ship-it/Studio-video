@@ -564,18 +564,26 @@ async function pollTask(videoId, onProgress) {
       await sleep(8000);
       continue;
     }
-    const d = await res.json();
-    const st = d.status || 'unknown';
+        const d = await res.json();
+    const st = (d.status || '').toLowerCase();
+    const internal = (d.internal_status || '').toLowerCase();
     const pr = d.progress || 0;
     onProgress('Création... ' + pr + '%');
-    if (st === 'completed' || st === 'succeeded' || st === 'done') {
-      const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
-      if (!videoUrl) throw new Error('Pas d\'URL');
+    
+    // SUCCÈS : statuts reconnus par Agnes
+    if (st === 'completed' || st === 'succeeded' || st === 'done' || st === 'success') {
+      const videoUrl = d.url || (d.metadata && d.metadata.url) || (d.output && d.output.url);
+      if (!videoUrl) throw new Error('Pas d\'URL dans la réponse');
       return videoUrl;
     }
-    if (st === 'failed' || st === 'error' || st === 'cancelled') {
+    
+    // ÉCHEC
+    if (st === 'failed' || st === 'error' || st === 'cancelled' || st === 'canceled') {
       throw new Error('Échec (' + st + ')');
     }
+    
+    // EN COURS : on continue d'attendre (in_progress, inference, queued, pending, processing, running)
+    // Aucune action — la boucle continue
   }
   throw new Error('Timeout');
 }
