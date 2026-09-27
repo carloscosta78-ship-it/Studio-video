@@ -3,30 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MCP Video Studio</title>
+<title>Studio Aménagement</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
   --bg: #fafafa; --panel: #fff; --panel2: #f5f5f5; --border: #e5e5e5;
   --ink: #1a1a1a; --dim: #777; --faint: #aaa;
   --ok: #2d8a4e; --err: #c0392b; --warn: #d4a017;
-  --mcp: #8b6f47; --mcp-light: #f5efe6;
+  --mcp: #b8860b; --mcp-light: #fdf8ee;
   --r: 12px;
 }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: var(--bg); color: var(--ink); min-height: 100vh; padding: 1.5rem 1rem 6rem;
   font-size: 15px; line-height: 1.5; max-width: 900px; margin: 0 auto; }
 header { margin-bottom: 1.5rem; text-align: center; }
-h1 { font-size: 1.5rem; font-weight: 500; }
-h1 .brand { color: var(--mcp); font-weight: 700; }
+h1 { font-size: 1.4rem; font-weight: 500; margin-bottom: 0.3rem; }
 .subtitle { font-size: 0.8rem; color: var(--dim); font-style: italic; }
-.sig { font-size: 0.68rem; color: var(--mcp); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.4rem; font-weight: 600; }
-.banner { background: var(--mcp-light); border-left: 3px solid var(--mcp); padding: 0.75rem 0.95rem; border-radius: 8px; font-size: 0.78rem; color: #4a3a25; margin-bottom: 1rem; line-height: 1.45; }
+.banner { background: var(--mcp-light); border-left: 3px solid var(--mcp); padding: 0.75rem 0.95rem; border-radius: 8px; font-size: 0.78rem; color: #5c4a1a; margin-bottom: 1rem; line-height: 1.45; }
+.mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+.mode-card { padding: 0.9rem 0.7rem; border-radius: var(--r); border: 2px solid var(--border); background: var(--panel); cursor: pointer; text-align: center; }
+.mode-card.sel { border-color: var(--mcp); background: var(--mcp); color: #fff; }
+.mode-card .e { font-size: 1.6rem; display: block; margin-bottom: 0.3rem; }
+.mode-card .n { font-size: 0.8rem; font-weight: 600; line-height: 1.2; }
+.mode-card .d { font-size: 0.62rem; opacity: 0.7; margin-top: 0.15rem; line-height: 1.2; }
 .section { background: var(--panel); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 1rem; overflow: hidden; }
 .sh { padding: 0.9rem 1.1rem; cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
-.sh:active { background: var(--panel2); }
 .st { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); font-weight: 600; }
-.st .bdg { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem; background: var(--mcp); color: #fff; border-radius: 10px; font-size: 0.65rem; }
+.st .b { display: inline-block; margin-left: 0.4rem; padding: 0.1rem 0.4rem; background: var(--mcp); color: #fff; border-radius: 10px; font-size: 0.65rem; }
 .chev { font-size: 0.7rem; color: var(--faint); transition: transform 0.2s; }
 .section.open .chev { transform: rotate(180deg); }
 .sb { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
@@ -37,7 +40,6 @@ h1 .brand { color: var(--mcp); font-weight: 700; }
 .api-input { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem; margin-bottom: 0.6rem; }
 .api-input:focus { outline: none; border-color: var(--mcp); }
 .api-btn { width: 100%; padding: 0.8rem 1.2rem; border-radius: 8px; border: none; background: var(--mcp); color: #fff; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 0.6rem; }
-.api-btn:active { transform: scale(0.98); }
 .api-status { font-size: 0.75rem; padding: 0.55rem 0.85rem; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem; background: var(--panel2); color: var(--dim); }
 .api-status.ok { background: #e3f5e9; color: var(--ok); font-weight: 600; }
 .api-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
@@ -51,35 +53,32 @@ h1 .brand { color: var(--mcp); font-weight: 700; }
 .upload .icon { font-size: 2.2rem; margin-bottom: 0.6rem; opacity: 0.6; }
 .upload .txt { font-size: 0.95rem; margin-bottom: 0.2rem; }
 .upload .hint { font-size: 0.75rem; color: var(--dim); }
-.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
-.media-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f0f0f0; aspect-ratio: 9/16; }
-.media-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.media-card .role { position: absolute; top: 3px; left: 3px; background: var(--mcp); color: #fff; padding: 1px 5px; border-radius: 5px; font-size: 8px; font-weight: 700; }
-.media-card .rm { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.65); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
-.obj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-.obj-card { padding: 0.8rem 0.7rem; border-radius: 8px; border: 2px solid var(--border); background: var(--panel2); cursor: pointer; text-align: center; }
-.obj-card.sel { border-color: var(--mcp); background: var(--mcp); color: #fff; }
-.obj-card .e { font-size: 1.3rem; display: block; margin-bottom: 0.2rem; }
-.obj-card .n { font-size: 0.72rem; font-weight: 600; }
-.obj-card .d { font-size: 0.6rem; opacity: 0.7; margin-top: 0.1rem; }
-.concept { padding: 0.9rem 1rem; border-radius: 8px; border: 2px solid var(--mcp); background: var(--mcp-light); margin-bottom: 0.5rem; }
-.concept .title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
-.concept .meta { font-size: 0.7rem; color: var(--dim); margin-bottom: 0.4rem; }
-.concept .sb-text { font-size: 0.68rem; line-height: 1.5; color: var(--dim); }
-.hook { padding: 0.6rem 0.8rem; border-radius: 8px; background: var(--panel2); border: 1px solid var(--border); font-size: 0.78rem; margin-top: 0.5rem; }
-.hook .lbl { font-weight: 700; color: var(--mcp); font-size: 0.68rem; text-transform: uppercase; margin-bottom: 0.2rem; }
-.prompt-main { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.9rem; min-height: 80px; resize: vertical; }
+.img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+.img-card { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #f0f0f0; aspect-ratio: 9/16; }
+.img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-card .rm { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.65); color: #fff; border: none; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; cursor: pointer; }
+.prompt-main { width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.9rem; min-height: 110px; resize: vertical; line-height: 1.5; }
 .prompt-main:focus { outline: none; border-color: var(--mcp); }
+.presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.preset { padding: 0.35rem 0.7rem; border-radius: 16px; border: 1px solid var(--border); background: var(--panel2); font-size: 0.72rem; cursor: pointer; }
+.preset:active { transform: scale(0.96); }
+.preset:hover { border-color: var(--mcp); }
 .hint { font-size: 0.72rem; color: var(--dim); margin-top: 0.5rem; line-height: 1.4; }
+.style-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; }
+.style-card { padding: 0.75rem 0.85rem; border-radius: 8px; border: 1px solid var(--border); background: var(--panel2); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+.style-card.sel { background: var(--mcp); color: #fff; border-color: var(--mcp); }
+.style-card .e { font-size: 1.2rem; flex-shrink: 0; }
+.style-card .n { font-size: 0.8rem; font-weight: 500; line-height: 1.2; }
+.style-card .d { font-size: 0.65rem; opacity: 0.7; margin-top: 0.1rem; line-height: 1.2; }
+.no-style { grid-column: 1 / -1; padding: 0.8rem 1rem; border-radius: 8px; border: 2px dashed var(--border); background: transparent; text-align: center; cursor: pointer; font-size: 0.82rem; color: var(--dim); }
+.no-style.sel { border-color: var(--mcp); border-style: solid; background: var(--mcp-light); color: var(--ink); font-weight: 600; }
 .row { margin-bottom: 0.9rem; }
-.row:last-child { margin-bottom: 0; }
 .lbl { display: block; font-size: 0.72rem; color: var(--dim); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
-select, input[type=text] { width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.88rem; }
-select:focus, input[type=text]:focus { outline: none; border-color: var(--mcp); }
+select { width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; border: 1px solid var(--border); background: #fafafa; font-family: inherit; font-size: 0.88rem; }
+select:focus { outline: none; border-color: var(--mcp); }
 .btn-primary { width: 100%; padding: 1.1rem; border-radius: var(--r); border: none; background: var(--mcp); color: #fff; font-size: 1rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; }
 .btn-primary:active:not(:disabled) { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
-.btn-secondary { width: 100%; padding: 0.9rem; border-radius: var(--r); border: 1px solid var(--mcp); background: var(--panel); color: var(--mcp); font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; }
 .btn-stop { width: 100%; padding: 0.8rem; border-radius: var(--r); border: 1px solid var(--border); background: var(--panel); color: var(--err); font-size: 0.85rem; font-weight: 600; font-family: inherit; cursor: pointer; margin-bottom: 1rem; display: none; }
 .btn-stop.visible { display: block; }
 .queue { margin-top: 1rem; }
@@ -90,7 +89,7 @@ select:focus, input[type=text]:focus { outline: none; border-color: var(--mcp); 
 .q-item.processing { border-color: var(--mcp); }
 .q-item.done { border-color: var(--ok); }
 .q-item.failed { border-color: var(--err); }
-.q-item .ic { font-size: 1rem; width: 1.5rem; text-align: center; }
+.q-item .ic { font-size: 1rem; width: 1.5rem; text-align: center; flex-shrink: 0; }
 .q-item .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .q-item .st2 { font-size: 0.72rem; color: var(--dim); text-align: right; flex-shrink: 0; }
 .gallery { margin-top: 1.5rem; }
@@ -114,107 +113,93 @@ select:focus, input[type=text]:focus { outline: none; border-color: var(--mcp); 
 <body>
 
 <header>
-  <h1><span class="brand">MCP</span> Video Studio</h1>
-  <p class="subtitle">AI Creative Studio for Interior Design</p>
-  <p class="sig" id="sig">Mon Cuisiniste Privé · Rambouillet · Yvelines</p>
+  <h1>Studio Aménagement</h1>
+  <p class="subtitle">Cuisine · Salle de bain · Dressing</p>
 </header>
 
 <div class="banner">
-  <strong>MCP Video Studio</strong> transforme vos photos de cuisine en clips vidéo publicitaires.
-  Choisissez un objectif, l'IA crée le storyboard, génère les clips. Téléchargez-les, puis montez-les avec CapCut.
+  <strong>Outil pro pour créateurs de contenu aménagement.</strong>
+  Choisis un mode, ajoute tes photos, écris ton prompt, et génère.
+  Format <strong>9:16 vertical</strong> · <strong>Aucun son</strong> — ajoute ta musique à la publication.
 </div>
 
+<!-- MODES -->
+<div class="mode-grid" id="mode-grid"></div>
+
+<!-- API -->
 <div class="api-panel" id="api-panel">
-  <input type="password" class="api-input" id="api-input" placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off">
+  <input type="password" class="api-input" id="api-input" placeholder="Collez votre clé API (sk-...)" autocomplete="off">
   <button type="button" class="api-btn" id="api-btn">Enregistrer la clé</button>
-  <div class="api-status" id="api-status">
-    <span class="dot"></span>
-    <span id="api-text">Aucune clé API</span>
-  </div>
+  <div class="api-status" id="api-status"><span class="dot"></span><span id="api-text">Aucune clé API</span></div>
   <div class="api-hint">Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank">platform.agnes-ai.com</a></div>
 </div>
 
-<div class="section open" id="s-import">
-  <div class="sh" data-toggle="s-import">
-    <span class="st">1️⃣ Importer vos photos <span class="bdg">photos</span></span>
-    <span class="chev">▼</span>
-  </div>
-  <div class="sb"><div class="sc">
-    <div class="upload" id="upload">
-      <input type="file" id="file-input" accept="image/*" multiple>
-      <div class="icon">＋</div>
-      <div class="txt">Ajoutez vos photos de cuisine</div>
-      <div class="hint">3 à 8 photos recommandées · JPG recommandé</div>
-    </div>
-    <div class="media-grid" id="media-grid"></div>
-    <div class="hint">💡 <strong>La première photo est la référence absolue</strong> du projet.</div>
-  </div></div>
+<!-- UPLOAD -->
+<div class="upload" id="upload">
+  <input type="file" id="file-input" accept="image/*" multiple>
+  <div class="icon">＋</div>
+  <div class="txt">Ajoutez vos photos</div>
+  <div class="hint">1 photo = 1 vidéo · Format portrait recommandé</div>
 </div>
 
-<div class="section" id="s-obj">
-  <div class="sh" data-toggle="s-obj">
-    <span class="st">2️⃣ Objectif de la vidéo <span class="bdg">storytelling</span></span>
-    <span class="chev">▼</span>
-  </div>
-  <div class="sb"><div class="sc">
-    <div class="obj-grid" id="obj-grid"></div>
-  </div></div>
-</div>
+<div class="img-grid" id="img-grid"></div>
 
-<div class="section" id="s-concept">
-  <div class="sh" data-toggle="s-concept">
-    <span class="st">3️⃣ Concept & storyboard <span class="bdg">IA</span></span>
-    <span class="chev">▼</span>
-  </div>
-  <div class="sb"><div class="sc">
-    <div id="concept-box"></div>
-    <button type="button" class="btn-secondary" id="analyze-btn">🔍 Analyser & proposer</button>
-  </div></div>
-</div>
-
-<div class="section" id="s-brand">
-  <div class="sh" data-toggle="s-brand">
-    <span class="st">🏷️ Identité MCP</span>
-    <span class="chev">▼</span>
-  </div>
-  <div class="sb"><div class="sc">
-    <div class="row"><label class="lbl">Nom</label><input type="text" id="brand-name" value="Mon Cuisiniste Privé"></div>
-    <div class="row"><label class="lbl">Signature</label><input type="text" id="brand-tagline" value="Conception de mobilier sur mesure · Rambouillet · Yvelines"></div>
-  </div></div>
-</div>
-
-<div class="section" id="s-prompt">
+<!-- PROMPT -->
+<div class="section open" id="s-prompt">
   <div class="sh" data-toggle="s-prompt">
-    <span class="st">✍️ Votre vision (optionnel)</span>
+    <span class="st">✍️ Votre prompt <span class="b">recommandé</span></span>
     <span class="chev">▼</span>
   </div>
   <div class="sb"><div class="sc">
-    <textarea class="prompt-main" id="main-prompt" placeholder="Direction artistique : « Cuisine haut de gamme, lumière naturelle du matin. »"></textarea>
+    <textarea class="prompt-main" id="main-prompt" placeholder="Décrivez ce que l'IA doit faire. Utilisez un preset ci-dessous pour aller plus vite."></textarea>
+    <div class="presets" id="presets"></div>
+    <div class="hint">💡 Ce prompt s'applique à <strong>toutes</strong> les images.</div>
   </div></div>
 </div>
 
+<!-- AMBIANCE -->
+<div class="section" id="s-ambiance">
+  <div class="sh" data-toggle="s-ambiance">
+    <span class="st">🎨 Ambiance visuelle <span class="b">optionnel</span></span>
+    <span class="chev">▼</span>
+  </div>
+  <div class="sb"><div class="sc">
+    <div class="style-grid" id="style-grid"></div>
+  </div></div>
+</div>
+
+<!-- TECH -->
 <div class="section" id="s-tech">
   <div class="sh" data-toggle="s-tech">
     <span class="st">📷 Réglages</span>
     <span class="chev">▼</span>
   </div>
   <div class="sb"><div class="sc">
-    <div class="row"><label class="lbl">Durée par clip</label>
-      <select id="dur"><option value="121">5 s</option><option value="153" selected>6,4 s (recommandé)</option><option value="193">8 s</option><option value="241">10 s</option></select>
+    <div class="row"><label class="lbl">Durée</label>
+      <select id="dur">
+        <option value="121">5 secondes</option>
+        <option value="153" selected>6,4 secondes (recommandé)</option>
+        <option value="241">10 secondes</option>
+      </select>
     </div>
-    <div class="row"><label class="lbl">Intensité mouvement</label>
-      <select id="int"><option value="subtle">Subtile</option><option value="moderate" selected>Modérée</option><option value="strong">Forte</option></select>
+    <div class="row"><label class="lbl">Mouvement</label>
+      <select id="int">
+        <option value="random">Automatique</option>
+        <option value="subtle">Très subtil</option>
+        <option value="moderate">Modéré</option>
+        <option value="strong">Dynamique</option>
+      </select>
     </div>
   </div></div>
 </div>
 
-<button type="button" class="btn-primary" id="gen-btn" disabled>🎬 Générer les clips</button>
+<button type="button" class="btn-primary" id="gen-btn" disabled>Créer les vidéos</button>
 <button type="button" class="btn-stop" id="stop-btn">⏹ Arrêter</button>
 
 <div class="queue" id="queue" style="display:none;"></div>
 
 <div class="gallery" id="gallery" style="display:none;">
-  <div class="st" style="margin-bottom:0.8rem;">🎥 Clips générés</div>
+  <div class="st" style="margin-bottom:0.8rem;">🎥 Vidéos générées</div>
   <div class="g-grid" id="g-grid"></div>
 </div>
 
@@ -222,115 +207,95 @@ select:focus, input[type=text]:focus { outline: none; border-color: var(--mcp); 
 <div class="toast" id="toast"><span id="toast-text">Message</span></div>
 
 <script>
-// ══════════════════════════════════════════════
 // CONFIG
-// ══════════════════════════════════════════════
 const API = 'https://apihub.agnes-ai.com/v1';
 const POLL = 'https://apihub.agnes-ai.com/agnesapi';
 const MODEL = 'agnes-video-v2.0';
 const FPS = 24;
-const KEY_STORE = 'mcp_vs_key_v2';
-const POLL_INTERVAL = 8;
-const MAX_POLL = 120;
+const KEY_STORE = 'sda_key_v1';
 const MAX_SIZE = 50 * 1024 * 1024;
 const THUMB_W = 200;
 
-// ══════════════════════════════════════════════
-// OBJECTIFS
-// ══════════════════════════════════════════════
-const OBJECTIVES = {
-  vues: { emoji:'🔥', name:'Obtenir des vues', desc:'Viral, spectaculaire', duration:20, structure:['hook','transformation','reveal','cta'], guidance:'Create a scroll-stopping viral video. Fast pace, punchy transitions, spectacular effects.' },
-  envie: { emoji:'❤️', name:'Donner envie', desc:'Lumière, matières', duration:30, structure:['hook','ambiance','macro','reveal','cta'], guidance:'Create a desire-driven video. Warm cinematic lighting, luxurious materials, elegant pace.' },
-  savoirfaire: { emoji:'🏆', name:'Savoir-faire', desc:'Détails, technique', duration:30, structure:['hook','detail','macro','reveal'], guidance:'Create a craftsmanship showcase. Emphasize precision, quality, technical details.' },
-  transformation: { emoji:'🔄', name:'Transformation', desc:'Avant / après', duration:25, structure:['hook','before','construction','reveal','cta'], guidance:'Create a before/after transformation. Progressive reveal of the finished kitchen.' },
-  conception: { emoji:'📐', name:'Conception', desc:'Plans, 2D → 3D', duration:30, structure:['hook','plan2d','wireframe','reveal'], guidance:'Create a design process video. 2D plan to 3D wireframe to photorealistic result.' },
-  premium: { emoji:'💰', name:'Haut de gamme', desc:'Luxe, macro', duration:35, structure:['hook','ambiance','macro','orbit','hero'], guidance:'Create a luxury brand video. Ultra-premium atmosphere, dramatic lighting, macro details.' },
-  devis: { emoji:'📩', name:'Générer devis', desc:'Problème → CTA', duration:25, structure:['hook','problem','solution','cta'], guidance:'Create a lead-generation video. Problem to solution to beautiful result to call-to-action.' },
-  realisation: { emoji:'🏠', name:'Présenter réalisation', desc:'Visite complète', duration:40, structure:['hook','entrance','wide','island','hero'], guidance:'Create a complete project showcase. Camera walks through, revealing space and details.' },
-  detail: { emoji:'👀', name:'Découvrir un détail', desc:'Macro, zoom', duration:15, structure:['hook','macro','reveal'], guidance:'Create a macro detail video. Extreme close-up on one beautiful element.' }
+// MODES
+const MODES = {
+  'cuisine-av': { e:'🍳', n:'Cuisine Avant/Après', d:'Transformation spectaculaire',
+    prefix:'Create an animated before/after transformation of this kitchen renovation. Start with the original dated kitchen, then gradually reveal the modern renovated kitchen. Smooth cinematic reveal. Emphasize contrast: cabinetry, countertops, lighting, layout. Keep the same room layout and framing.',
+    suffix:'Kitchen renovation showcase: dramatic transformation, warm cinematic lighting, premium interior magazine quality. Portrait 9:16 vertical. No text, no subtitles, no watermarks, no people.',
+    presets:[
+      {l:'🎬 Révélation cinéma', t:'Révélation cinématographique. La cuisine ancienne s\'efface progressivement pour laisser place à la cuisine moderne, morphing fluide et lumineux.'},
+      {l:'✨ Balayage lumière', t:'Un balayage de lumière dorée traverse l\'image, transformant la cuisine ancienne en cuisine moderne.'},
+      {l:'🔄 Comparaison', t:'Comparaison directe entre l\'ancienne et la nouvelle cuisine. Effet de glissement révélant le changement.'}
+    ]
+  },
+  'sdb-av': { e:'🛁', n:'Salle de bain Avant/Après', d:'Rénovation salle de bain',
+    prefix:'Create an animated before/after transformation of this bathroom renovation. Smooth cinematic reveal. Emphasize contrast: tiles, shower, bathtub, vanity, lighting, fixtures. Premium spa bathroom reveal. Keep the same room layout and framing.',
+    suffix:'Bathroom renovation showcase: dramatic transformation, clean and bright, premium spa atmosphere. Portrait 9:16 vertical. No text, no watermarks, no people.',
+    presets:[
+      {l:'💧 Révélation spa', t:'Révélation douce et apaisante, comme une entrée dans un spa.'},
+      {l:'✨ Éclat marbre', t:'Mise en valeur des matériaux nobles : marbre, céramique, robinetterie dorée.'}
+    ]
+  },
+  'dressing-av': { e:'🚪', n:'Dressing Avant/Après', d:'Transformation dressing',
+    prefix:'Create an animated before/after transformation of this dressing renovation. Smooth cinematic reveal. Emphasize contrast: shelving, lighting, materials, organization. Luxury boutique dressing reveal. Keep the same room layout and framing.',
+    suffix:'Dressing showcase: transformation from cluttered to elegant, warm lighting, premium boutique atmosphere. Portrait 9:16 vertical. No text, no watermarks, no people.',
+    presets:[
+      {l:'👔 Révélation boutique', t:'Révélation élégante comme dans une boutique de luxe.'},
+      {l:'📚 Organisation', t:'Mise en valeur de l\'organisation : étagères, tiroirs, LED intégré.'}
+    ]
+  },
+  'visite': { e:'🏠', n:'Visite de réalisation', d:'Walkthrough fluide',
+    prefix:'Create a smooth real estate walkthrough video. Slow elegant camera movements: dolly-in, subtle pan, or slow push forward. Emphasize space, light, architectural details, materials. Keep room layout and furniture identical. Professional interior showcase.',
+    suffix:'Real estate showcase: bright, airy, welcoming, professional lighting. Portrait 9:16 vertical. No people, no text, no watermarks.',
+    presets:[
+      {l:'🎥 Dolly avant', t:'Avancée lente et fluide de la caméra dans la pièce, révélant l\'espace et la lumière.'},
+      {l:'🔄 Rotation', t:'Mouvement de rotation lente autour du point central de la pièce.'},
+      {l:'📐 Pan latéral', t:'Mouvement de caméra latéral lent pour montrer toute la pièce.'}
+    ]
+  },
+  'materiau': { e:'✨', n:'Détail matériau', d:'Gros plan noble',
+    prefix:'Create a luxurious macro close-up video of this interior material or detail. Slow cinematic camera movement. Emphasize texture, grain, reflections, craftsmanship. Material identical to source. Premium advertising quality.',
+    suffix:'Luxury material showcase: premium quality, warm cinematic lighting, elegant slow motion. Portrait 9:16 vertical. No people, no text, no watermarks.',
+    presets:[
+      {l:'💎 Reflets luxe', t:'Mise en valeur des reflets et de la brillance du matériau.'},
+      {l:'🎞️ Parallaxe lente', t:'Mouvement de parallaxe très lent donnant une sensation de profondeur.'}
+    ]
+  },
+  'hook': { e:'📱', n:'Hook viral', d:'Arrêter le scroll',
+    prefix:'Create a scroll-stopping viral video. The first frame must grab attention immediately. Punchy dynamic motion, quick zoom, dramatic reveal. Vibrant energy, high contrast. Subject identical to source.',
+    suffix:'Social media optimized: high contrast, vibrant colors, dynamic composition. Stop the scroll in under 1 second. Portrait 9:16 vertical. No text, no watermarks.',
+    presets:[
+      {l:'⚡ Zoom choc', t:'Zoom rapide et dynamique vers le sujet dès la première seconde.'},
+      {l:'🔥 Révélation', t:'Révélation progressive et surprenante, jeu de lumière dramatique.'}
+    ]
+  }
 };
 
-// ══════════════════════════════════════════════
-// EFFETS
-// ══════════════════════════════════════════════
-const EFFECTS = {
-  transformation: [
-    { id:'plan2d3d', p:'Start with 2D floor plan, then walls and furniture rise in 3D, plan becomes photorealistic kitchen.' },
-    { id:'ancienne', p:'Start with old dated kitchen, progressively transform into modern premium kitchen.' },
-    { id:'vide', p:'Start with empty room, progressively assemble the kitchen: cabinets, worktop, facades, handles, appliances.' },
-    { id:'sol', p:'Kitchen components emerge from the floor and assemble themselves: base cabinets rise, worktop appears, facades snap in.' },
-    { id:'assemblage', p:'Kitchen parts fly in and assemble precisely with elegant ease-out motion.' },
-    { id:'wireframe', p:'Start with 3D wireframe, surfaces fill in, materials appear, becomes photorealistic.' }
-  ],
-  camera: [
-    { id:'push', p:'Slow cinematic push-in toward the main subject, smooth dolly forward.' },
-    { id:'orbit', p:'Smooth 360-degree orbit around the central island, steady camera.' },
-    { id:'crane', p:'Slow crane shot rising vertically, revealing the scene bottom to top.' },
-    { id:'parallax', p:'Subtle lateral parallax movement revealing depth and layering.' },
-    { id:'top', p:'Slow top-down shot, camera rising to reveal the layout from above.' },
-    { id:'macro', p:'Extreme macro shot on material details, texture, veins, shallow depth of field.' },
-    { id:'reveal', p:'Camera starts on close detail then slowly pulls back to reveal the entire kitchen.' },
-    { id:'low', p:'Extreme low angle camera at floor level, slowly moving forward, dramatic perspective.' },
-    { id:'dolly', p:'Dolly zoom effect, camera moves forward while zooming out.' }
-  ],
-  materiaux: [
-    { id:'veinage', p:'Extreme close-up on stone or wood veining, slow cinematic zoom.' },
-    { id:'pierre', p:'The stone surface progressively appears on the worktop, natural veining reveals itself.' },
-    { id:'finition', p:'The facade finish progressively changes, matte to glossy or another tone.' },
-    { id:'led', p:'Integrated LED lighting progressively turns on, warm glow illuminating surfaces.' },
-    { id:'texture', p:'Material texture reveals itself under grazing light, showing grain and depth.' }
-  ],
-  fonctionnalite: [
-    { id:'tiroir', p:'Drawer slides out smoothly with soft-close mechanism, revealing interior organization.' },
-    { id:'porte', p:'Cabinet door opens to 90 degrees smoothly, revealing interior with LED lighting.' },
-    { id:'coulissant', p:'Sliding cabinet glides out horizontally, revealing hidden storage.' }
-  ],
-  ambiance: [
-    { id:'golden', p:'Golden hour warm sunlight, amber glow, luxurious atmosphere.' },
-    { id:'matin', p:'Soft morning natural light entering through windows, serene atmosphere.' },
-    { id:'soir', p:'Elegant evening atmosphere, warm LED lighting, luxury night mood.' },
-    { id:'archi', p:'Professional architectural lighting, precise highlights, showroom quality.' },
-    { id:'showroom', p:'High-end furniture showroom lighting, dramatic yet soft.' },
-    { id:'cinema', p:'Cinematic film lighting, dramatic highlights, professional color grading.' }
-  ]
-};
+// AMBIANCES
+const AMBIANCES = [
+  { id:'warm', e:'✨', n:'Luxe chaleureux', d:'Lumière dorée', p:'warm luxury interior lighting, golden tones, premium materials, elegant atmosphere. Preserve the exact layout.' },
+  { id:'natural', e:'🌤️', n:'Lumière naturelle', d:'Clair, aéré', p:'bright natural daylight, airy atmosphere, clean whites, soft shadows. Preserve the exact layout.' },
+  { id:'led', e:'🌙', n:'Soirée LED', d:'LED chaudes', p:'evening atmosphere with warm integrated LED lighting, cosy mood, intimate ambiance. Preserve the exact layout.' },
+  { id:'cinema', e:'🎬', n:'Cinématique', d:'Dramatique', p:'cinematic interior lighting, dramatic highlights, deep shadows, professional color grading. Preserve the exact layout.' },
+  { id:'minimal', e:'⚪', n:'Minimaliste', d:'Épuré', p:'minimalist aesthetic, clean lines, neutral palette, soft diffused light. Preserve the exact layout.' },
+  { id:'scandi', e:'🌿', n:'Scandinave', d:'Bois clair', p:'scandinavian interior style, light wood tones, natural light, hygge atmosphere. Preserve the exact layout.' },
+  { id:'indus', e:'⚙️', n:'Industriel', d:'Métal, béton', p:'industrial interior style, exposed brick, dark metal, concrete, moody lighting. Preserve the exact layout.' },
+  { id:'boho', e:'🌾', n:'Bohème', d:'Naturel', p:'bohemian interior style, natural fibers, earthy tones, plants, warm atmosphere. Preserve the exact layout.' }
+];
 
-// ══════════════════════════════════════════════
-// HOOKS
-// ══════════════════════════════════════════════
-const HOOKS = {
-  vues: ['Vous n\'imaginez pas comment cette cuisine a été conçue.', 'Cette transformation va vous surprendre.', 'Regardez ce que l\'on peut faire avec 3 mètres.'],
-  envie: ['Imaginez votre matin dans cette cuisine.', 'Quand la lumière rencontre la pierre.', 'Le luxe, c\'est dans les détails.'],
-  savoirfaire: ['Chaque centimètre de cette cuisine a été pensé.', 'Voici comment on conçoit une cuisine sur mesure.', 'Le savoir-faire derrière cette réalisation.'],
-  transformation: ['Voici ce que nous avons fait de cet espace.', '3 mètres de cuisine transformés.', 'Vous ne reconnaîtrez pas cette pièce.'],
-  conception: ['Du plan à la réalité : le processus complet.', 'Comment on conçoit une cuisine de A à Z.', 'Chaque trait de ce plan a une raison.'],
-  premium: ['Quand la cuisine devient une pièce d\'architecture.', 'Le raffinement à l\'état pur.', 'Le luxe se cache dans les détails.'],
-  devis: ['Combien coûte vraiment une cuisine sur mesure ?', 'Vous voulez une cuisine comme celle-ci ?', '3 erreurs à éviter dans votre projet.'],
-  realisation: ['Bienvenue dans cette réalisation exceptionnelle.', 'Visitez cette cuisine comme si vous y étiez.', 'Un projet transformé en réalité.'],
-  detail: ['Ce détail fait toute la différence.', 'Regardez ce détail de plus près.', 'Le petit plus qui fait la différence.']
-};
-
-const SOURCE_LOCK = 'SOURCE LOCK: Preserve exactly the architecture, furniture geometry, dimensions, materials, colors, appliances, handles, worktops of the source image. Do NOT invent, move or reshape anything. All photos = same project.';
-
-// ══════════════════════════════════════════════
 // ÉTAT
-// ══════════════════════════════════════════════
 const state = {
-  media: [], isRunning: false, stopRequested: false,
+  images: [], isRunning: false, stopRequested: false,
   queue: [], completed: 0, failed: 0,
-  selectedObjective: 'premium', storyboard: null,
-  mainPrompt: '', durationFrames: 153, intensity: 'moderate',
-  isLoadingMedia: false
+  mode: 'cuisine-av', ambiance: null,
+  mainPrompt: '', intensity: 'random', durationFrames: 153,
+  isLoading: false
 };
 
-// ══════════════════════════════════════════════
 // UTILS
-// ══════════════════════════════════════════════
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function log(m) { console.log('[MCP]', m); }
+function log(m) { console.log('[Studio]', m); }
 function esc(s) { return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function randomFrom(a) { return a[Math.floor(Math.random()*a.length)]; }
-
+function randomItem(a) { return a[Math.floor(Math.random()*a.length)]; }
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   const txt = document.getElementById('toast-text');
@@ -341,7 +306,6 @@ function showToast(msg, type) {
   t.classList.add(type || 'success', 'visible');
   setTimeout(() => t.classList.remove('visible'), 2500);
 }
-
 function setStatus(txt) {
   const b = document.getElementById('status-bar');
   const t = document.getElementById('status-text');
@@ -350,45 +314,39 @@ function setStatus(txt) {
   else b.classList.remove('visible');
 }
 
-// ══════════════════════════════════════════════
 // CLÉ API
-// ══════════════════════════════════════════════
 function getKey() {
   try { return (localStorage.getItem(KEY_STORE) || '').trim(); }
   catch(e) { return ''; }
 }
-
 function saveKey() {
   const input = document.getElementById('api-input');
   if (!input) return;
-  const key = input.value.trim();
-  if (!key) {
+  const k = input.value.trim();
+  if (!k) {
     try { localStorage.removeItem(KEY_STORE); } catch(e){}
     updateApiPanel();
     showToast('Clé supprimée', 'warn');
     return;
   }
   try {
-    localStorage.setItem(KEY_STORE, key);
+    localStorage.setItem(KEY_STORE, k);
     updateApiPanel();
     showToast('Clé enregistrée', 'success');
-  } catch(e) {
-    showToast('Erreur stockage', 'error');
-  }
+  } catch(e) { showToast('Erreur', 'error'); }
 }
-
 function updateApiPanel() {
   const panel = document.getElementById('api-panel');
   const input = document.getElementById('api-input');
   const status = document.getElementById('api-status');
   const text = document.getElementById('api-text');
   if (!panel || !input || !status || !text) return;
-  const key = getKey();
-  if (key) {
+  const k = getKey();
+  if (k) {
     panel.classList.add('ok');
     status.classList.add('ok');
-    text.textContent = 'Clé active · ' + key.slice(0,8) + '...' + key.slice(-4);
-    input.value = key;
+    text.textContent = 'Clé active · ' + k.slice(0,8) + '...' + k.slice(-4);
+    input.value = k;
   } else {
     panel.classList.remove('ok');
     status.classList.remove('ok');
@@ -397,25 +355,21 @@ function updateApiPanel() {
   }
   updateGenBtn();
 }
-
 function updateGenBtn() {
   const btn = document.getElementById('gen-btn');
   if (!btn) return;
-  const hasMedia = state.media.length > 0;
+  const hasImg = state.images.length > 0;
   const hasKey = !!getKey();
-  const hasStoryboard = state.storyboard !== null;
-  btn.disabled = !hasMedia || !hasKey || state.isRunning || state.isLoadingMedia || !hasStoryboard;
-  if (state.isLoadingMedia) btn.textContent = 'Chargement...';
-  else if (state.isRunning) btn.textContent = 'Génération... (' + (state.completed + state.failed) + '/' + state.queue.length + ')';
+  btn.disabled = !hasImg || !hasKey || state.isRunning || state.isLoading;
+  const m = MODES[state.mode];
+  if (state.isLoading) btn.textContent = 'Chargement... (' + state.images.length + ')';
+  else if (state.isRunning) btn.textContent = 'En cours... (' + (state.completed + state.failed) + '/' + state.queue.length + ')';
   else if (!hasKey) btn.textContent = 'Ajoutez votre clé API';
-  else if (!hasMedia) btn.textContent = 'Ajoutez vos photos';
-  else if (!hasStoryboard) btn.textContent = 'Analysez d\'abord vos photos';
-  else btn.textContent = '🎬 Générer ' + state.storyboard.plans.length + ' clips';
+  else if (!hasImg) btn.textContent = 'Ajoutez vos photos';
+  else btn.textContent = m.e + ' Créer ' + state.images.length + ' vidéo' + (state.images.length > 1 ? 's' : '');
 }
 
-// ══════════════════════════════════════════════
-// MÉDIAS
-// ══════════════════════════════════════════════
+// IMAGES
 function fileToDataUri(file) {
   return new Promise((res, rej) => {
     const r = new FileReader();
@@ -424,7 +378,6 @@ function fileToDataUri(file) {
     r.readAsDataURL(file);
   });
 }
-
 function makeThumb(dataUri) {
   return new Promise(res => {
     const img = new Image();
@@ -443,21 +396,19 @@ function makeThumb(dataUri) {
     img.src = dataUri;
   });
 }
-
 async function processFile(file) {
   if (!file.type.startsWith('image/')) return null;
   if (file.size > MAX_SIZE) return null;
   try {
     const dataUri = await fileToDataUri(file);
     const thumb = await makeThumb(dataUri);
-    return { file, dataUri, thumb, id: Date.now() + Math.random(), role: '' };
+    return { file, dataUri, thumb, id: Date.now() + Math.random() };
   } catch(e) { return null; }
 }
-
 async function handleFiles(files) {
   const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
   if (!imgs.length) return;
-  state.isLoadingMedia = true;
+  state.isLoading = true;
   updateGenBtn();
   setStatus('Chargement...');
   const up = document.getElementById('upload');
@@ -465,161 +416,108 @@ async function handleFiles(files) {
   let done = 0;
   for (const f of imgs) {
     const r = await processFile(f);
-    if (r) { state.media.push(r); done++; }
-    renderMedia();
+    if (r) { state.images.push(r); done++; }
+    renderImages();
     setStatus('Chargement... ' + done + '/' + imgs.length);
   }
-  state.media.forEach((m, i) => { m.role = i === 0 ? 'Référence' : i === 1 ? 'Complément' : i === 2 ? 'Détail' : 'Angle ' + (i+1); });
-  state.isLoadingMedia = false;
+  state.isLoading = false;
   if (up) up.classList.remove('loading');
-  state.storyboard = null;
-  renderMedia();
-  updateGenBtn();
   setStatus(null);
-}
-
-function removeMedia(id) {
-  state.media = state.media.filter(m => m.id !== id);
-  state.media.forEach((m, i) => { m.role = i === 0 ? 'Référence' : i === 1 ? 'Complément' : i === 2 ? 'Détail' : 'Angle ' + (i+1); });
-  state.storyboard = null;
-  renderMedia();
   updateGenBtn();
 }
-
-function renderMedia() {
-  const g = document.getElementById('media-grid');
+function removeImage(id) {
+  state.images = state.images.filter(i => i.id !== id);
+  renderImages();
+  updateGenBtn();
+}
+function renderImages() {
+  const g = document.getElementById('img-grid');
   if (!g) return;
-  g.innerHTML = state.media.map(m => 
-    '<div class="media-card">' +
-      '<img src="' + m.thumb + '">' +
-      '<span class="role">' + esc(m.role) + '</span>' +
-      '<button class="rm" data-rm="' + m.id + '">X</button>' +
-    '</div>'
+  g.innerHTML = state.images.map(i =>
+    '<div class="img-card"><img src="' + i.thumb + '"><button class="rm" data-rm="' + i.id + '">✕</button></div>'
   ).join('');
   g.querySelectorAll('[data-rm]').forEach(b => {
-    b.addEventListener('click', e => { e.stopPropagation(); removeMedia(parseFloat(b.dataset.rm)); });
+    b.addEventListener('click', e => { e.stopPropagation(); removeImage(parseFloat(b.dataset.rm)); });
   });
 }
 
-// ══════════════════════════════════════════════
-// OBJECTIFS
-// ══════════════════════════════════════════════
-function renderObjectives() {
-  const g = document.getElementById('obj-grid');
+// MODES
+function renderModes() {
+  const g = document.getElementById('mode-grid');
   if (!g) return;
-  g.innerHTML = Object.entries(OBJECTIVES).map(([id, o]) => 
-    '<div class="obj-card ' + (state.selectedObjective === id ? 'sel' : '') + '" data-obj="' + id + '">' +
-      '<span class="e">' + o.emoji + '</span>' +
-      '<div class="n">' + esc(o.name) + '</div>' +
-      '<div class="d">' + esc(o.desc) + '</div>' +
-    '</div>'
+  g.innerHTML = Object.entries(MODES).map(([id, m]) =>
+    '<div class="mode-card ' + (state.mode === id ? 'sel' : '') + '" data-m="' + id + '"><span class="e">' + m.e + '</span><div class="n">' + esc(m.n) + '</div><div class="d">' + esc(m.d) + '</div></div>'
   ).join('');
-  g.querySelectorAll('[data-obj]').forEach(el => {
+  g.querySelectorAll('[data-m]').forEach(el => {
     el.addEventListener('click', () => {
-      state.selectedObjective = el.dataset.obj;
-      state.storyboard = null;
-      renderObjectives();
+      state.mode = el.dataset.m;
+      renderModes();
+      renderPresets();
       updateGenBtn();
     });
   });
 }
-
-// ══════════════════════════════════════════════
-// STORYBOARD
-// ══════════════════════════════════════════════
-function pickEffects(role) {
-  const ef = [];
-  switch(role) {
-    case 'hook': ef.push(randomFrom(EFFECTS.camera.filter(e => ['macro','push','dolly'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['cinema','showroom'].includes(e.id)))); break;
-    case 'transformation': ef.push(randomFrom(EFFECTS.transformation)); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','archi'].includes(e.id)))); break;
-    case 'before': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','golden'].includes(e.id)))); break;
-    case 'construction': ef.push(randomFrom(EFFECTS.transformation.filter(e => ['sol','vide','assemblage'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['archi','showroom'].includes(e.id)))); break;
-    case 'reveal': ef.push(randomFrom(EFFECTS.camera.filter(e => ['orbit','reveal','crane'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','cinema'].includes(e.id)))); break;
-    case 'ambiance': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','low','top'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','soir'].includes(e.id)))); break;
-    case 'macro': case 'detail': ef.push(EFFECTS.camera.find(e => e.id === 'macro')); ef.push(randomFrom(EFFECTS.materiaux)); break;
-    case 'orbit': case 'island': ef.push(randomFrom(EFFECTS.camera.filter(e => ['orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['showroom','cinema'].includes(e.id)))); break;
-    case 'hero': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','cinema'].includes(e.id)))); break;
-    case 'wide': case 'entrance': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','top','crane'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','archi'].includes(e.id)))); break;
-    case 'plan2d': ef.push(EFFECTS.transformation.find(e => e.id === 'plan2d3d')); break;
-    case 'wireframe': ef.push(EFFECTS.transformation.find(e => e.id === 'wireframe')); break;
-    case 'problem': case 'solution': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push','orbit'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['matin','golden'].includes(e.id)))); break;
-    case 'cta': ef.push(randomFrom(EFFECTS.camera.filter(e => ['push'].includes(e.id)))); ef.push(randomFrom(EFFECTS.ambiance.filter(e => ['golden','showroom'].includes(e.id)))); break;
-    default: ef.push(randomFrom(EFFECTS.camera)); ef.push(randomFrom(EFFECTS.ambiance));
-  }
-  return ef.filter(Boolean);
+function renderPresets() {
+  const c = document.getElementById('presets');
+  if (!c) return;
+  const m = MODES[state.mode];
+  c.innerHTML = (m.presets || []).map((p, i) =>
+    '<div class="preset" data-p="' + i + '">' + esc(p.l) + '</div>'
+  ).join('');
+  c.querySelectorAll('.preset').forEach(el => {
+    el.addEventListener('click', () => {
+      const p = m.presets[parseInt(el.dataset.p, 10)];
+      if (!p) return;
+      const ta = document.getElementById('main-prompt');
+      ta.value = p.t;
+      state.mainPrompt = p.t;
+      showToast('Preset appliqué', 'success', 1200);
+    });
+  });
 }
 
-function buildStoryboard() {
-  const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
-  const structure = obj.structure;
-  const n = structure.length;
-  const plans = [];
-  const mediaCount = state.media.length;
-  for (let i = 0; i < n; i++) {
-    const mi = mediaCount >= n ? Math.floor((i / n) * mediaCount) : i % mediaCount;
-    const plan = {
-      index: i,
-      role: structure[i],
-      media: state.media[mi],
-      mediaIndex: mi,
-      duration: Math.max(5, Math.min(10, Math.floor(obj.duration / n))),
-      effects: pickEffects(structure[i])
-    };
-    plans.push(plan);
-  }
-  return {
-    objective: state.selectedObjective,
-    duration: obj.duration,
-    plans: plans,
-    hook: randomFrom(HOOKS[state.selectedObjective] || HOOKS.premium)
-  };
+// AMBIANCES
+function renderAmbiances() {
+  const g = document.getElementById('style-grid');
+  if (!g) return;
+  let html = '<div class="no-style ' + (state.ambiance === null ? 'sel' : '') + '" data-a="none">' + (state.ambiance === null ? '✓ Aucune ambiance' : '🚫 Aucune ambiance') + '</div>';
+  html += AMBIANCES.map(a =>
+    '<div class="style-card ' + (state.ambiance === a.id ? 'sel' : '') + '" data-a="' + a.id + '"><div class="e">' + a.e + '</div><div><div class="n">' + esc(a.n) + '</div><div class="d">' + esc(a.d) + '</div></div></div>'
+  ).join('');
+  g.innerHTML = html;
+  g.querySelectorAll('[data-a]').forEach(el => {
+    el.addEventListener('click', () => {
+      const v = el.dataset.a;
+      state.ambiance = (v === 'none') ? null : v;
+      renderAmbiances();
+    });
+  });
 }
 
-function renderConcept() {
-  const box = document.getElementById('concept-box');
-  if (!box) return;
-  if (!state.storyboard) {
-    box.innerHTML = '<div class="hint" style="text-align:center;padding:1rem;">Importez vos photos et choisissez un objectif, puis cliquez sur <strong>Analyser & proposer</strong>.</div>';
-    return;
-  }
-  const sb = state.storyboard;
-  const obj = OBJECTIVES[sb.objective];
-  let html = '<div class="concept">' +
-    '<div class="title">' + obj.emoji + ' ' + esc(obj.name) + '</div>' +
-    '<div class="meta">' + sb.duration + 's · ' + sb.plans.length + ' plans</div>' +
-    '<div class="sb-text">' + sb.plans.map((p, i) => 'Plan ' + (i+1) + ' — ' + esc(p.role) + ' — ' + p.duration + 's').join('<br>') + '</div>' +
-    '</div>';
-  html += '<div class="hook"><div class="lbl">Hook proposé</div>' + esc(sb.hook) + '</div>';
-  box.innerHTML = html;
-}
-
-// ══════════════════════════════════════════════
 // PROMPT
-// ══════════════════════════════════════════════
-function buildPrompt(plan) {
-  const obj = OBJECTIVES[state.selectedObjective] || OBJECTIVES.premium;
-  const brandName = document.getElementById('brand-name')?.value.trim() || '';
-  const brandTag = document.getElementById('brand-tagline')?.value.trim() || '';
+const INTENSITY = {
+  subtle: 'very subtle movement, barely perceptible',
+  moderate: 'moderate movement, clear but controlled',
+  strong: 'strong dynamic movement, energetic'
+};
+function buildPrompt() {
+  const m = MODES[state.mode];
+  const a = state.ambiance ? AMBIANCES.find(x => x.id === state.ambiance) : null;
   const userP = state.mainPrompt && state.mainPrompt.trim() ? state.mainPrompt.trim() : '';
-  const intensityMap = { subtle:'subtle elegant motion', moderate:'moderate cinematic motion', strong:'dynamic energetic motion' };
-  const parts = [
-    SOURCE_LOCK,
-    obj.guidance,
-    'Shot role: ' + plan.role + '.',
-    plan.effects.map(e => e.p).join(' '),
-    userP,
-    intensityMap[state.intensity] || intensityMap.moderate,
-    'Portrait 9:16 vertical, 24fps, photorealistic, luxury commercial quality, no text, no watermarks, no people.',
-    'Brand: ' + brandName + (brandTag ? ' — ' + brandTag : '')
-  ];
-  return parts.filter(Boolean).join(' ');
+  const parts = [m.prefix];
+  if (a) parts.push(a.p);
+  if (userP) parts.push('Artistic direction: ' + userP);
+  if (state.intensity !== 'random' && INTENSITY[state.intensity]) parts.push(INTENSITY[state.intensity]);
+  parts.push('Preserve the exact subject, layout, materials, colors and composition of the source image.');
+  parts.push('No audio, no sound, no music. Silent video.');
+  parts.push(m.suffix);
+  parts.push('Portrait 9:16 vertical, 24fps, no text, no watermarks, no logos.');
+  return parts.join('. ');
 }
 
-// ══════════════════════════════════════════════
-// API AGNES
-// ══════════════════════════════════════════════
-async function apiPost(imageData, prompt) {
-  const body = { model: MODEL, prompt: prompt, image: imageData, num_frames: state.durationFrames, frame_rate: FPS };
+// API
+async function createTask(imageDataUri, prompt) {
+  const body = { model: MODEL, prompt: prompt, image: imageDataUri, num_frames: state.durationFrames, frame_rate: FPS };
   const res = await fetch(API + '/videos', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + getKey(), 'Content-Type': 'application/json' },
@@ -631,55 +529,49 @@ async function apiPost(imageData, prompt) {
   }
   const data = await res.json();
   const videoId = data.video_id;
-  const taskId = data.task_id;
-  if (!videoId && !taskId) throw new Error('Pas d\'ID retourné');
-  return { videoId, taskId };
+  if (!videoId) throw new Error('Pas de video_id');
+  return videoId;
 }
-
-async function apiPoll(videoId, taskId) {
-  const urls = [];
-  if (taskId) urls.push(POLL + '?task_id=' + encodeURIComponent(taskId) + '&model_name=' + encodeURIComponent(MODEL));
-  if (videoId) urls.push(POLL + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL));
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + getKey() } });
-      const text = await res.text();
-      if (text.includes('task not found') || text.includes('"code":404')) continue;
-      try { return JSON.parse(text); } catch(e) { continue; }
-    } catch(e) { continue; }
-  }
-  throw new Error('Polling échoué — tâche introuvable');
-}
-
-async function generateClip(item) {
-  item.status = 'creating';
-  item.progress = 'Création...';
-  renderQueue();
-  const prompt = buildPrompt(item.plan);
-  const result = await apiPost(item.plan.media.dataUri, prompt);
-  item.videoId = result.videoId;
-  item.taskId = result.taskId;
-  item.status = 'processing';
-  item.progress = 'En cours...';
-  renderQueue();
-  for (let i = 0; i < MAX_POLL; i++) {
+async function pollTask(videoId, onProgress) {
+  // On laisse passer 20s avant le premier poll
+  let remaining = 20;
+  while (remaining > 0) {
     if (state.stopRequested) throw new Error('Arrêt');
-    await sleep(i === 0 ? 20000 : POLL_INTERVAL * 1000);
-    const data = await apiPoll(item.videoId, item.taskId);
-    const st = data.status || 'unknown';
-    const pr = data.progress || 0;
-    item.progress = 'Rendu... ' + pr + '%';
-    renderQueue();
+    onProgress('Préparation... — ' + remaining + 's');
+    await sleep(1000);
+    remaining--;
+  }
+  for (let i = 0; i < 100; i++) {
+    if (state.stopRequested) throw new Error('Arrêt');
+    if (i > 0) {
+      let r = 8;
+      while (r > 0) {
+        if (state.stopRequested) throw new Error('Arrêt');
+        onProgress('Création... — ' + r + 's');
+        await sleep(1000);
+        r--;
+      }
+    }
+    const url = POLL + '?video_id=' + encodeURIComponent(videoId) + '&model_name=' + encodeURIComponent(MODEL);
+    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + getKey() } });
+    if (res.status === 429) {
+      log('429 rate limit, attente 15s');
+      await sleep(15000);
+      continue;
+    }
+    if (!res.ok) {
+      log('Poll error ' + res.status);
+      await sleep(8000);
+      continue;
+    }
+    const d = await res.json();
+    const st = d.status || 'unknown';
+    const pr = d.progress || 0;
+    onProgress('Création... ' + pr + '%');
     if (st === 'completed' || st === 'succeeded' || st === 'done') {
-      const url = (data.metadata && data.metadata.url) || data.url || (data.output && data.output.url);
-      if (!url) throw new Error('URL manquante');
-      item.status = 'done';
-      item.videoUrl = url;
-      item.progress = 'Terminé';
-      state.completed++;
-      renderQueue();
-      updateGenBtn();
-      return url;
+      const videoUrl = (d.metadata && d.metadata.url) || d.url || (d.output && d.output.url);
+      if (!videoUrl) throw new Error('Pas d\'URL');
+      return videoUrl;
     }
     if (st === 'failed' || st === 'error' || st === 'cancelled') {
       throw new Error('Échec (' + st + ')');
@@ -688,9 +580,7 @@ async function generateClip(item) {
   throw new Error('Timeout');
 }
 
-// ══════════════════════════════════════════════
 // QUEUE
-// ══════════════════════════════════════════════
 function renderQueue() {
   const q = document.getElementById('queue');
   if (!q) return;
@@ -699,20 +589,18 @@ function renderQueue() {
   const total = state.queue.length;
   const done = state.completed + state.failed;
   let html = '<div class="q-summary"><span>Progression : ' + done + '/' + total + '</span><span>' + (done < total ? 'En cours...' : 'Terminé') + '</span></div>';
-  html += state.queue.map(item => {
-    let ic = 'o', st = 'En attente', cls = 'pending';
-    if (item.status === 'creating') { ic = 'C'; st = 'Création...'; cls = 'creating'; }
-    else if (item.status === 'processing') { ic = 'C'; st = item.progress || 'En cours'; cls = 'processing'; }
-    else if (item.status === 'done') { ic = 'D'; st = 'Terminé'; cls = 'done'; }
-    else if (item.status === 'failed') { ic = 'X'; st = 'Échec'; cls = 'failed'; }
-    return '<div class="q-item ' + cls + '"><div class="ic">' + ic + '</div><div class="nm">Plan ' + (item.planIndex+1) + ' — ' + esc(item.plan.role) + '</div><div class="st2">' + esc(st) + '</div></div>';
+  html += state.queue.map(it => {
+    let ic = '○', st = 'En attente', cls = 'pending';
+    if (it.status === 'creating') { ic = '◐'; st = 'Création...'; cls = 'creating'; }
+    else if (it.status === 'processing') { ic = '◐'; st = it.progress || 'En cours'; cls = 'processing'; }
+    else if (it.status === 'done') { ic = '●'; st = 'Terminé'; cls = 'done'; }
+    else if (it.status === 'failed') { ic = '✕'; st = 'Échec'; cls = 'failed'; }
+    return '<div class="q-item ' + cls + '"><div class="ic">' + ic + '</div><div class="nm">Photo ' + (it.idx+1) + '</div><div class="st2">' + esc(st) + '</div></div>';
   }).join('');
   q.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════
 // GALERIE
-// ══════════════════════════════════════════════
 function addToGallery(url, label) {
   const g = document.getElementById('gallery');
   const grid = document.getElementById('g-grid');
@@ -722,42 +610,28 @@ function addToGallery(url, label) {
   el.className = 'g-item';
   el.innerHTML = '<video controls preload="metadata" muted playsinline><source src="' + url + '" type="video/mp4"></video>' +
     '<div class="cap">' + esc(label) + '</div>' +
-    '<div class="act"><a href="' + url + '" download="mcp-' + Date.now() + '.mp4">Télécharger</a></div>';
+    '<div class="act"><a href="' + url + '" download="studio-' + Date.now() + '.mp4">Télécharger</a></div>';
   grid.appendChild(el);
 }
 
-// ══════════════════════════════════════════════
 // WORKFLOW
-// ══════════════════════════════════════════════
-async function analyzeAndPropose() {
-  if (!state.media.length) { showToast('Ajoutez d\'abord des photos', 'error'); return; }
-  setStatus('Analyse...');
-  await sleep(600);
-  state.storyboard = buildStoryboard();
-  renderConcept();
-  setStatus(null);
-  updateGenBtn();
-  showToast('Storyboard proposé', 'success');
-  const s = document.getElementById('s-concept');
-  if (s) s.classList.add('open');
-}
-
 async function startGeneration() {
-  if (state.isRunning || !state.media.length) return;
+  if (state.isRunning || !state.images.length) return;
   if (!getKey()) { showToast('Ajoutez votre clé API', 'error'); return; }
-  if (!state.storyboard) { showToast('Analysez d\'abord vos photos', 'error'); return; }
   const mp = document.getElementById('main-prompt');
   state.mainPrompt = mp ? mp.value.trim() : '';
+  if (!state.mainPrompt && !state.ambiance) {
+    if (!confirm('Ni prompt ni ambiance. Continuer ?')) return;
+  }
   state.isRunning = true;
   state.stopRequested = false;
   state.completed = 0;
   state.failed = 0;
-  state.queue = state.storyboard.plans.map((plan, i) => ({
-    planIndex: i, plan: plan, status: 'pending', progress: null,
-    videoId: null, taskId: null, videoUrl: null
+  state.queue = state.images.map((img, i) => ({
+    idx: i, image: img, status: 'pending', progress: null, videoId: null, videoUrl: null
   }));
-  const ggrid = document.getElementById('g-grid');
-  if (ggrid) ggrid.innerHTML = '';
+  const gg = document.getElementById('g-grid');
+  if (gg) gg.innerHTML = '';
   const gal = document.getElementById('gallery');
   if (gal) gal.style.display = 'none';
   const sb = document.getElementById('stop-btn');
@@ -766,97 +640,89 @@ async function startGeneration() {
   if (gb) gb.disabled = true;
   renderQueue();
   updateGenBtn();
+  const prompt = buildPrompt();
   for (let i = 0; i < state.queue.length; i++) {
     if (state.stopRequested) break;
-    const item = state.queue[i];
+    const it = state.queue[i];
     try {
-      const url = await generateClip(item);
-      addToGallery(url, OBJECTIVES[state.storyboard.objective].emoji + ' Plan ' + (i+1) + ' — ' + item.plan.role);
+      it.status = 'creating';
+      it.progress = 'Création...';
+      renderQueue();
+      it.videoId = await createTask(it.image.dataUri, prompt);
+      it.status = 'processing';
+      it.progress = 'En cours...';
+      renderQueue();
+      const url = await pollTask(it.videoId, (p) => { it.progress = p; renderQueue(); });
+      it.status = 'done';
+      it.videoUrl = url;
+      it.progress = 'Terminé';
+      state.completed++;
+      renderQueue();
+      updateGenBtn();
+      const m = MODES[state.mode];
+      addToGallery(url, m.e + ' ' + m.n + ' — Photo ' + (i+1));
     } catch(e) {
       if (e.message === 'Arrêt') break;
-      item.status = 'failed';
-      item.progress = 'Échec';
+      it.status = 'failed';
+      it.progress = 'Échec';
       state.failed++;
-      log('Erreur plan ' + (i+1) + ': ' + e.message);
+      log('Erreur photo ' + (i+1) + ': ' + e.message);
       renderQueue();
     }
     if (i < state.queue.length - 1 && !state.stopRequested) {
-      const waitSec = 62;
+      const waitSec = 70;
       for (let r = waitSec; r > 0; r--) {
         if (state.stopRequested) break;
-        setStatus('Pause — plan ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
+        setStatus('Pause — photo ' + (i+2) + '/' + state.queue.length + ' dans ' + r + 's');
         await sleep(1000);
       }
     }
   }
-  setStatus(state.completed + '/' + state.queue.length + ' clips générés');
+  setStatus(state.completed + '/' + state.queue.length + ' vidéos');
   await sleep(3000);
   setStatus(null);
   state.isRunning = false;
   state.stopRequested = false;
   if (sb) sb.classList.remove('visible');
   updateGenBtn();
-  showToast(state.completed + ' clip(s) généré(s)', 'success');
+  showToast(state.completed + ' vidéo(s) créée(s)', 'success');
 }
 
-// ══════════════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════════
 (function init() {
   document.querySelectorAll('[data-toggle]').forEach(h => {
     h.addEventListener('click', () => {
-      const target = document.getElementById(h.dataset.toggle);
-      if (target) target.classList.toggle('open');
+      const t = document.getElementById(h.dataset.toggle);
+      if (t) t.classList.toggle('open');
     });
   });
-  
   const apiBtn = document.getElementById('api-btn');
   if (apiBtn) apiBtn.addEventListener('click', saveKey);
-  
-  const apiInput = document.getElementById('api-input');
-  if (apiInput) apiInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
-  
+  const apiIn = document.getElementById('api-input');
+  if (apiIn) apiIn.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
   const up = document.getElementById('upload');
   const fi = document.getElementById('file-input');
   if (up && fi) {
     up.addEventListener('click', () => fi.click());
     fi.addEventListener('change', e => { handleFiles(e.target.files); fi.value = ''; });
   }
-  
   const mp = document.getElementById('main-prompt');
   if (mp) mp.addEventListener('input', e => { state.mainPrompt = e.target.value; });
-  
   const dur = document.getElementById('dur');
   if (dur) dur.addEventListener('change', e => { state.durationFrames = parseInt(e.target.value, 10); });
-  
   const int = document.getElementById('int');
   if (int) int.addEventListener('change', e => { state.intensity = e.target.value; });
-  
-  ['brand-name','brand-tagline'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => {
-      const n = document.getElementById('brand-name');
-      const t = document.getElementById('brand-tagline');
-      const s = document.getElementById('sig');
-      if (n && t && s) s.textContent = n.value + (t.value ? ' · ' + t.value : '');
-    });
-  });
-  
   const gb = document.getElementById('gen-btn');
   if (gb) gb.addEventListener('click', startGeneration);
-  
   const sb = document.getElementById('stop-btn');
   if (sb) sb.addEventListener('click', () => { state.stopRequested = true; setStatus('Arrêt...'); });
-  
-  const ab = document.getElementById('analyze-btn');
-  if (ab) ab.addEventListener('click', analyzeAndPropose);
-  
-  renderObjectives();
-  renderMedia();
-  renderConcept();
+  renderModes();
+  renderPresets();
+  renderAmbiances();
+  renderImages();
   updateApiPanel();
   updateGenBtn();
-  log('MCP Video Studio prêt');
+  log('Studio prêt — mode: ' + state.mode);
 })();
 </script>
 </body>
